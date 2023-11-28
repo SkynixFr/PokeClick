@@ -1,14 +1,23 @@
 import { StyleSheet, Text, View } from 'react-native';
 import React from 'react';
 
-const index = () => {
+import BottomNavBar from '../components/bottomNavBar';
+
+const Home = () => {
 	return (
-		<View>
-			<Text>index</Text>
+		<View style={styles.container}>
+			<Text>Home</Text>
+			<BottomNavBar />
 		</View>
 	);
 };
 
-export default index;
+export default Home;
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+	container: {
+		width: '100%',
+		height: '100%',
+		backgroundColor: 'lightgrey'
+	}
+});

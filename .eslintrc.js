@@ -6,7 +6,8 @@ module.exports = {
 
 		'universe/web',
 
-		'universe/shared/typescript-analysis'
+		'universe/shared/typescript-analysis',
+		'plugin:prettier/recommended'
 	],
 
 	overrides: [
@@ -19,10 +20,12 @@ module.exports = {
 		}
 	],
 
-	plugins: ['react-hooks'],
+	plugins: ['react-hooks', 'prettier'],
 
 	rules: {
-		'import/order': 'off'
+		'import/order': 'off',
+
+		'prettier/prettier': 'error'
 	},
 
 	env: {
