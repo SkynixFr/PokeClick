@@ -27,16 +27,16 @@ export const PokemonProvider = (props: React.PropsWithChildren) => {
 			}
 			setIsLoading(true);
 
-			const detailsPromises = data.results.map(async pokemon => {
-				const pokemonDetails = await trigger(pokemon.id);
-				return pokemonDetails.data;
-			});
+			// const detailsPromises = data.results.map(async pokemon => {
+			// 	const pokemonDetails = await trigger(pokemon.id);
+			// 	return pokemonDetails.data;
+			// });
 
-			await _.chunk(detailsPromises, 100).forEach(async chunk => {
-				await Promise.all(chunk).then(pokemonsDetails => {
-					dispatch(addPokemons(pokemonsDetails as PokemonDetails[]));
-				});
-			});
+			// await _.chunk(detailsPromises, 100).forEach(async chunk => {
+			// 	await Promise.all(chunk).then(pokemonsDetails => {
+			// 		dispatch(addPokemons(pokemonsDetails as PokemonDetails[]));
+			// 	});
+			// });
 
 			setIsLoading(false);
 		}
