@@ -1,23 +1,56 @@
-import { StyleSheet, Text, View } from 'react-native';
-import React from 'react';
+import { Text, View, Image } from 'react-native';
+import React, { useEffect } from 'react';
+import PokemonDetails from '../components/PokemonDetails';
 
-import BottomNavBar from '../components/bottomNavBar';
+import { useGetPokemonsQuery } from '../features/api/apiSlice';
+
+import { Pokemon } from '../types/pokemon';
+
+import HomeStyle from '../styles/home';
 
 const Home = () => {
+	const [pokemon, setPokemon] = React.useState<Pokemon | null>(null);
+
+	const { data, error, isLoading } = useGetPokemonsQuery();
+
+	useEffect(() => {
+		if (pokemon) {
+			return;
+		}
+
+		const getRandomPokemons = () => {
+			if (isLoading || error || !data) {
+				return;
+			}
+			const randomId = Math.floor(Math.random() * 1000);
+
+			const selectedPokemon = data.results[randomId];
+
+			setPokemon(selectedPokemon);
+		};
+
+		getRandomPokemons();
+	}, [data, isLoading]);
+
 	return (
-		<View style={styles.container}>
-			<Text>Home</Text>
-			<BottomNavBar />
-		</View>
+		<>
+			{isLoading ? (
+				<Text>Loading...</Text>
+			) : (
+				<View style={HomeStyle.container}>
+					<View>
+						<View>
+							<Text>Niveau 1</Text>
+						</View>
+						<View>
+							<Text>0/10</Text>
+						</View>
+					</View>
+					{pokemon && <PokemonDetails pokemon={pokemon} />}
+				</View>
+			)}
+		</>
 	);
 };
 
 export default Home;
-
-const styles = StyleSheet.create({
-	container: {
-		width: '100%',
-		height: '100%',
-		backgroundColor: 'lightgrey'
-	}
-});

@@ -4,8 +4,6 @@ const BottomNavBarStyle = StyleSheet.create({
 	bottomNavBar: {
 		position: 'absolute',
 		bottom: 0,
-		left: 0,
-		right: 0,
 		width: '100%',
 		height: 75,
 		display: 'flex',
@@ -14,7 +12,8 @@ const BottomNavBarStyle = StyleSheet.create({
 		flexDirection: 'row',
 		backgroundColor: '#fff',
 		borderTopLeftRadius: 20,
-		borderTopRightRadius: 20
+		borderTopRightRadius: 20,
+		zIndex: 10
 	},
 	navBtn: {
 		width: '25%',

@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { Text, TouchableOpacity, View, Image } from 'react-native';
+import { Text, TouchableOpacity, View } from 'react-native';
 
-import Upgrade from './upgrades';
-import Quests from './quests';
-import Shop from './shop';
+import Upgrade from './Upgrades';
+import Quests from './Quests';
+import Shop from './Shop';
 
 import FaIcon from '@expo/vector-icons/FontAwesome5';
 
@@ -16,23 +16,11 @@ const BottomNavBar = () => {
 	const renderComponent = () => {
 		switch (selectedComponent) {
 			case 'Upgrades':
-				return (
-					<View>
-						<Upgrade />
-					</View>
-				);
+				return <Upgrade />;
 			case 'Quests':
-				return (
-					<View>
-						<Quests />
-					</View>
-				);
+				return <Quests />;
 			case 'Shop':
-				return (
-					<View>
-						<Shop />
-					</View>
-				);
+				return <Shop />;
 			default:
 				return null;
 		}

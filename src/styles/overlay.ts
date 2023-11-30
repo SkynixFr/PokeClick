@@ -7,9 +7,10 @@ const BottomNavBarStyle = StyleSheet.create({
 		left: 0,
 		right: 0,
 		height: Dimensions.get('window').height * 0.5,
-		backgroundColor: 'rgba(0, 0, 0, 0.3)',
+		backgroundColor: 'rgba(255, 255, 255, 1)',
 		justifyContent: 'center',
-		alignItems: 'center'
+		alignItems: 'center',
+		zIndex: 5
 	}
 });
 
