@@ -4,24 +4,20 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useGetPokemonDetailsQuery } from '../features/api/apiSlice';
 import { RootState } from '../app/store';
 
-import { Pokemon } from '../types/pokemon';
+import { PokemonDetails } from '../types/pokemon';
 import { incrementLevel } from '../features/levelSlice';
 
 type PokemonDetailsProps = {
-	pokemon: Pokemon;
+	pokemon: PokemonDetails;
 	randomPokemon: () => void;
 };
 
-const PokemonDetails: React.FC<PokemonDetailsProps> = ({
-	pokemon,
-	randomPokemon
-}) => {
+const Pokemon: React.FC<PokemonDetailsProps> = ({ pokemon, randomPokemon }) => {
+	const dpc = useSelector((state: RootState) => state.dpc.value);
+
 	const dispatch = useDispatch();
 	const [currentPokemonLife, setCurrentPokemonLife] =
 		React.useState<number>(100);
-	const dpc = useSelector((state: RootState) => state.dpc.value);
-
-	const { data, error, isLoading } = useGetPokemonDetailsQuery(pokemon.id);
 
 	function battle() {
 		const totalDamage = dpc;
@@ -33,41 +29,36 @@ const PokemonDetails: React.FC<PokemonDetailsProps> = ({
 			randomPokemon();
 			setCurrentPokemonLife(100);
 			dispatch(incrementLevel());
+			console.log('level up');
 		}
 	}, [currentPokemonLife]);
 
 	return (
-		<>
-			{isLoading ? (
-				<Text>Loading...</Text>
-			) : (
-				<View>
-					<View>
-						<Text>{data!.name}</Text>
-						<Pressable
-							onPress={() => {
-								battle();
-							}}
-						>
-							<Image
-								source={{
-									uri: data!.sprites.other['official-artwork']
-										.front_default
-								}}
-								style={{ width: 300, height: 300 }}
-							/>
-						</Pressable>
-					</View>
+		<View>
+			<View>
+				<Text>{pokemon.name}</Text>
+				<Pressable
+					onPress={() => {
+						battle();
+					}}
+				>
+					<Image
+						source={{
+							uri: pokemon.sprites.other['official-artwork']
+								.front_default
+						}}
+						style={{ width: 300, height: 300 }}
+					/>
+				</Pressable>
+			</View>
 
-					<View>
-						<Text>Point de vie: {currentPokemonLife}</Text>
-					</View>
-				</View>
-			)}
-		</>
+			<View>
+				<Text>Point de vie: {currentPokemonLife}</Text>
+			</View>
+		</View>
 	);
 };
 
-export default PokemonDetails;
+export default Pokemon;
 
 const styles = StyleSheet.create({});

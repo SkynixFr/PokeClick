@@ -26,9 +26,20 @@ export const apiSlice = createApi({
 			}
 		}),
 		getPokemonDetails: builder.query<PokemonDetails, string>({
-			query: id => `pokemon/${id}`
+			query: id => `pokemon/${id}`,
+			transformResponse: (response: PokemonDetails) => {
+				return {
+					id: response.id,
+					name: response.name,
+					sprites: response.sprites
+				};
+			}
 		})
 	})
 });
 
-export const { useGetPokemonsQuery, useGetPokemonDetailsQuery } = apiSlice;
+export const {
+	useGetPokemonsQuery,
+	useGetPokemonDetailsQuery,
+	useLazyGetPokemonDetailsQuery
+} = apiSlice;

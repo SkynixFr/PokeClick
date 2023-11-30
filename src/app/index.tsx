@@ -1,67 +1,69 @@
-import { Text, View, Image } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 import React, { useEffect } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from './store';
+import { router } from 'expo-router';
 
-import PokemonDetails from '../components/PokemonDetails';
+import {
+	useGetPokemonsQuery,
+	useLazyGetPokemonDetailsQuery
+} from '../features/api/apiSlice';
 
-import { useGetPokemonsQuery } from '../features/api/apiSlice';
-import { Pokemon } from '../types/pokemon';
+import { PokemonDetails } from '../types/pokemon';
+import { addPokemons } from '../features/pokemonsSlice';
 
-import HomeStyle from '../styles/home';
+const Loading = () => {
+	// const [isLoading, setIsLoading] = React.useState<boolean>(false);
 
-const Home = () => {
-	const [pokemon, setPokemon] = React.useState<Pokemon | null>(null);
-	const currentLevel = useSelector((state: RootState) => state.level.value);
+	// const { data, error, isLoading: isQuerying } = useGetPokemonsQuery();
 
-	const dpc = useSelector((state: RootState) => state.dpc.value);
+	// const [trigger, { isLoading: isLazyQuering }] =
+	// 	useLazyGetPokemonDetailsQuery();
 
-	const { data, error, isLoading } = useGetPokemonsQuery();
+	// const dispatch = useDispatch();
 
-	const getRandomPokemons = () => {
-		const randomId = Math.floor(Math.random() * 1000);
+	// useEffect(() => {
+	// 	async function getPokemons() {
+	// 		if (isQuerying || error || !data) {
+	// 			return;
+	// 		}
+	// 		setIsLoading(true);
 
-		const selectedPokemon = data!.results[randomId];
+	// 		const detailsPromises = data.results.map(async pokemon => {
+	// 			const pokemonDetails = await trigger(pokemon.id);
+	// 			return pokemonDetails.data;
+	// 		});
 
-		setPokemon(selectedPokemon);
-	};
+	// 		const pokemonsDetails = await Promise.all(detailsPromises);
+	// 		dispatch(addPokemons(pokemonsDetails as PokemonDetails[]));
 
-	useEffect(() => {
-		if (pokemon) {
-			return;
-		}
+	// 		setIsLoading(false);
+	// 		router.replace('/home');
+	// 		console.log('pokemonsDetails');
+	// 	}
 
-		if (isLoading || error || !data) {
-			return;
-		}
-
-		getRandomPokemons();
-	}, [data, isLoading]);
+	// 	getPokemons();
+	// }, []);
 
 	return (
-		<>
-			{isLoading ? (
+		<View style={styles.container}>
+			{/* {isLoading ? (
 				<Text>Loading...</Text>
 			) : (
-				<View style={HomeStyle.container}>
-					<View>
-						<View>
-							<Text>Niveau {currentLevel}</Text>
-						</View>
-						<View>
-							<Text>DPC : {dpc}</Text>
-						</View>
-					</View>
-					{pokemon && (
-						<PokemonDetails
-							pokemon={pokemon}
-							randomPokemon={getRandomPokemons}
-						/>
-					)}
+				<View>
+					<Text>index</Text>
 				</View>
-			)}
-		</>
+			)} */}
+		</View>
 	);
 };
 
-export default Home;
+export default Loading;
+
+const styles = StyleSheet.create({
+	container: {
+		flex: 1,
+		alignItems: 'center',
+		justifyContent: 'center'
+	}
+});
