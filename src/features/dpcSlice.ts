@@ -7,16 +7,17 @@ export const dpcSlice = createSlice({
 		value: 50
 	},
 	reducers: {
-		increment: state => {
+		incrementDpc: state => {
 			state.value += 1;
 		},
-		decrement: state => {
+		decrementDpc: state => {
 			state.value -= 1;
 		},
-		incrementByAmount: (state, action: PayloadAction<number>) => {
+		incrementDpcByAmount: (state, action: PayloadAction<number>) => {
 			state.value += action.payload;
 		}
 	}
 });
 
-export const { increment, decrement, incrementByAmount } = dpcSlice.actions;
+export const { incrementDpc, decrementDpc, incrementDpcByAmount } =
+	dpcSlice.actions;

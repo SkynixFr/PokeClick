@@ -2,10 +2,10 @@ import { StyleSheet, Text, View, Image, Pressable } from 'react-native';
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useGetPokemonDetailsQuery } from '../features/api/apiSlice';
-import { increment } from '../features/dpcSlice';
 import { RootState } from '../app/store';
 
 import { Pokemon } from '../types/pokemon';
+import { incrementLevel } from '../features/levelSlice';
 
 type PokemonDetailsProps = {
 	pokemon: Pokemon;
@@ -32,6 +32,7 @@ const PokemonDetails: React.FC<PokemonDetailsProps> = ({
 		if (currentPokemonLife < dpc) {
 			randomPokemon();
 			setCurrentPokemonLife(100);
+			dispatch(incrementLevel());
 		}
 	}, [currentPokemonLife]);
 
@@ -42,7 +43,7 @@ const PokemonDetails: React.FC<PokemonDetailsProps> = ({
 			) : (
 				<View>
 					<View>
-						<Text>{data?.name}</Text>
+						<Text>{data!.name}</Text>
 						<Pressable
 							onPress={() => {
 								battle();
@@ -50,7 +51,7 @@ const PokemonDetails: React.FC<PokemonDetailsProps> = ({
 						>
 							<Image
 								source={{
-									uri: data?.sprites.other['official-artwork']
+									uri: data!.sprites.other['official-artwork']
 										.front_default
 								}}
 								style={{ width: 300, height: 300 }}

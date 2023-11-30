@@ -12,7 +12,7 @@ import HomeStyle from '../styles/home';
 
 const Home = () => {
 	const [pokemon, setPokemon] = React.useState<Pokemon | null>(null);
-	const [currentLevel, setCurrentLevel] = React.useState<number>(1);
+	const currentLevel = useSelector((state: RootState) => state.level.value);
 
 	const dpc = useSelector((state: RootState) => state.dpc.value);
 

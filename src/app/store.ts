@@ -2,11 +2,13 @@ import { configureStore } from '@reduxjs/toolkit';
 import { setupListeners } from '@reduxjs/toolkit/query';
 import { apiSlice } from '../features/api/apiSlice';
 import { dpcSlice } from '../features/dpcSlice';
+import { levelSlice } from '../features/levelSlice';
 
 export const store = configureStore({
 	reducer: {
 		[apiSlice.reducerPath]: apiSlice.reducer,
-		dpc: dpcSlice.reducer
+		dpc: dpcSlice.reducer,
+		level: levelSlice.reducer
 	},
 	middleware: getDefaultMiddleware => {
 		return getDefaultMiddleware().concat(apiSlice.middleware);
