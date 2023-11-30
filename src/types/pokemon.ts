@@ -4,10 +4,6 @@ export type Pokemon = {
 	url: string;
 };
 
-export type PokemonDetailsProps = {
-	pokemon: Pokemon;
-};
-
 export type PokemonDetails = {
 	id: number;
 	name: string;

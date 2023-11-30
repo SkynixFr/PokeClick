@@ -1,33 +1,39 @@
 import { Text, View, Image } from 'react-native';
 import React, { useEffect } from 'react';
+import { useSelector } from 'react-redux';
+import { RootState } from './store';
+
 import PokemonDetails from '../components/PokemonDetails';
 
 import { useGetPokemonsQuery } from '../features/api/apiSlice';
-
 import { Pokemon } from '../types/pokemon';
 
 import HomeStyle from '../styles/home';
 
 const Home = () => {
 	const [pokemon, setPokemon] = React.useState<Pokemon | null>(null);
+	const [currentLevel, setCurrentLevel] = React.useState<number>(1);
+
+	const dpc = useSelector((state: RootState) => state.dpc.value);
 
 	const { data, error, isLoading } = useGetPokemonsQuery();
+
+	const getRandomPokemons = () => {
+		const randomId = Math.floor(Math.random() * 1000);
+
+		const selectedPokemon = data!.results[randomId];
+
+		setPokemon(selectedPokemon);
+	};
 
 	useEffect(() => {
 		if (pokemon) {
 			return;
 		}
 
-		const getRandomPokemons = () => {
-			if (isLoading || error || !data) {
-				return;
-			}
-			const randomId = Math.floor(Math.random() * 1000);
-
-			const selectedPokemon = data.results[randomId];
-
-			setPokemon(selectedPokemon);
-		};
+		if (isLoading || error || !data) {
+			return;
+		}
 
 		getRandomPokemons();
 	}, [data, isLoading]);
@@ -40,13 +46,18 @@ const Home = () => {
 				<View style={HomeStyle.container}>
 					<View>
 						<View>
-							<Text>Niveau 1</Text>
+							<Text>Niveau {currentLevel}</Text>
 						</View>
 						<View>
-							<Text>0/10</Text>
+							<Text>DPC : {dpc}</Text>
 						</View>
 					</View>
-					{pokemon && <PokemonDetails pokemon={pokemon} />}
+					{pokemon && (
+						<PokemonDetails
+							pokemon={pokemon}
+							randomPokemon={getRandomPokemons}
+						/>
+					)}
 				</View>
 			)}
 		</>
