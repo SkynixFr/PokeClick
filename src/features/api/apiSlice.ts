@@ -1,5 +1,5 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import { Pokemon, PokemonDetails } from '../../types/pokemon';
+import { PokemonDetails } from '../../types/pokemon';
 import { ApiResponse } from '../../types/apiResponse';
 
 export const apiSlice = createApi({
@@ -8,9 +8,9 @@ export const apiSlice = createApi({
 		baseUrl: 'https://pokeapi.co/api/v2/'
 	}),
 	endpoints: builder => ({
-		getPokemons: builder.query<ApiResponse<Pokemon[]>, void>({
+		getPokemons: builder.query<ApiResponse<PokemonDetails[]>, void>({
 			query: () => `pokemon?limit=1000`,
-			transformResponse: (response: ApiResponse<Pokemon[]>) => {
+			transformResponse: (response: ApiResponse<PokemonDetails[]>) => {
 				return {
 					count: response.count,
 					next: response.next,
@@ -24,22 +24,8 @@ export const apiSlice = createApi({
 					}))
 				};
 			}
-		}),
-		getPokemonDetails: builder.query<PokemonDetails, string>({
-			query: id => `pokemon/${id}`,
-			transformResponse: (response: PokemonDetails) => {
-				return {
-					id: response.id,
-					name: response.name,
-					sprites: response.sprites
-				};
-			}
 		})
 	})
 });
 
-export const {
-	useGetPokemonsQuery,
-	useGetPokemonDetailsQuery,
-	useLazyGetPokemonDetailsQuery
-} = apiSlice;
+export const { useGetPokemonsQuery } = apiSlice;

@@ -1,52 +1,60 @@
 import React, { useEffect } from 'react';
-import { Text } from 'react-native';
+import { Text, View, StyleSheet, ImageBackground } from 'react-native';
 import { useDispatch } from 'react-redux';
-import {
-	useGetPokemonsQuery,
-	useLazyGetPokemonDetailsQuery
-} from '../features/api/apiSlice';
+import { useGetPokemonsQuery } from '../features/api/apiSlice';
 import { addPokemons } from '../features/pokemonsSlice';
-import { PokemonDetails } from '../types/pokemon';
-
-import _ from 'lodash';
 
 export const PokemonProvider = (props: React.PropsWithChildren) => {
 	const [isLoading, setIsLoading] = React.useState<boolean>(false);
 
 	const { data, error, isLoading: isQuerying } = useGetPokemonsQuery();
 
-	const [trigger, { isLoading: isLazyQuering }] =
-		useLazyGetPokemonDetailsQuery();
-
 	const dispatch = useDispatch();
 
 	useEffect(() => {
-		async function getPokemons() {
+		function getPokemons() {
 			if (isQuerying || error || !data) {
 				return;
 			}
 			setIsLoading(true);
-
-			// const detailsPromises = data.results.map(async pokemon => {
-			// 	const pokemonDetails = await trigger(pokemon.id);
-			// 	return pokemonDetails.data;
-			// });
-
-			// await _.chunk(detailsPromises, 100).forEach(async chunk => {
-			// 	await Promise.all(chunk).then(pokemonsDetails => {
-			// 		dispatch(addPokemons(pokemonsDetails as PokemonDetails[]));
-			// 	});
-			// });
-
-			setIsLoading(false);
+			setTimeout(() => {
+				dispatch(addPokemons(data.results));
+				setIsLoading(false);
+			}, 5000);
 		}
 
-		getPokemons().then();
+		getPokemons();
 	}, [data]);
 
-	return isLoading || isQuerying || isLazyQuering ? (
-		<Text>Loading...</Text>
+	return isLoading || isQuerying ? (
+		<View style={styles.container}>
+			<ImageBackground
+				source={require('../../assets/miaoussLoader.gif')}
+				style={styles.loader}
+				resizeMode="contain"
+			>
+				<Text style={styles.text}>Chargement des assets...</Text>
+			</ImageBackground>
+		</View>
 	) : (
 		props.children
 	);
 };
+
+const styles = StyleSheet.create({
+	container: {
+		flex: 1,
+		justifyContent: 'center',
+		backgroundColor: '#feffe9'
+	},
+	loader: {
+		flex: 1,
+		justifyContent: 'center',
+		alignItems: 'center'
+	},
+	text: {
+		fontSize: 20,
+		fontWeight: 'bold',
+		color: 'black'
+	}
+});

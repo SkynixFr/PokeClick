@@ -1,23 +1,26 @@
 import { StyleSheet, Text, View, Image, Pressable } from 'react-native';
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useGetPokemonDetailsQuery } from '../features/api/apiSlice';
 import { RootState } from '../app/store';
 
-import { PokemonDetails } from '../types/pokemon';
 import { incrementLevel } from '../features/levelSlice';
 
+import { PokemonDetails } from '../types/pokemon';
+
+import { PokemonImgByPokemonId } from '../constants/PokemonImgByPokemonId';
+
 type PokemonDetailsProps = {
-	pokemon: PokemonDetails;
+	pokemon: PokemonDetails | null;
 	randomPokemon: () => void;
 };
 
 const Pokemon: React.FC<PokemonDetailsProps> = ({ pokemon, randomPokemon }) => {
+	const [currentPokemonLife, setCurrentPokemonLife] = useState<number>(100);
+	const [imageLoaded, setImageLoaded] = useState<boolean>(true);
+
 	const dpc = useSelector((state: RootState) => state.dpc.value);
 
 	const dispatch = useDispatch();
-	const [currentPokemonLife, setCurrentPokemonLife] =
-		React.useState<number>(100);
 
 	function battle() {
 		const totalDamage = dpc;
@@ -29,33 +32,44 @@ const Pokemon: React.FC<PokemonDetailsProps> = ({ pokemon, randomPokemon }) => {
 			randomPokemon();
 			setCurrentPokemonLife(100);
 			dispatch(incrementLevel());
-			console.log('level up');
 		}
 	}, [currentPokemonLife]);
 
-	return (
-		<View>
-			<View>
-				<Text>{pokemon.name}</Text>
-				<Pressable
-					onPress={() => {
-						battle();
-					}}
-				>
-					<Image
-						source={{
-							uri: pokemon.sprites.other['official-artwork']
-								.front_default
-						}}
-						style={{ width: 300, height: 300 }}
-					/>
-				</Pressable>
-			</View>
+	if (!pokemon) return null;
 
+	return (
+		<>
 			<View>
-				<Text>Point de vie: {currentPokemonLife}</Text>
+				<View>
+					{imageLoaded && <Text>{pokemon.name}</Text>}
+
+					<Pressable
+						onPress={() => {
+							if (imageLoaded) battle();
+						}}
+					>
+						<Image
+							source={PokemonImgByPokemonId[pokemon.id]}
+							style={{ width: 300, height: 400 }}
+							resizeMode="contain"
+							onLoadStart={() => {
+								setImageLoaded(false);
+							}}
+							onLoad={() => {
+								setImageLoaded(true);
+							}}
+							onError={err => {
+								setImageLoaded(true);
+							}}
+						/>
+					</Pressable>
+				</View>
+
+				<View>
+					{imageLoaded && <Text>Point de vie: {currentPokemonLife}</Text>}
+				</View>
 			</View>
-		</View>
+		</>
 	);
 };
 
