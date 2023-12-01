@@ -3,10 +3,12 @@ import { setupListeners } from '@reduxjs/toolkit/query';
 import { apiSlice } from '../features/api/apiSlice';
 import { dpcSlice } from '../features/dpcSlice';
 import { levelSlice } from '../features/levelSlice';
+import { pokemonsSlice } from '../features/pokemonsSlice';
 
 export const store = configureStore({
 	reducer: {
 		[apiSlice.reducerPath]: apiSlice.reducer,
+		pokemons: pokemonsSlice.reducer,
 		dpc: dpcSlice.reducer,
 		level: levelSlice.reducer
 	},

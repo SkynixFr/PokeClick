@@ -8,9 +8,9 @@
 		"icon": "./assets/icon.png",
 		"userInterfaceStyle": "light",
 		"splash": {
-			"image": "./assets/splash.png",
+			"image": "./assets/miaoussLoader.gif",
 			"resizeMode": "contain",
-			"backgroundColor": "#ffffff"
+			"backgroundColor": "#feffe9"
 		},
 		"assetBundlePatterns": ["**/*"],
 		"ios": {
@@ -18,8 +18,8 @@
 		},
 		"android": {
 			"adaptiveIcon": {
-				"foregroundImage": "./assets/adaptive-icon.png",
-				"backgroundColor": "#ffffff"
+				"foregroundImage": "./assets/miaoussLoader.gif",
+				"backgroundColor": "#feffe9"
 			}
 		},
 		"web": {

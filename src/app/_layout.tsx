@@ -1,8 +1,8 @@
 import { ReduxProvider } from '../components/ReduxProvider';
-import { View, StyleSheet, Dimensions } from 'react-native';
+import { StyleSheet } from 'react-native';
 
-import BottomNavBar from '../components/BottomNavBar';
-import Home from './index';
+import { PokemonProvider } from '../components/PokemonProvider';
+import { Stack } from 'expo-router';
 
 export default function RootLayout() {
 	return <RootLayoutNav />;
@@ -11,18 +11,22 @@ export default function RootLayout() {
 function RootLayoutNav() {
 	return (
 		<ReduxProvider>
-			<View style={styles.container}>
-				<Home />
-				<BottomNavBar />
-			</View>
+			<PokemonProvider>
+				<Stack>
+					<Stack.Screen
+						name="index"
+						options={{
+							headerShown: false
+						}}
+					/>
+					<Stack.Screen
+						name="about"
+						options={{
+							headerShown: false
+						}}
+					/>
+				</Stack>
+			</PokemonProvider>
 		</ReduxProvider>
 	);
 }
-
-const styles = StyleSheet.create({
-	container: {
-		width: '100%',
-		height: '100%',
-		backgroundColor: 'lightblue'
-	}
-});
