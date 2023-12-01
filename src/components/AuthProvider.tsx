@@ -24,9 +24,5 @@ export const AuthProvider = (props: React.PropsWithChildren) => {
 		return () => unsubscribe();
 	}, []);
 
-	return isAuthenticated ? (
-		<Provider store={store}>{props.children}</Provider>
-	) : (
-		<Login />
-	);
+	return isAuthenticated ? props.children : <Login />;
 };
