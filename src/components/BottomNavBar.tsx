@@ -16,7 +16,7 @@ const BottomNavBar = () => {
 	const renderComponent = () => {
 		switch (selectedComponent) {
 			case 'Upgrades':
-				return <Upgrade />;
+				return <Upgrade user_id="Newt" />;
 			case 'Quests':
 				return <Quests />;
 			case 'Shop':
