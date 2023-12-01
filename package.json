@@ -13,6 +13,7 @@
 	"dependencies": {
 		"@hookform/resolvers": "^3.3.2",
 		"@reduxjs/toolkit": "^1.9.7",
+		"@rneui/themed": "^4.0.0-rc.8",
 		"expo": "~49.0.15",
 		"expo-constants": "~14.4.2",
 		"expo-linking": "~5.0.2",
