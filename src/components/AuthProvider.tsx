@@ -4,6 +4,7 @@ import { Provider } from 'react-redux';
 import { View } from 'react-native';
 import Login from '../app/(auth)/login';
 import { getAuth } from 'firebase/auth';
+import { router } from 'expo-router';
 export const AuthProvider = (props: React.PropsWithChildren) => {
 	const [isAuthenticated, setIsAuthenticated] = React.useState<boolean>(false);
 
@@ -23,6 +24,8 @@ export const AuthProvider = (props: React.PropsWithChildren) => {
 		});
 		return () => unsubscribe();
 	}, []);
+
+	if (!isAuthenticated) router.replace('login');
 
 	return isAuthenticated ? props.children : <Login />;
 };

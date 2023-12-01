@@ -4,6 +4,7 @@ import RegisterStyle from '../../styles/register';
 import { TextInput } from 'react-native-gesture-handler';
 import { Button } from '@rneui/themed';
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
+import { Link } from 'expo-router';
 
 function loginEmailPassword(email: string, password: string) {
 	try {
@@ -39,7 +40,7 @@ export const Login = () => {
 					onPress={() => loginEmailPassword(email, password)}
 					title="Login"
 				/>
-				<Button title="Create account" />
+				<Link href="/register">Create an account</Link>
 			</View>
 		</>
 	);
