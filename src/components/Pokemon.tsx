@@ -10,6 +10,8 @@ import { PokemonDetails } from '../types/pokemon';
 import { PokemonImgByPokemonId } from '../constants/PokemonImgByPokemonId';
 import { ComputePokemonLife } from '../utils/computePokemonLife';
 import { incrementDifficulty } from '../features/difficulty';
+import { incrementMoneyByAmount } from '../features/moneySlice';
+import { ComputeMoney } from '../utils/computeMoney';
 
 type PokemonDetailsProps = {
 	pokemon: PokemonDetails | null;
@@ -38,6 +40,8 @@ const Pokemon: React.FC<PokemonDetailsProps> = ({ pokemon, randomPokemon }) => {
 		if (currentPokemonLife <= 0) {
 			randomPokemon();
 			dispatch(incrementLevel());
+			const moneyEarned = ComputeMoney();
+			dispatch(incrementMoneyByAmount(moneyEarned));
 		}
 	}, [currentPokemonLife]);
 

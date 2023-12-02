@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 export const difficultySlice = createSlice({
-	name: 'dpc',
+	name: 'difficulty',
 	initialState: {
 		value: 1
 	},

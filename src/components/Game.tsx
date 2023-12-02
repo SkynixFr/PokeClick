@@ -14,7 +14,8 @@ const Game = () => {
 	const currentDiffulty = useSelector(
 		(state: RootState) => state.difficulty.value
 	);
-	const dpc = useSelector((state: RootState) => state.dpc.value);
+	const currentMoney = useSelector((state: RootState) => state.money.value);
+	const currentDpc = useSelector((state: RootState) => state.dpc.value);
 	const pokemons = useSelector((state: RootState) => state.pokemons.value);
 
 	const getRandomPokemons = () => {
@@ -37,11 +38,12 @@ const Game = () => {
 			<View>
 				<View>
 					<Text>
-						Niveau {currentLevel} / Difficulté {currentDiffulty}
+						Niveau {currentLevel} / Difficulté {currentDiffulty} / Argent{' '}
+						{currentMoney}
 					</Text>
 				</View>
 				<View>
-					<Text>DPC : {dpc}</Text>
+					<Text>DPC : {currentDpc}</Text>
 				</View>
 			</View>
 

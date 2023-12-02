@@ -5,6 +5,7 @@ import { dpcSlice } from '../features/dpcSlice';
 import { levelSlice } from '../features/levelSlice';
 import { pokemonsSlice } from '../features/pokemonsSlice';
 import { difficultySlice } from '../features/difficulty';
+import { moneySlice } from '../features/moneySlice';
 
 export const store = configureStore({
 	reducer: {
@@ -12,7 +13,8 @@ export const store = configureStore({
 		pokemons: pokemonsSlice.reducer,
 		dpc: dpcSlice.reducer,
 		level: levelSlice.reducer,
-		difficulty: difficultySlice.reducer
+		difficulty: difficultySlice.reducer,
+		money: moneySlice.reducer
 	},
 	middleware: getDefaultMiddleware => {
 		return getDefaultMiddleware().concat(apiSlice.middleware);
