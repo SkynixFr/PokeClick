@@ -11,6 +11,9 @@ const Game = () => {
 	const [pokemon, setPokemon] = useState<PokemonDetails | null>(null);
 
 	const currentLevel = useSelector((state: RootState) => state.level.value);
+	const currentDiffulty = useSelector(
+		(state: RootState) => state.difficulty.value
+	);
 	const dpc = useSelector((state: RootState) => state.dpc.value);
 	const pokemons = useSelector((state: RootState) => state.pokemons.value);
 
@@ -33,7 +36,9 @@ const Game = () => {
 		<>
 			<View>
 				<View>
-					<Text>Niveau {currentLevel}</Text>
+					<Text>
+						Niveau {currentLevel} / Difficulté {currentDiffulty}
+					</Text>
 				</View>
 				<View>
 					<Text>DPC : {dpc}</Text>

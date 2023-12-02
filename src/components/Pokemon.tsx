@@ -8,6 +8,8 @@ import { incrementLevel } from '../features/levelSlice';
 import { PokemonDetails } from '../types/pokemon';
 
 import { PokemonImgByPokemonId } from '../constants/PokemonImgByPokemonId';
+import { ComputePokemonLife } from '../utils/computePokemonLife';
+import { incrementDifficulty } from '../features/difficulty';
 
 type PokemonDetailsProps = {
 	pokemon: PokemonDetails | null;
@@ -15,12 +17,17 @@ type PokemonDetailsProps = {
 };
 
 const Pokemon: React.FC<PokemonDetailsProps> = ({ pokemon, randomPokemon }) => {
-	const [currentPokemonLife, setCurrentPokemonLife] = useState<number>(100);
-	const [imageLoaded, setImageLoaded] = useState<boolean>(true);
-
-	const dpc = useSelector((state: RootState) => state.dpc.value);
-
 	const dispatch = useDispatch();
+	const dpc = useSelector((state: RootState) => state.dpc.value);
+	const currentLevel = useSelector((state: RootState) => state.level.value);
+	const currentDifficulty = useSelector(
+		(state: RootState) => state.difficulty.value
+	);
+
+	const [imageLoaded, setImageLoaded] = useState<boolean>(true);
+	const [currentPokemonLife, setCurrentPokemonLife] = useState<number>(
+		ComputePokemonLife(currentDifficulty, 10, currentLevel)
+	);
 
 	function battle() {
 		const totalDamage = dpc;
@@ -28,12 +35,23 @@ const Pokemon: React.FC<PokemonDetailsProps> = ({ pokemon, randomPokemon }) => {
 	}
 
 	useEffect(() => {
-		if (currentPokemonLife < dpc) {
+		if (currentPokemonLife <= 0) {
 			randomPokemon();
-			setCurrentPokemonLife(100);
 			dispatch(incrementLevel());
 		}
 	}, [currentPokemonLife]);
+
+	useEffect(() => {
+		if (currentLevel > 100 && currentLevel % 100 === 1) {
+			dispatch(incrementDifficulty());
+		}
+	}, [currentLevel]);
+
+	useEffect(() => {
+		setCurrentPokemonLife(
+			ComputePokemonLife(currentDifficulty, 10, currentLevel)
+		);
+	}, [currentLevel, currentDifficulty]);
 
 	if (!pokemon) return null;
 
