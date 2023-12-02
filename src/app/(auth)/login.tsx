@@ -6,6 +6,9 @@ import { Button } from '@rneui/themed';
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
 import { Link } from '@react-navigation/native';
 import { NavigationProp } from '@react-navigation/native';
+interface RouterProps {
+	navigation: NavigationProp<any, any>;
+}
 
 function loginEmailPassword(email: string, password: string) {
 	try {
@@ -20,7 +23,7 @@ function loginEmailPassword(email: string, password: string) {
 	}
 }
 
-export const Login = ({ navigation }: any) => {
+export const Login = ({ navigation }: RouterProps) => {
 	const [email, SetEmail] = React.useState<string>('');
 	const [password, SetPassword] = React.useState<string>('');
 	return (
@@ -44,7 +47,10 @@ export const Login = ({ navigation }: any) => {
 					onPress={() => loginEmailPassword(email, password)}
 					title="Login"
 				/>
-				<Link to="/register">Register</Link>
+				<Button
+					onPress={() => navigation.navigate('register')}
+					title="Create an Account"
+				/>
 			</View>
 		</>
 	);
