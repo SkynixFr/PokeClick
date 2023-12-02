@@ -1,17 +1,22 @@
 import { View, Text } from 'react-native';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import RegisterStyle from '../../styles/register';
 
-export const Register = () => {
-	const [email, SetEmail] = React.useState<string>('');
-	const [password, SetPassword] = React.useState<string>('');
-	const [confirmPassword, SetConfirmPassword] = React.useState<string>('');
+const Register: React.FC = () => {
+	const [title, setTitle] = useState(''); // Initialize with an empty string or default title
+
+	useEffect(() => {
+		// Set the title directly (without navigation)
+		setTitle('Create an Account');
+	}, []);
+
 	return (
 		<>
 			<View style={RegisterStyle.container}>
-				<Text>Create an Account</Text>
+				<Text>{title}</Text>
 			</View>
 		</>
 	);
 };
+
 export default Register;
