@@ -4,12 +4,9 @@ import RegisterStyle from '../../styles/register';
 import { TextInput } from 'react-native-gesture-handler';
 import { Button } from '@rneui/themed';
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
-import { Link } from 'expo-router';
+import { Link } from '@react-navigation/native';
 import { NavigationProp } from '@react-navigation/native';
 
-interface RouterProps {
-	navigation: NavigationProp<any, any>;
-}
 function loginEmailPassword(email: string, password: string) {
 	try {
 		const auth = getAuth();
@@ -23,7 +20,7 @@ function loginEmailPassword(email: string, password: string) {
 	}
 }
 
-export const Login = ({ navigation }: RouterProps) => {
+export const Login = ({ navigation }: any) => {
 	const [email, SetEmail] = React.useState<string>('');
 	const [password, SetPassword] = React.useState<string>('');
 	return (
@@ -47,10 +44,7 @@ export const Login = ({ navigation }: RouterProps) => {
 					onPress={() => loginEmailPassword(email, password)}
 					title="Login"
 				/>
-				<Button
-					onPress={() => navigation.navigate('(auth)/register')}
-					title="Create an account"
-				/>
+				<Link to="/register">Register</Link>
 			</View>
 		</>
 	);

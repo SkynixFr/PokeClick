@@ -18,9 +18,7 @@ function RootLayoutNav() {
 	const [user, setUser] = useState<User | null>(null);
 	useEffect(() => {
 		const auth = getAuth();
-		const user = auth.currentUser;
 		onAuthStateChanged(auth, user => {
-			console.log('user', user);
 			setUser(user);
 		});
 	}, []);
