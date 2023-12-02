@@ -1,3 +1,3 @@
-export function ComputeMoney() {
+export function computeMoney() {
 	return Math.floor(50);
 }

@@ -1,4 +1,4 @@
-export function ComputePokemonLife(
+export function computePokemonLife(
 	difficulty: number,
 	baseLife: 10,
 	level: number

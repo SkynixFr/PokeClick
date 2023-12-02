@@ -16,6 +16,7 @@ const Game = () => {
 	);
 	const currentMoney = useSelector((state: RootState) => state.money.value);
 	const currentDpc = useSelector((state: RootState) => state.dpc.value);
+	const currentDps = useSelector((state: RootState) => state.dps.value);
 	const pokemons = useSelector((state: RootState) => state.pokemons.value);
 
 	const getRandomPokemons = () => {
@@ -44,6 +45,7 @@ const Game = () => {
 				</View>
 				<View>
 					<Text>DPC : {currentDpc}</Text>
+					<Text>DPS : {currentDps}</Text>
 				</View>
 			</View>
 
