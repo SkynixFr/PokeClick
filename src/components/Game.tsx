@@ -6,10 +6,9 @@ import { useSelector } from 'react-redux';
 import { PokemonDetails } from '../types/pokemon';
 
 import Pokemon from './Pokemon';
+import StarterSelection from './StarterSelection';
 
 const Game = () => {
-	const [pokemon, setPokemon] = useState<PokemonDetails | null>(null);
-
 	const currentLevel = useSelector((state: RootState) => state.level.value);
 	const currentDiffulty = useSelector(
 		(state: RootState) => state.difficulty.value
@@ -18,6 +17,8 @@ const Game = () => {
 	const currentDpc = useSelector((state: RootState) => state.dpc.value);
 	const currentDps = useSelector((state: RootState) => state.dps.value);
 	const pokemons = useSelector((state: RootState) => state.pokemons.value);
+
+	const [pokemon, setPokemon] = useState<PokemonDetails | null>(null);
 
 	const getRandomPokemons = () => {
 		const randomId = Math.floor(Math.random() * 1000);

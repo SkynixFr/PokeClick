@@ -1,11 +1,13 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Text, View, StyleSheet, ImageBackground } from 'react-native';
 import { useDispatch } from 'react-redux';
 import { useGetPokemonsQuery } from '../features/api/apiSlice';
 import { addPokemons } from '../features/pokemonsSlice';
+import StarterSelection from './StarterSelection';
 
 export const PokemonProvider = (props: React.PropsWithChildren) => {
-	const [isLoading, setIsLoading] = React.useState<boolean>(false);
+	const [isLoading, setIsLoading] = useState<boolean>(false);
+	const [isStarterSelected, setIsStarterSelected] = useState(false);
 
 	const { data, error, isLoading: isQuerying } = useGetPokemonsQuery();
 
@@ -36,8 +38,10 @@ export const PokemonProvider = (props: React.PropsWithChildren) => {
 				<Text style={styles.text}>Chargement des assets...</Text>
 			</ImageBackground>
 		</View>
-	) : (
+	) : isStarterSelected ? (
 		props.children
+	) : (
+		<StarterSelection />
 	);
 };
 
