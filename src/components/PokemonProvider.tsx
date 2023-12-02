@@ -20,7 +20,7 @@ export const PokemonProvider = (props: React.PropsWithChildren) => {
 			setTimeout(() => {
 				dispatch(addPokemons(data.results));
 				setIsLoading(false);
-			}, 5000);
+			}, 1000);
 		}
 
 		getPokemons();
@@ -53,6 +53,7 @@ const styles = StyleSheet.create({
 		alignItems: 'center'
 	},
 	text: {
+		marginTop: 300,
 		fontSize: 20,
 		fontWeight: 'bold',
 		color: 'black'

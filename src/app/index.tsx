@@ -2,9 +2,9 @@ import { View } from 'react-native';
 import React from 'react';
 
 import Game from '../components/Game';
+import BottomNavBar from '../components/BottomNavbar';
 
 import HomeStyle from '../styles/home';
-import BottomNavBar from '../components/BottomNavbar';
 
 const Home = () => {
 	return (
