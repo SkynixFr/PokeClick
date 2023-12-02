@@ -5,7 +5,11 @@ import { TextInput } from 'react-native-gesture-handler';
 import { Button } from '@rneui/themed';
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
 import { Link } from 'expo-router';
+import { NavigationProp } from '@react-navigation/native';
 
+interface RouterProps {
+	navigation: NavigationProp<any, any>;
+}
 function loginEmailPassword(email: string, password: string) {
 	try {
 		const auth = getAuth();
@@ -19,7 +23,7 @@ function loginEmailPassword(email: string, password: string) {
 	}
 }
 
-export const Login = () => {
+export const Login = ({ navigation }: RouterProps) => {
 	const [email, SetEmail] = React.useState<string>('');
 	const [password, SetPassword] = React.useState<string>('');
 	return (
@@ -29,18 +33,24 @@ export const Login = () => {
 				<TextInput
 					onChangeText={SetEmail}
 					value={email}
+					autoCapitalize="none"
 					placeholder="Your Email"
 				/>
 				<TextInput
 					onChangeText={SetPassword}
 					value={password}
+					autoCapitalize="none"
+					secureTextEntry={true}
 					placeholder="Your Password"
 				/>
 				<Button
 					onPress={() => loginEmailPassword(email, password)}
 					title="Login"
 				/>
-				<Link href="/register">Create an account</Link>
+				<Button
+					onPress={() => navigation.navigate('(auth)/register')}
+					title="Create an account"
+				/>
 			</View>
 		</>
 	);
