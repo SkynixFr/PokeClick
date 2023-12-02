@@ -2,7 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
 
 export const levelSlice = createSlice({
-	name: 'slice',
+	name: 'level',
 	initialState: {
 		value: 1
 	},
