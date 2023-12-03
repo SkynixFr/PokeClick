@@ -41,6 +41,10 @@ const Pokemon: React.FC<PokemonDetailsProps> = ({
 	);
 
 	const [imageLoaded, setImageLoaded] = useState<boolean>(true);
+	const [damageDisplay, setDamageDisplay] = useState<{
+		x: number;
+		y: number;
+	} | null>(null);
 
 	const clickDamage = () => {
 		battle(currentDpc);
@@ -74,6 +78,17 @@ const Pokemon: React.FC<PokemonDetailsProps> = ({
 		setPokemonLife(computePokemonLife(currentDifficulty, 10, currentLevel));
 	}, [currentLevel, currentDifficulty]);
 
+	useEffect(() => {
+		if (damageDisplay) {
+			const timer = setTimeout(() => {
+				setDamageDisplay(null);
+			}, 3000);
+			return () => {
+				clearTimeout(timer);
+			};
+		}
+	}, [damageDisplay]);
+
 	if (!pokemon) return null;
 
 	return (
@@ -83,8 +98,13 @@ const Pokemon: React.FC<PokemonDetailsProps> = ({
 					{imageLoaded && <Text>{pokemon.name}</Text>}
 
 					<Pressable
-						onPress={() => {
-							if (imageLoaded) clickDamage();
+						onPress={event => {
+							if (imageLoaded) {
+								const { locationX, locationY } = event.nativeEvent;
+								setDamageDisplay({ x: locationX, y: locationY });
+
+								clickDamage();
+							}
 						}}
 					>
 						<Image
@@ -102,6 +122,19 @@ const Pokemon: React.FC<PokemonDetailsProps> = ({
 							}}
 						/>
 					</Pressable>
+					{damageDisplay && (
+						<View
+							style={[
+								styles.damageDisplay,
+								{
+									top: damageDisplay.y,
+									left: damageDisplay.x - 25
+								}
+							]}
+						>
+							<Text style={styles.damageDisplayText}>{currentDpc}</Text>
+						</View>
+					)}
 				</View>
 
 				<View>
@@ -116,4 +149,14 @@ const Pokemon: React.FC<PokemonDetailsProps> = ({
 
 export default Pokemon;
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+	damageDisplay: {
+		position: 'absolute',
+		zIndex: 1
+	},
+	damageDisplayText: {
+		fontWeight: 'bold',
+		fontSize: 25,
+		color: 'crimson'
+	}
+});
