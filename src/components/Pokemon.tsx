@@ -15,10 +15,23 @@ import { computeMoney } from '../utils/computeMoney';
 
 type PokemonDetailsProps = {
 	pokemon: PokemonDetails | null;
+	pokemonLife: number;
 	randomPokemon: () => void;
+	battle: (damage: number) => void;
+	setPokemonLife: (life: number) => void;
+	startAutoAttack: () => void;
+	stopAutoAttack: () => void;
 };
 
-const Pokemon: React.FC<PokemonDetailsProps> = ({ pokemon, randomPokemon }) => {
+const Pokemon: React.FC<PokemonDetailsProps> = ({
+	pokemon,
+	pokemonLife,
+	randomPokemon,
+	battle,
+	setPokemonLife,
+	startAutoAttack,
+	stopAutoAttack
+}) => {
 	const dispatch = useDispatch();
 	const currentDpc = useSelector((state: RootState) => state.dpc.value);
 	const currentDps = useSelector((state: RootState) => state.dps.value);
@@ -27,32 +40,10 @@ const Pokemon: React.FC<PokemonDetailsProps> = ({ pokemon, randomPokemon }) => {
 		(state: RootState) => state.difficulty.value
 	);
 
-	const autoAttackIntervalRef = useRef<NodeJS.Timeout | null>(null);
-
 	const [imageLoaded, setImageLoaded] = useState<boolean>(true);
-	const [currentPokemonLife, setCurrentPokemonLife] = useState<number>(
-		computePokemonLife(currentDifficulty, 10, currentLevel)
-	);
-
-	function battle(damage: number) {
-		setCurrentPokemonLife(prevLife => Math.max(0, prevLife - damage));
-	}
 
 	const clickDamage = () => {
 		battle(currentDpc);
-	};
-
-	const startAutoAttack = () => {
-		autoAttackIntervalRef.current = setInterval(() => {
-			battle(currentDps);
-		}, 1000);
-	};
-
-	const stopAutoAttack = () => {
-		if (autoAttackIntervalRef.current) {
-			clearInterval(autoAttackIntervalRef.current);
-			autoAttackIntervalRef.current = null;
-		}
 	};
 
 	useEffect(() => {
@@ -65,13 +56,13 @@ const Pokemon: React.FC<PokemonDetailsProps> = ({ pokemon, randomPokemon }) => {
 	}, [currentDps]);
 
 	useEffect(() => {
-		if (currentPokemonLife <= 0) {
+		if (pokemonLife <= 0) {
 			randomPokemon();
 			dispatch(incrementLevel());
 			const moneyEarned = computeMoney();
 			dispatch(incrementMoneyByAmount(moneyEarned));
 		}
-	}, [currentPokemonLife]);
+	}, [pokemonLife]);
 
 	useEffect(() => {
 		if (currentLevel > 100 && currentLevel % 100 === 1) {
@@ -80,9 +71,7 @@ const Pokemon: React.FC<PokemonDetailsProps> = ({ pokemon, randomPokemon }) => {
 	}, [currentLevel]);
 
 	useEffect(() => {
-		setCurrentPokemonLife(
-			computePokemonLife(currentDifficulty, 10, currentLevel)
-		);
+		setPokemonLife(computePokemonLife(currentDifficulty, 10, currentLevel));
 	}, [currentLevel, currentDifficulty]);
 
 	if (!pokemon) return null;
@@ -117,7 +106,7 @@ const Pokemon: React.FC<PokemonDetailsProps> = ({ pokemon, randomPokemon }) => {
 
 				<View>
 					{imageLoaded && (
-						<Text>Point de vie: {Math.round(currentPokemonLife)}</Text>
+						<Text>Point de vie: {Math.round(pokemonLife)}</Text>
 					)}
 				</View>
 			</View>
