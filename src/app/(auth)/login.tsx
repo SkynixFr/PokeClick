@@ -4,13 +4,9 @@ import RegisterStyle from '../../styles/register';
 import { TextInput } from 'react-native-gesture-handler';
 import { Button } from '@rneui/themed';
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
-import { Link } from '@react-navigation/native';
-import { NavigationProp } from '@react-navigation/native';
-interface RouterProps {
-	navigation: NavigationProp<any, any>;
-}
+import RouterProps from '../../types/routerProps';
 
-function loginEmailPassword(email: string, password: string) {
+function loginFirebase(email: string, password: string) {
 	try {
 		const auth = getAuth();
 		signInWithEmailAndPassword(auth, email, password).then(() => {
@@ -44,7 +40,7 @@ export const Login = ({ navigation }: RouterProps) => {
 					placeholder="Your Password"
 				/>
 				<Button
-					onPress={() => loginEmailPassword(email, password)}
+					onPress={() => loginFirebase(email, password)}
 					title="Login"
 				/>
 				<Button
