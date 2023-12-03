@@ -1,13 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { Text, View, StyleSheet, ImageBackground } from 'react-native';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useGetPokemonsQuery } from '../features/api/apiSlice';
 import { addPokemons } from '../features/pokemonsSlice';
 import StarterSelection from './StarterSelection';
+import { RootState } from '../app/store';
 
 export const PokemonProvider = (props: React.PropsWithChildren) => {
 	const [isLoading, setIsLoading] = useState<boolean>(false);
-	const [isStarterSelected, setIsStarterSelected] = useState(false);
+	const isStarterSelected = useSelector(
+		(state: RootState) => state.upgrades.isStarterSelected
+	);
 
 	const { data, error, isLoading: isQuerying } = useGetPokemonsQuery();
 
