@@ -3,16 +3,14 @@ import React, { useEffect, useRef, useState } from 'react';
 import { RootState } from '../app/store';
 import { useSelector } from 'react-redux';
 
-import { PokemonDetails } from '../types/pokemon';
+import { PokemonDetails, LegendaryPokemon } from '../types/pokemon';
 
 import Pokemon from './Pokemon';
 import { computePokemonLife } from '../utils/computePokemonLife';
+import LegendaryMythicalPokemons from '../constants/LegendaryMythicalPokemon';
 
 const Game = () => {
 	const currentLevel = useSelector((state: RootState) => state.level.value);
-	const currentDiffulty = useSelector(
-		(state: RootState) => state.difficulty.value
-	);
 	const currentMoney = useSelector((state: RootState) => state.money.value);
 	const currentDpc = useSelector((state: RootState) => state.dpc.value);
 	const currentDps = useSelector((state: RootState) => state.dps.value);
@@ -28,13 +26,25 @@ const Game = () => {
 
 	const autoAttackIntervalRef = useRef<NodeJS.Timeout | null>(null);
 
-	const getRandomPokemons = () => {
+	const getRandomPokemon = () => {
 		const randomId = Math.floor(Math.random() * 1000);
 		const selectedPokemon = pokemons.find(
 			pokemon => pokemon.id === String(randomId)
 		);
 
 		setPokemon(selectedPokemon!);
+	};
+
+	const getRandomLegendaryPokemon = () => {
+		const legendaryPokemon = LegendaryMythicalPokemons;
+		const randomId = Math.floor(Math.random() * legendaryPokemon.length);
+		const selectedPokemon = legendaryPokemon[randomId];
+		const newPokemonDetails: PokemonDetails = {
+			id: String(selectedPokemon.id),
+			name: selectedPokemon.name,
+			url: `https://pokeapi.co/api/v2/pokemon/${selectedPokemon.id}/`
+		};
+		setPokemon(newPokemonDetails);
 	};
 
 	const battle = (damage: number) => {
@@ -55,7 +65,11 @@ const Game = () => {
 	};
 
 	useEffect(() => {
-		getRandomPokemons();
+		if (currentLevel % 100 === 0) {
+			getRandomLegendaryPokemon();
+		} else {
+			getRandomPokemon();
+		}
 	}, [pokemons]);
 
 	if (!pokemon) return null;
@@ -65,8 +79,8 @@ const Game = () => {
 			<View>
 				<View>
 					<Text>
-						Niveau {currentLevel} / Difficulté {currentDiffulty} / Argent{' '}
-						{currentMoney}
+						Niveau {currentLevel} / Difficulté {currentDifficulty} /
+						Argent {currentMoney}
 					</Text>
 				</View>
 				<View>
@@ -77,7 +91,8 @@ const Game = () => {
 
 			<Pokemon
 				pokemon={pokemon}
-				randomPokemon={getRandomPokemons}
+				randomPokemon={getRandomPokemon}
+				randomLegendaryPokemon={getRandomLegendaryPokemon}
 				battle={battle}
 				pokemonLife={currentPokemonLife}
 				setPokemonLife={setCurrentPokemonLife}

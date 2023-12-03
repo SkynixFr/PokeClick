@@ -17,6 +17,7 @@ type PokemonDetailsProps = {
 	pokemon: PokemonDetails | null;
 	pokemonLife: number;
 	randomPokemon: () => void;
+	randomLegendaryPokemon: () => void;
 	battle: (damage: number) => void;
 	setPokemonLife: (life: number) => void;
 	startAutoAttack: () => void;
@@ -27,6 +28,7 @@ const Pokemon: React.FC<PokemonDetailsProps> = ({
 	pokemon,
 	pokemonLife,
 	randomPokemon,
+	randomLegendaryPokemon,
 	battle,
 	setPokemonLife,
 	startAutoAttack,
@@ -61,12 +63,16 @@ const Pokemon: React.FC<PokemonDetailsProps> = ({
 
 	useEffect(() => {
 		if (pokemonLife <= 0) {
-			randomPokemon();
+			if (currentLevel % 100 === 0) {
+				randomLegendaryPokemon();
+			} else {
+				randomPokemon();
+			}
 			dispatch(incrementLevel());
 			const moneyEarned = computeMoney();
 			dispatch(incrementMoneyByAmount(moneyEarned));
 		}
-	}, [pokemonLife]);
+	}, [pokemonLife, currentLevel]);
 
 	useEffect(() => {
 		if (currentLevel > 100 && currentLevel % 100 === 1) {
@@ -102,7 +108,6 @@ const Pokemon: React.FC<PokemonDetailsProps> = ({
 							if (imageLoaded) {
 								const { locationX, locationY } = event.nativeEvent;
 								setDamageDisplay({ x: locationX, y: locationY });
-
 								clickDamage();
 							}
 						}}
