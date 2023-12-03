@@ -74,6 +74,7 @@ export const Register = () => {
 				) : null}
 				<TextInput
 					onChangeText={setPassword}
+					secureTextEntry={true}
 					onBlur={() => {
 						if (password && !isValidPassword(password)) {
 							setPasswordError(
@@ -85,7 +86,6 @@ export const Register = () => {
 					}}
 					value={password}
 					autoCapitalize="none"
-					secureTextEntry={true}
 					placeholder="Your Password"
 				/>
 				{confirmPasswordError ? (
@@ -93,8 +93,9 @@ export const Register = () => {
 				) : null}
 				<TextInput
 					onChangeText={setConfirmPassword}
+					secureTextEntry={true}
 					onBlur={() => {
-						if (confirmPassword && password !== confirmPassword) {
+						if (confirmPassword && password != confirmPassword) {
 							setConfirmPasswordError('Password does not match.');
 						} else {
 							setConfirmPasswordError('');
@@ -102,7 +103,6 @@ export const Register = () => {
 					}}
 					value={confirmPassword}
 					autoCapitalize="none"
-					secureTextEntry={true}
 					placeholder="Confirm Your Password"
 				/>
 				<Button
