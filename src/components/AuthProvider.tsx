@@ -45,7 +45,6 @@ export const AuthProvider = (props: React.PropsWithChildren) => {
 			}
 		});
 	}, []);
-	console.log(user?.uid);
 	return (
 		<Stack.Navigator>
 			{isAuthenticated ? (

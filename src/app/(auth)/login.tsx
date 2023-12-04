@@ -105,7 +105,7 @@ export const Login = ({ navigation }: RouterProps) => {
 				/>
 				<Button onPress={handleLogin} title="Login" />
 				<Button
-					onPress={() => navigation.navigate('register')}
+					onPress={() => navigation.navigate('Register')}
 					title="Create an Account"
 				/>
 			</View>

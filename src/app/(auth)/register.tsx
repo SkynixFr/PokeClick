@@ -6,17 +6,28 @@ import { Button } from '@rneui/themed';
 import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
 import { isValidEmail } from '../../handler/isValid';
 import { isValidPassword } from '../../handler/isValid';
+import { createNewAccountInFireStore } from '../../firebase/createNewAccountInFirebase';
 
-function registerEmailPassword(email: string, password: string) {
+async function registerEmailPassword(
+	email: string,
+	username: string,
+	password: string
+) {
 	try {
 		const auth = getAuth();
-		createUserWithEmailAndPassword(auth, email, password).then(() => {
+		await createUserWithEmailAndPassword(auth, email, password).then(() => {
 			// Signed in
+			const user = auth.currentUser;
+			const user_uid = user?.uid;
+			createNewAccountInFireStore(email, username, user_uid);
 		});
 	} catch (error: any) {
 		const errorCode = error.code;
 		const errorMessage = error.message;
 		console.log(errorCode + ' ' + errorMessage);
+		if (errorCode == 'auth/email-already-in-use') {
+			Alert.alert('Error', 'Email already in use.');
+		}
 	}
 }
 
@@ -40,7 +51,7 @@ export const Register = () => {
 			return;
 		}
 		if (!emailError && !passwordError && !confirmPasswordError) {
-			registerEmailPassword(email, password);
+			registerEmailPassword(email, username, password);
 		}
 	};
 
