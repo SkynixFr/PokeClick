@@ -3,17 +3,28 @@ import { createSlice } from '@reduxjs/toolkit';
 export const moneySlice = createSlice({
 	name: 'money',
 	initialState: {
-		value: 0
+		pokeDollar: 0,
+		pokeBall: 0
 	},
 	reducers: {
-		incrementMoneyByAmount: (state, action) => {
-			state.value += action.payload;
+		incrementPokeDollarMoneyByAmount: (state, action) => {
+			state.pokeDollar += action.payload;
 		},
-		decrementMoneyByAmount: (state, action) => {
-			state.value -= action.payload;
+		decrementPokedollarMoneyByAmount: (state, action) => {
+			state.pokeDollar -= action.payload;
+		},
+		incrementPokeBallMoneyByAmount: (state, action) => {
+			state.pokeBall += action.payload;
+		},
+		decrementPokeBallMoneyByAmount: (state, action) => {
+			state.pokeBall -= action.payload;
 		}
 	}
 });
 
-export const { incrementMoneyByAmount, decrementMoneyByAmount } =
-	moneySlice.actions;
+export const {
+	incrementPokeDollarMoneyByAmount,
+	decrementPokedollarMoneyByAmount,
+	incrementPokeBallMoneyByAmount,
+	decrementPokeBallMoneyByAmount
+} = moneySlice.actions;
