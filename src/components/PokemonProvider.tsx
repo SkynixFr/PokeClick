@@ -6,7 +6,7 @@ import { addPokemons } from '../features/pokemonsSlice';
 import StarterSelection from './StarterSelection';
 import { RootState } from '../app/store';
 import LegendaryMythicalPokemons from '../constants/LegendaryMythicalPokemon';
-import { addUpgrades } from '../features/upgradesSlice';
+import { addUpgrades, setIsStarterSelected } from '../features/upgradesSlice';
 import { UpgradeDetails } from '../types/upgrade';
 import { incrementDpcByAmount } from '../features/dpcSlice';
 import { getAuth } from 'firebase/auth';
@@ -22,6 +22,22 @@ export const PokemonProvider = (props: React.PropsWithChildren) => {
 	const { data, error, isLoading: isQuerying } = useGetPokemonsQuery();
 
 	const dispatch = useDispatch();
+
+	const auth = getAuth();
+	const user = auth.currentUser;
+
+	async function initIsStarterSelected() {
+		if (user !== null) {
+			const uid = user.uid;
+			const q = query(
+				collection(db, 'Upgrades'),
+				where('uid_user', '==', uid)
+			);
+			const querySnapshot = await getDocs(q);
+
+			dispatch(setIsStarterSelected(querySnapshot.docs.length !== 0));
+		}
+	}
 
 	useEffect(() => {
 		function getPokemons() {
@@ -43,10 +59,6 @@ export const PokemonProvider = (props: React.PropsWithChildren) => {
 
 		async function getUserUpgrades() {
 			if (!isStarterSelected) return;
-
-			const auth = getAuth();
-
-			const user = auth.currentUser;
 
 			if (user !== null) {
 				const uid = user.uid;
@@ -81,6 +93,7 @@ export const PokemonProvider = (props: React.PropsWithChildren) => {
 			}
 		}
 
+		initIsStarterSelected();
 		getPokemons();
 		getUserUpgrades();
 	}, [data, isStarterSelected]);
