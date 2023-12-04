@@ -4,7 +4,8 @@ import type { PayloadAction } from '@reduxjs/toolkit';
 export const dpcSlice = createSlice({
 	name: 'dpc',
 	initialState: {
-		value: 2000
+		value: 20000000000,
+		nbClicks: 0
 	},
 	reducers: {
 		incrementDpc: state => {
@@ -15,9 +16,16 @@ export const dpcSlice = createSlice({
 		},
 		incrementDpcByAmount: (state, action: PayloadAction<number>) => {
 			state.value += action.payload;
+		},
+		incrementClicks: state => {
+			state.nbClicks += 1;
 		}
 	}
 });
 
-export const { incrementDpc, decrementDpc, incrementDpcByAmount } =
-	dpcSlice.actions;
+export const {
+	incrementDpc,
+	decrementDpc,
+	incrementDpcByAmount,
+	incrementClicks
+} = dpcSlice.actions;

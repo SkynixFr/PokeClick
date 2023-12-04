@@ -12,6 +12,7 @@ import { computePokemonLife } from '../utils/computePokemonLife';
 import { incrementDifficulty } from '../features/difficultySlice';
 import { incrementPokeDollarMoneyByAmount } from '../features/moneySlice';
 import { computeMoney } from '../utils/computeMoney';
+import { incrementClicks } from '../features/dpcSlice';
 
 type PokemonDetailsProps = {
 	pokemon: PokemonDetails | null;
@@ -52,6 +53,7 @@ const Pokemon: React.FC<PokemonDetailsProps> = ({
 
 	const clickDamage = () => {
 		battleDpc(currentDpc);
+		dispatch(incrementClicks());
 	};
 
 	useEffect(() => {
