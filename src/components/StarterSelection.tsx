@@ -11,16 +11,16 @@ const StarterSelection = () => {
 
 	const starters: Starter[] = [
 		{
-			id: 1,
-			name: 'Bulbizarre'
+			id: 387,
+			name: 'Turtwig'
 		},
 		{
-			id: 2,
-			name: 'Herbizarre'
+			id: 4,
+			name: 'Charmender'
 		},
 		{
-			id: 3,
-			name: 'Florizarre'
+			id: 501,
+			name: 'Oshawott'
 		}
 	];
 
