@@ -1,49 +1,62 @@
-import { User, getAuth, onAuthStateChanged } from 'firebase/auth';
 import React, { useEffect } from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { InsideLayout } from './InsideLayout';
 import Login from '../app/(auth)/login';
 import Register from '../app/(auth)/register';
+import { User, getAuth, onAuthStateChanged } from 'firebase/auth';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 export const AuthProvider = (props: React.PropsWithChildren) => {
 	const [isAuthenticated, setIsAuthenticated] = React.useState<boolean>(false);
 	const [user, setUser] = React.useState<User | null>(null);
 	const Stack = createNativeStackNavigator();
+
 	useEffect(() => {
-		// Vérifier si l'utilisateur est connecté ici
-		// Si oui, setIsAuthenticated(true)
-		// Si non, setIsAuthenticated(false)
-		//La vérification se fait de manière automatique avec la fonction onAuthStateChanged
 		const auth = getAuth();
+
+		// Check AsyncStorage for stored user data
+		const checkAsyncStorage = async () => {
+			try {
+				const storedUser = await AsyncStorage.getItem('user');
+				if (storedUser) {
+					setUser(JSON.parse(storedUser));
+					setIsAuthenticated(true);
+				}
+			} catch (error) {
+				console.error('Error reading AsyncStorage:', error);
+			}
+		};
+
+		checkAsyncStorage();
+
+		// Check if the user is authenticated using onAuthStateChanged
 		onAuthStateChanged(auth, user => {
-			setUser(user);
+			if (user) {
+				// Store user data in AsyncStorage
+				AsyncStorage.setItem('user', JSON.stringify(user));
+				setUser(user);
+				setIsAuthenticated(true);
+			}
 		});
 	}, []);
+	console.log(user?.uid);
 	return (
-		//Je vérifie si l'utilisateur est connecté ou non
-		//Si oui, je l'envoie sur la page d'accueil
-		//Si non, je l'envoie sur la page de connexion
 		<Stack.Navigator>
-			{user ? (
-				// Si l'utilisateur est connecté
+			{isAuthenticated ? (
 				<Stack.Screen
-					name="Login"
+					name="InsideLayout"
 					component={InsideLayout}
-					options={{
-						headerShown: false
-					}}
+					options={{ headerShown: false }}
 				/>
 			) : (
 				<>
-					{/*Si l'utilisateur n'est pas connecté */}
 					<Stack.Screen
-						name="login"
+						name="Login"
 						component={Login}
-						options={{
-							headerShown: false
-						}}
+						options={{ headerShown: false }}
 					/>
 					<Stack.Screen
-						name="register"
+						name="Register"
 						component={Register}
 						options={{ headerShown: false }}
 					/>
