@@ -1,7 +1,7 @@
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { ReduxProvider } from '../components/ReduxProvider';
-import { PokemonProvider } from '../components/PokemonProvider';
+
 import { db, fireBaseInit } from '../firebase/firebaseInit';
 import { AuthProvider } from '../components/AuthProvider';
 
@@ -16,11 +16,9 @@ function RootLayoutNav() {
 	db;
 	return (
 		<ReduxProvider>
-			<PokemonProvider>
-				<NavigationContainer independent={true}>
-					<AuthProvider></AuthProvider>
-				</NavigationContainer>
-			</PokemonProvider>
+			<NavigationContainer independent={true}>
+				<AuthProvider></AuthProvider>
+			</NavigationContainer>
 		</ReduxProvider>
 	);
 }
