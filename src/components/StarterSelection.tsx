@@ -5,6 +5,9 @@ import { Starter } from '../types/starter';
 import { useDispatch } from 'react-redux';
 import { addUpgrades, setIsStarterSelected } from '../features/upgradesSlice';
 import { UpgradeDetails } from '../types/upgrade';
+import { db } from '../firebase/firebaseInit';
+import { doc, setDoc } from 'firebase/firestore';
+import { getAuth } from 'firebase/auth';
 
 const StarterSelection = () => {
 	const dispatch = useDispatch();
@@ -29,9 +32,29 @@ const StarterSelection = () => {
 			id: starter.id,
 			name: starter.name,
 			cost: 20,
-			damage: 2,
+			dpc: 2,
+			dps: 0,
 			level: 1
 		};
+
+		const auth = getAuth();
+		const user = auth.currentUser;
+		const uid = user?.uid;
+
+		setDoc(
+			doc(db, 'Upgrades', `${starterUpgrade.name}_${uid}`),
+			{
+				id: starterUpgrade.id,
+				name: starterUpgrade.name,
+				cost: starterUpgrade.cost,
+				dpc: starterUpgrade.dpc,
+				dps: starterUpgrade.dps,
+				level: starterUpgrade.level,
+				uid_user: uid
+			},
+			{ merge: true }
+		);
+
 		dispatch(addUpgrades([starterUpgrade]));
 		dispatch(setIsStarterSelected(true));
 	}

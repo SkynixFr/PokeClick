@@ -1,58 +1,27 @@
-import {
-	StyleSheet,
-	Text,
-	View,
-	Button,
-	ActivityIndicator
-} from 'react-native';
-import React, { useEffect, useState } from 'react';
+import { StyleSheet } from 'react-native';
+import React, { useEffect } from 'react';
 import UpgradeComponent from './UserUpgrade';
-import {
-	DocumentData,
-	collection,
-	getDocs,
-	query,
-	where
-} from 'firebase/firestore';
-import { db } from '../firebase/firebaseInit';
+import { useSelector } from 'react-redux';
+import { RootState } from '../app/store';
+import { UpgradeDetails } from '../types/upgrade';
 
-interface UpgradeComponentProps {
-	user_id: string;
-}
+interface UpgradeComponentProps {}
 
-const Upgrade: React.FC<UpgradeComponentProps> = ({ user_id }) => {
-	async function getData() {
-		const q = query(
-			collection(db, 'Upgrades'),
-			where('uid_user', '==', user_id)
-		);
-		const querySnapshot = await getDocs(q);
+const Upgrade: React.FC<UpgradeComponentProps> = ({}) => {
+	const currentUpgrades = useSelector(
+		(state: RootState) => state.upgrades.value
+	);
 
-		const datas = querySnapshot.docs.map(dataDetails => {
-			return dataDetails.data();
-		});
+	useEffect(() => {}, []);
 
-		setUpgrades(datas);
-		console.log('data', datas);
-	}
+	if (!currentUpgrades) return null;
 
-	const [upgrades, setUpgrades] = useState<DocumentData[] | null>(null);
-	const [isLoading, setIsLoading] = useState(false);
-
-	useEffect(() => {
-		setIsLoading(true);
-		getData().then(() => setIsLoading(false));
-	}, []);
-
-	if (!upgrades) return null;
-	return !isLoading ? (
+	return (
 		<>
-			{upgrades.map(upgrade => {
+			{currentUpgrades.map((upgrade: UpgradeDetails) => {
 				return <UpgradeComponent upgrade={upgrade} />;
 			})}
 		</>
-	) : (
-		<ActivityIndicator />
 	);
 };
 

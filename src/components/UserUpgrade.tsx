@@ -2,16 +2,17 @@
 import { DocumentData } from 'firebase/firestore';
 import React from 'react';
 import { StyleSheet, View, Text, Button } from 'react-native';
+import { UpgradeDetails } from '../types/upgrade';
 
-type Upgrade = {
-	uid_user: string;
-	name: string;
-};
 interface UpgradeComponentProps {
-	upgrade: DocumentData;
+	upgrade: UpgradeDetails;
 }
 
 const UpgradeComponent: React.FC<UpgradeComponentProps> = ({ upgrade }) => {
+	function onUpgrade(): void {
+		
+	}
+
 	return (
 		<View style={styles.container}>
 			<View style={styles.leftColumn}>
@@ -36,10 +37,7 @@ const UpgradeComponent: React.FC<UpgradeComponentProps> = ({ upgrade }) => {
 			</View>
 
 			<View style={styles.rightColumn}>
-				<Button
-					title={`Upgrade\n[${upgrade.cost}]`}
-					// onPress={onUpgrade}
-				/>
+				<Button title={`Upgrade\n[${upgrade.cost}]`} onPress={onUpgrade} />
 			</View>
 		</View>
 	);

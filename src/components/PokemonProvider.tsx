@@ -6,6 +6,12 @@ import { addPokemons } from '../features/pokemonsSlice';
 import StarterSelection from './StarterSelection';
 import { RootState } from '../app/store';
 import LegendaryMythicalPokemons from '../constants/LegendaryMythicalPokemon';
+import { addUpgrades } from '../features/upgradesSlice';
+import { UpgradeDetails } from '../types/upgrade';
+import { incrementDpcByAmount } from '../features/dpcSlice';
+import { getAuth } from 'firebase/auth';
+import { collection, getDocs, query, where } from 'firebase/firestore';
+import { db } from '../firebase/firebaseInit';
 
 export const PokemonProvider = (props: React.PropsWithChildren) => {
 	const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -35,8 +41,49 @@ export const PokemonProvider = (props: React.PropsWithChildren) => {
 			}, 1000);
 		}
 
+		async function getUserUpgrades() {
+			if (!isStarterSelected) return;
+
+			const auth = getAuth();
+
+			const user = auth.currentUser;
+
+			if (user !== null) {
+				const uid = user.uid;
+
+				const q = query(
+					collection(db, 'Upgrades'),
+					where('uid_user', '==', uid)
+				);
+				const querySnapshot = await getDocs(q);
+
+				const upgrades: UpgradeDetails[] = [];
+
+				querySnapshot.docs.map(dataDetails => {
+					const currentDataDetails = dataDetails.data();
+
+					const currentUpgrade: UpgradeDetails = {
+						id: currentDataDetails.id,
+						name: currentDataDetails.name,
+						cost: currentDataDetails.cost,
+						dpc: currentDataDetails.dpc,
+						dps: currentDataDetails.dps,
+						level: currentDataDetails.level
+					};
+
+					dispatch(incrementDpcByAmount(currentUpgrade.dpc));
+
+					upgrades.push(currentUpgrade);
+
+					// console.log('Upgrade added to the store => ', currentUpgrade);
+				});
+				dispatch(addUpgrades(upgrades));
+			}
+		}
+
 		getPokemons();
-	}, [data]);
+		getUserUpgrades();
+	}, [data, isStarterSelected]);
 
 	return isLoading || isQuerying ? (
 		<View style={styles.container}>

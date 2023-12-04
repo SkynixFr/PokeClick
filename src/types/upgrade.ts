@@ -2,6 +2,7 @@ export type UpgradeDetails = {
 	id: number;
 	name: string;
 	cost: number;
-	damage: number;
+	dpc: number;
+	dps: number;
 	level: number;
 };
