@@ -3,7 +3,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { RootState } from '../app/store';
 import { useSelector } from 'react-redux';
 
-import { PokemonDetails, LegendaryPokemon } from '../types/pokemon';
+import { PokemonDetails } from '../types/pokemon';
 
 import Pokemon from './Pokemon';
 import { computePokemonLife } from '../utils/computePokemonLife';
@@ -12,7 +12,12 @@ import SecretZarbi from './SecretZarbi';
 
 const Game = () => {
 	const currentLevel = useSelector((state: RootState) => state.level.value);
-	const currentMoney = useSelector((state: RootState) => state.money.value);
+	const currentPokedollar = useSelector(
+		(state: RootState) => state.money.pokeDollar
+	);
+	const currentPokeball = useSelector(
+		(state: RootState) => state.money.pokeBall
+	);
 	const currentDpc = useSelector((state: RootState) => state.dpc.value);
 	const currentDps = useSelector((state: RootState) => state.dps.value);
 	const currentDifficulty = useSelector(
@@ -92,7 +97,7 @@ const Game = () => {
 				<View>
 					<Text>
 						Niveau {currentLevel} / Difficulté {currentDifficulty} /
-						Argent {currentMoney}
+						Argent {currentPokedollar} / Pokeball {currentPokeball}
 					</Text>
 				</View>
 				<View>

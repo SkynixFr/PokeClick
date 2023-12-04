@@ -4,11 +4,11 @@ import { apiSlice } from '../features/api/apiSlice';
 import { dpcSlice } from '../features/dpcSlice';
 import { levelSlice } from '../features/levelSlice';
 import { pokemonsSlice } from '../features/pokemonsSlice';
-import { difficultySlice } from '../features/difficulty';
+import { difficultySlice } from '../features/difficultySlice';
 import { moneySlice } from '../features/moneySlice';
 import { dpsSlice } from '../features/dpsSlice';
 import { upgradesSlice } from '../features/upgradesSlice';
-
+import { successSlice } from '../features/successSlice';
 export const store = configureStore({
 	reducer: {
 		[apiSlice.reducerPath]: apiSlice.reducer,
@@ -18,7 +18,8 @@ export const store = configureStore({
 		dps: dpsSlice.reducer,
 		level: levelSlice.reducer,
 		difficulty: difficultySlice.reducer,
-		money: moneySlice.reducer
+		money: moneySlice.reducer,
+		success: successSlice.reducer
 	},
 	middleware: getDefaultMiddleware => {
 		return getDefaultMiddleware().concat(apiSlice.middleware);

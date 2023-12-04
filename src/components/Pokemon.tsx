@@ -9,8 +9,8 @@ import { PokemonDetails } from '../types/pokemon';
 
 import { PokemonImgByPokemonId } from '../constants/PokemonImgByPokemonId';
 import { computePokemonLife } from '../utils/computePokemonLife';
-import { incrementDifficulty } from '../features/difficulty';
-import { incrementMoneyByAmount } from '../features/moneySlice';
+import { incrementDifficulty } from '../features/difficultySlice';
+import { incrementPokeDollarMoneyByAmount } from '../features/moneySlice';
 import { computeMoney } from '../utils/computeMoney';
 
 type PokemonDetailsProps = {
@@ -33,7 +33,7 @@ const Pokemon: React.FC<PokemonDetailsProps> = ({
 	battleDpc,
 	setPokemonLife,
 	startAutoAttack,
-	stopAutoAttack, 
+	stopAutoAttack,
 	imgRef
 }) => {
 	const dispatch = useDispatch();
@@ -72,7 +72,7 @@ const Pokemon: React.FC<PokemonDetailsProps> = ({
 			}
 			dispatch(incrementLevel());
 			const moneyEarned = computeMoney();
-			dispatch(incrementMoneyByAmount(moneyEarned));
+			dispatch(incrementPokeDollarMoneyByAmount(moneyEarned));
 		}
 	}, [pokemonLife]);
 
