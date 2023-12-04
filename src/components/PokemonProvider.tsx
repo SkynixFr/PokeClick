@@ -39,6 +39,42 @@ export const PokemonProvider = (props: React.PropsWithChildren) => {
 		}
 	}
 
+	async function getUserUpgrades() {
+		if (!isStarterSelected) return;
+
+		if (user !== null) {
+			const uid = user.uid;
+
+			const q = query(
+				collection(db, 'Upgrades'),
+				where('uid_user', '==', uid)
+			);
+			const querySnapshot = await getDocs(q);
+
+			const upgrades: UpgradeDetails[] = [];
+
+			querySnapshot.docs.map(dataDetails => {
+				const currentDataDetails = dataDetails.data();
+
+				const currentUpgrade: UpgradeDetails = {
+					id: currentDataDetails.id,
+					name: currentDataDetails.name,
+					cost: currentDataDetails.cost,
+					dpc: currentDataDetails.dpc,
+					dps: currentDataDetails.dps,
+					level: currentDataDetails.level
+				};
+
+				dispatch(incrementDpcByAmount(currentUpgrade.dpc));
+
+				upgrades.push(currentUpgrade);
+
+				// console.log('Upgrade added to the store => ', currentUpgrade);
+			});
+			dispatch(addUpgrades(upgrades));
+		}
+	}
+
 	useEffect(() => {
 		function getPokemons() {
 			if (isQuerying || error || !data) {
@@ -55,42 +91,6 @@ export const PokemonProvider = (props: React.PropsWithChildren) => {
 				dispatch(addPokemons(filteredPokemons));
 				setIsLoading(false);
 			}, 1000);
-		}
-
-		async function getUserUpgrades() {
-			if (!isStarterSelected) return;
-
-			if (user !== null) {
-				const uid = user.uid;
-
-				const q = query(
-					collection(db, 'Upgrades'),
-					where('uid_user', '==', uid)
-				);
-				const querySnapshot = await getDocs(q);
-
-				const upgrades: UpgradeDetails[] = [];
-
-				querySnapshot.docs.map(dataDetails => {
-					const currentDataDetails = dataDetails.data();
-
-					const currentUpgrade: UpgradeDetails = {
-						id: currentDataDetails.id,
-						name: currentDataDetails.name,
-						cost: currentDataDetails.cost,
-						dpc: currentDataDetails.dpc,
-						dps: currentDataDetails.dps,
-						level: currentDataDetails.level
-					};
-
-					dispatch(incrementDpcByAmount(currentUpgrade.dpc));
-
-					upgrades.push(currentUpgrade);
-
-					// console.log('Upgrade added to the store => ', currentUpgrade);
-				});
-				dispatch(addUpgrades(upgrades));
-			}
 		}
 
 		initIsStarterSelected();

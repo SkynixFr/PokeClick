@@ -1,17 +1,35 @@
 // UpgradeComponent.tsx
-import { DocumentData } from 'firebase/firestore';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { StyleSheet, View, Text, Button } from 'react-native';
 import { UpgradeDetails } from '../types/upgrade';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '../app/store';
+import { decrementMoneyByAmount } from '../features/moneySlice';
 
 interface UpgradeComponentProps {
 	upgrade: UpgradeDetails;
 }
 
 const UpgradeComponent: React.FC<UpgradeComponentProps> = ({ upgrade }) => {
+	const money = useSelector((state: RootState) => state.money.value);
+	const dispatch = useDispatch();
+
+	const [errorMoneyMessage, setErrorMoneyMessage] = useState<string>('');
+
+	console.log('Money => ', money);
+
 	function onUpgrade(): void {
-		
+		if (money < upgrade.cost) {
+			setErrorMoneyMessage('Not enough money !');
+			setTimeout(() => {
+				setErrorMoneyMessage('');
+			}, 1000);
+		} else {
+			dispatch(decrementMoneyByAmount(upgrade.cost));
+		}
 	}
+
+	useEffect(() => {});
 
 	return (
 		<View style={styles.container}>
@@ -32,12 +50,14 @@ const UpgradeComponent: React.FC<UpgradeComponentProps> = ({ upgrade }) => {
 
 			<View style={styles.rightColumn}>
 				<Text>
-					Level{'\n'}1{upgrade.level}
+					Level{'\n'}
+					{upgrade.level}
 				</Text>
 			</View>
 
 			<View style={styles.rightColumn}>
 				<Button title={`Upgrade\n[${upgrade.cost}]`} onPress={onUpgrade} />
+				<Text>{errorMoneyMessage}</Text>
 			</View>
 		</View>
 	);
