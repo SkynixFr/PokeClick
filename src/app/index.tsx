@@ -5,8 +5,6 @@ import Game from '../components/Game';
 import BottomNavBar from '../components/BottomNavBar';
 
 import HomeStyle from '../styles/home';
-import BottomNavBar from '../components/BottomNavBar';
-import { NavigationProp } from '@react-navigation/native';
 
 const Home = () => {
 	return (

@@ -14,7 +14,7 @@ import {
 	query,
 	where
 } from 'firebase/firestore';
-import { db } from '../env/environnement';
+import { db } from '../firebase/firebaseInit';
 
 interface UpgradeComponentProps {
 	user_id: string;
