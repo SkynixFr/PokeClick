@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from 'react-native';
+import { Image, StyleSheet, Text, View } from 'react-native';
 import React, { useEffect, useRef, useState } from 'react';
 import { RootState } from '../app/store';
 import { useSelector } from 'react-redux';
@@ -25,13 +25,14 @@ const Game = () => {
 	);
 
 	const autoAttackIntervalRef = useRef<NodeJS.Timeout | null>(null);
+	const pokemonImgRef = useRef<Image | null>(null);
 
 	const getRandomPokemon = () => {
-		const randomId = Math.floor(Math.random() * 1000);
-		const selectedPokemon = pokemons.find(
-			pokemon => pokemon.id === String(randomId)
+		const nonLegendaryPokemonIds = pokemons.map(pokemon => pokemon.id);
+		const randomPosition = Math.floor(
+			Math.random() * nonLegendaryPokemonIds.length
 		);
-
+		const selectedPokemon = pokemons[randomPosition];
 		setPokemon(selectedPokemon!);
 	};
 
@@ -47,13 +48,18 @@ const Game = () => {
 		setPokemon(newPokemonDetails);
 	};
 
-	const battle = (damage: number) => {
+	const battleDpc = (damage: number) => {
+		setCurrentPokemonLife(prevLife => Math.max(0, prevLife - damage));
+	};
+
+	const battleDps = (damage: number) => {
+		if (!pokemonImgRef.current) return;
 		setCurrentPokemonLife(prevLife => Math.max(0, prevLife - damage));
 	};
 
 	const startAutoAttack = () => {
 		autoAttackIntervalRef.current = setInterval(() => {
-			battle(currentDps);
+			battleDps(currentDps);
 		}, 1000);
 	};
 
@@ -72,7 +78,12 @@ const Game = () => {
 		}
 	}, [pokemons]);
 
-	if (!pokemon) return null;
+	if (!pokemon)
+		return (
+			<View>
+				<Text>Pas de pokemon</Text>
+			</View>
+		);
 
 	return (
 		<>
@@ -90,10 +101,11 @@ const Game = () => {
 			</View>
 
 			<Pokemon
+				imgRef={pokemonImgRef}
 				pokemon={pokemon}
 				randomPokemon={getRandomPokemon}
 				randomLegendaryPokemon={getRandomLegendaryPokemon}
-				battle={battle}
+				battleDpc={battleDpc}
 				pokemonLife={currentPokemonLife}
 				setPokemonLife={setCurrentPokemonLife}
 				startAutoAttack={startAutoAttack}

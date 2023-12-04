@@ -18,10 +18,11 @@ type PokemonDetailsProps = {
 	pokemonLife: number;
 	randomPokemon: () => void;
 	randomLegendaryPokemon: () => void;
-	battle: (damage: number) => void;
+	battleDpc: (damage: number) => void;
 	setPokemonLife: (life: number) => void;
 	startAutoAttack: () => void;
 	stopAutoAttack: () => void;
+	imgRef: React.MutableRefObject<Image | null>;
 };
 
 const Pokemon: React.FC<PokemonDetailsProps> = ({
@@ -29,10 +30,11 @@ const Pokemon: React.FC<PokemonDetailsProps> = ({
 	pokemonLife,
 	randomPokemon,
 	randomLegendaryPokemon,
-	battle,
+	battleDpc,
 	setPokemonLife,
 	startAutoAttack,
-	stopAutoAttack
+	stopAutoAttack, 
+	imgRef
 }) => {
 	const dispatch = useDispatch();
 	const currentDpc = useSelector((state: RootState) => state.dpc.value);
@@ -49,7 +51,7 @@ const Pokemon: React.FC<PokemonDetailsProps> = ({
 	} | null>(null);
 
 	const clickDamage = () => {
-		battle(currentDpc);
+		battleDpc(currentDpc);
 	};
 
 	useEffect(() => {
@@ -63,7 +65,7 @@ const Pokemon: React.FC<PokemonDetailsProps> = ({
 
 	useEffect(() => {
 		if (pokemonLife <= 0) {
-			if (currentLevel % 100 === 0) {
+			if ((currentLevel + 1) % 100 === 0) {
 				randomLegendaryPokemon();
 			} else {
 				randomPokemon();
@@ -72,7 +74,7 @@ const Pokemon: React.FC<PokemonDetailsProps> = ({
 			const moneyEarned = computeMoney();
 			dispatch(incrementMoneyByAmount(moneyEarned));
 		}
-	}, [pokemonLife, currentLevel]);
+	}, [pokemonLife]);
 
 	useEffect(() => {
 		if (currentLevel > 100 && currentLevel % 100 === 1) {
@@ -113,6 +115,7 @@ const Pokemon: React.FC<PokemonDetailsProps> = ({
 						}}
 					>
 						<Image
+							ref={imgRef}
 							source={PokemonImgByPokemonId[pokemon.id]}
 							style={{ width: 300, height: 400 }}
 							resizeMode="contain"
