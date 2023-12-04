@@ -5,6 +5,7 @@ import Login from '../app/(auth)/login';
 import Register from '../app/(auth)/register';
 import { User, getAuth, onAuthStateChanged } from 'firebase/auth';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Index from '../app/index';
 
 export const AuthProvider = (props: React.PropsWithChildren) => {
 	const [isAuthenticated, setIsAuthenticated] = React.useState<boolean>(false);
@@ -36,6 +37,11 @@ export const AuthProvider = (props: React.PropsWithChildren) => {
 				AsyncStorage.setItem('user', JSON.stringify(user));
 				setUser(user);
 				setIsAuthenticated(true);
+			} else {
+				// Remove user data from AsyncStorage
+				AsyncStorage.removeItem('user');
+				setUser(null);
+				setIsAuthenticated(false);
 			}
 		});
 	}, []);
