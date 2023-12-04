@@ -5,7 +5,6 @@ import Login from '../app/(auth)/login';
 import Register from '../app/(auth)/register';
 import { User, getAuth, onAuthStateChanged } from 'firebase/auth';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import Index from '../app/index';
 
 export const AuthProvider = (props: React.PropsWithChildren) => {
 	const [isAuthenticated, setIsAuthenticated] = React.useState<boolean>(false);
@@ -14,37 +13,28 @@ export const AuthProvider = (props: React.PropsWithChildren) => {
 
 	useEffect(() => {
 		const auth = getAuth();
-
-		// Check AsyncStorage for stored user data
-		const checkAsyncStorage = async () => {
-			try {
-				const storedUser = await AsyncStorage.getItem('user');
-				if (storedUser) {
-					setUser(JSON.parse(storedUser));
-					setIsAuthenticated(true);
-				}
-			} catch (error) {
-				console.error('Error reading AsyncStorage:', error);
-			}
-		};
-
-		checkAsyncStorage();
-
-		// Check if the user is authenticated using onAuthStateChanged
-		onAuthStateChanged(auth, user => {
+		// Listen for changes in authentication state
+		const unsubscribe = onAuthStateChanged(auth, user => {
 			if (user) {
 				// Store user data in AsyncStorage
-				AsyncStorage.setItem('user', JSON.stringify(user));
-				setUser(user);
-				setIsAuthenticated(true);
+				AsyncStorage.setItem('user', JSON.stringify(user))
+					.then(() => {
+						setUser(user);
+						setIsAuthenticated(true);
+					})
+					.catch(error => {
+						console.error('Error storing user data:', error);
+					});
 			} else {
-				// Remove user data from AsyncStorage
-				AsyncStorage.removeItem('user');
 				setUser(null);
 				setIsAuthenticated(false);
 			}
 		});
+
+		// Clean up subscription on component unmount
+		return () => unsubscribe();
 	}, []);
+
 	return (
 		<Stack.Navigator>
 			{isAuthenticated ? (
