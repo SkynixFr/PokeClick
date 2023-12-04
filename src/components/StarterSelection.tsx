@@ -1,16 +1,15 @@
-import {
-	StyleSheet,
-	Text,
-	TouchableOpacity,
-	View,
-	Image,
-	FlatList
-} from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View, Image } from 'react-native';
 import React from 'react';
 import { PokemonImgByPokemonId } from '../constants/PokemonImgByPokemonId';
+import { Starter } from '../types/starter';
+import { useDispatch } from 'react-redux';
+import { addUpgrades, setIsStarterSelected } from '../features/upgradesSlice';
+import { UpgradeDetails } from '../types/upgrade';
 
 const StarterSelection = () => {
-	const starters = [
+	const dispatch = useDispatch();
+
+	const starters: Starter[] = [
 		{
 			id: 1,
 			name: 'Bulbizarre'
@@ -25,28 +24,37 @@ const StarterSelection = () => {
 		}
 	];
 
-	const renderStarterItem = ({ item }: any) => (
-		<TouchableOpacity>
-			<View>
-				<Image
-					source={PokemonImgByPokemonId[item.id]}
-					style={{ width: 100, height: 100 }}
-				/>
-				<Text>{item.name}</Text>
-			</View>
-		</TouchableOpacity>
-	);
+	function handlerStarterSelection(starter: Starter) {
+		const starterUpgrade: UpgradeDetails = {
+			id: starter.id,
+			name: starter.name,
+			cost: 20,
+			damage: 2,
+			level: 1
+		};
+		dispatch(addUpgrades([starterUpgrade]));
+		dispatch(setIsStarterSelected(true));
+	}
 
 	return (
 		<View style={styles.container}>
-			<Text style={styles.headerText}>Choisis ton Pokémon de départ :</Text>
-			<FlatList
-				data={starters}
-				renderItem={renderStarterItem}
-				keyExtractor={item => item.id.toString()}
-				horizontal
-				contentContainerStyle={styles.flatListContainer}
-			/>
+			<Text>Choisis ton Pokémon de départ !</Text>
+			<View style={styles.list}>
+				{starters.map((starter: Starter) => (
+					<TouchableOpacity
+						key={starter.id}
+						onPress={() => handlerStarterSelection(starter)}
+					>
+						<View>
+							<Image
+								source={PokemonImgByPokemonId[starter.id]}
+								style={{ width: 100, height: 100 }}
+							/>
+							<Text>{starter.name}</Text>
+						</View>
+					</TouchableOpacity>
+				))}
+			</View>
 		</View>
 	);
 };
@@ -56,17 +64,14 @@ export default StarterSelection;
 const styles = StyleSheet.create({
 	container: {
 		flex: 1,
-		justifyContent: 'space-around',
+		justifyContent: 'center',
 		alignItems: 'center',
 		alignContent: 'center',
-		backgroundColor: 'blue'
+		gap: 50
 	},
-	headerText: {
-		textAlign: 'center',
-		marginBottom: 10
-	},
-	flatListContainer: {
-		alignItems: 'center',
-		backgroundColor: 'red'
+	list: {
+		width: '100%',
+		flexDirection: 'row',
+		justifyContent: 'space-around'
 	}
 });

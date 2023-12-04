@@ -3,3 +3,8 @@ export type PokemonDetails = {
 	name: string;
 	url: string;
 };
+
+export type LegendaryPokemon = {
+	id: number;
+	name: string;
+};

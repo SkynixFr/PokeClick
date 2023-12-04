@@ -15,10 +15,25 @@ import { computeMoney } from '../utils/computeMoney';
 
 type PokemonDetailsProps = {
 	pokemon: PokemonDetails | null;
+	pokemonLife: number;
 	randomPokemon: () => void;
+	randomLegendaryPokemon: () => void;
+	battle: (damage: number) => void;
+	setPokemonLife: (life: number) => void;
+	startAutoAttack: () => void;
+	stopAutoAttack: () => void;
 };
 
-const Pokemon: React.FC<PokemonDetailsProps> = ({ pokemon, randomPokemon }) => {
+const Pokemon: React.FC<PokemonDetailsProps> = ({
+	pokemon,
+	pokemonLife,
+	randomPokemon,
+	randomLegendaryPokemon,
+	battle,
+	setPokemonLife,
+	startAutoAttack,
+	stopAutoAttack
+}) => {
 	const dispatch = useDispatch();
 	const currentDpc = useSelector((state: RootState) => state.dpc.value);
 	const currentDps = useSelector((state: RootState) => state.dps.value);
@@ -27,32 +42,14 @@ const Pokemon: React.FC<PokemonDetailsProps> = ({ pokemon, randomPokemon }) => {
 		(state: RootState) => state.difficulty.value
 	);
 
-	const autoAttackIntervalRef = useRef<NodeJS.Timeout | null>(null);
-
 	const [imageLoaded, setImageLoaded] = useState<boolean>(true);
-	const [currentPokemonLife, setCurrentPokemonLife] = useState<number>(
-		computePokemonLife(currentDifficulty, 10, currentLevel)
-	);
-
-	function battle(damage: number) {
-		setCurrentPokemonLife(prevLife => Math.max(0, prevLife - damage));
-	}
+	const [damageDisplay, setDamageDisplay] = useState<{
+		x: number;
+		y: number;
+	} | null>(null);
 
 	const clickDamage = () => {
 		battle(currentDpc);
-	};
-
-	const startAutoAttack = () => {
-		autoAttackIntervalRef.current = setInterval(() => {
-			battle(currentDps);
-		}, 1000);
-	};
-
-	const stopAutoAttack = () => {
-		if (autoAttackIntervalRef.current) {
-			clearInterval(autoAttackIntervalRef.current);
-			autoAttackIntervalRef.current = null;
-		}
 	};
 
 	useEffect(() => {
@@ -65,13 +62,17 @@ const Pokemon: React.FC<PokemonDetailsProps> = ({ pokemon, randomPokemon }) => {
 	}, [currentDps]);
 
 	useEffect(() => {
-		if (currentPokemonLife <= 0) {
-			randomPokemon();
+		if (pokemonLife <= 0) {
+			if (currentLevel % 100 === 0) {
+				randomLegendaryPokemon();
+			} else {
+				randomPokemon();
+			}
 			dispatch(incrementLevel());
 			const moneyEarned = computeMoney();
 			dispatch(incrementMoneyByAmount(moneyEarned));
 		}
-	}, [currentPokemonLife]);
+	}, [pokemonLife, currentLevel]);
 
 	useEffect(() => {
 		if (currentLevel > 100 && currentLevel % 100 === 1) {
@@ -80,10 +81,19 @@ const Pokemon: React.FC<PokemonDetailsProps> = ({ pokemon, randomPokemon }) => {
 	}, [currentLevel]);
 
 	useEffect(() => {
-		setCurrentPokemonLife(
-			computePokemonLife(currentDifficulty, 10, currentLevel)
-		);
+		setPokemonLife(computePokemonLife(currentDifficulty, 10, currentLevel));
 	}, [currentLevel, currentDifficulty]);
+
+	useEffect(() => {
+		if (damageDisplay) {
+			const timer = setTimeout(() => {
+				setDamageDisplay(null);
+			}, 3000);
+			return () => {
+				clearTimeout(timer);
+			};
+		}
+	}, [damageDisplay]);
 
 	if (!pokemon) return null;
 
@@ -94,8 +104,12 @@ const Pokemon: React.FC<PokemonDetailsProps> = ({ pokemon, randomPokemon }) => {
 					{imageLoaded && <Text>{pokemon.name}</Text>}
 
 					<Pressable
-						onPress={() => {
-							if (imageLoaded) clickDamage();
+						onPress={event => {
+							if (imageLoaded) {
+								const { locationX, locationY } = event.nativeEvent;
+								setDamageDisplay({ x: locationX, y: locationY });
+								clickDamage();
+							}
 						}}
 					>
 						<Image
@@ -113,11 +127,24 @@ const Pokemon: React.FC<PokemonDetailsProps> = ({ pokemon, randomPokemon }) => {
 							}}
 						/>
 					</Pressable>
+					{damageDisplay && (
+						<View
+							style={[
+								styles.damageDisplay,
+								{
+									top: damageDisplay.y,
+									left: damageDisplay.x - 25
+								}
+							]}
+						>
+							<Text style={styles.damageDisplayText}>{currentDpc}</Text>
+						</View>
+					)}
 				</View>
 
 				<View>
 					{imageLoaded && (
-						<Text>Point de vie: {Math.round(currentPokemonLife)}</Text>
+						<Text>Point de vie: {Math.round(pokemonLife)}</Text>
 					)}
 				</View>
 			</View>
@@ -127,4 +154,14 @@ const Pokemon: React.FC<PokemonDetailsProps> = ({ pokemon, randomPokemon }) => {
 
 export default Pokemon;
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+	damageDisplay: {
+		position: 'absolute',
+		zIndex: 1
+	},
+	damageDisplayText: {
+		fontWeight: 'bold',
+		fontSize: 25,
+		color: 'crimson'
+	}
+});

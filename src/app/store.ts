@@ -7,11 +7,13 @@ import { pokemonsSlice } from '../features/pokemonsSlice';
 import { difficultySlice } from '../features/difficulty';
 import { moneySlice } from '../features/moneySlice';
 import { dpsSlice } from '../features/dpsSlice';
+import { upgradesSlice } from '../features/upgradesSlice';
 
 export const store = configureStore({
 	reducer: {
 		[apiSlice.reducerPath]: apiSlice.reducer,
 		pokemons: pokemonsSlice.reducer,
+		upgrades: upgradesSlice.reducer,
 		dpc: dpcSlice.reducer,
 		dps: dpsSlice.reducer,
 		level: levelSlice.reducer,
