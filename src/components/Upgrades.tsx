@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View } from 'react-native';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from '../app/store';
 import { UpgradeDetails } from '../types/upgrade';
@@ -8,6 +8,13 @@ const Upgrade = () => {
 	const currentUpgrades = useSelector(
 		(state: RootState) => state.upgrades.value
 	);
+	let currentDpc = useSelector((state: RootState) => state.dpc.value);
+
+	useEffect(() => {
+		currentUpgrades.map((upgrade: UpgradeDetails) => {
+			currentDpc = currentDpc + upgrade.damage;
+		});
+	}, []);
 	return (
 		<View>
 			{currentUpgrades.map((upgrade: UpgradeDetails) => (
