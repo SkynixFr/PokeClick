@@ -8,6 +8,7 @@ import { PokemonDetails, LegendaryPokemon } from '../types/pokemon';
 import Pokemon from './Pokemon';
 import { computePokemonLife } from '../utils/computePokemonLife';
 import LegendaryMythicalPokemons from '../constants/LegendaryMythicalPokemon';
+import SecretZarbi from './SecretZarbi';
 
 const Game = () => {
 	const currentLevel = useSelector((state: RootState) => state.level.value);
@@ -111,6 +112,8 @@ const Game = () => {
 				startAutoAttack={startAutoAttack}
 				stopAutoAttack={stopAutoAttack}
 			/>
+
+			<SecretZarbi />
 		</>
 	);
 };
