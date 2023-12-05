@@ -21,7 +21,13 @@ import {
 import { getAuth } from 'firebase/auth';
 // import { InitialUpgrades } from '../constants/InitialUpgrades';
 
-const StarterSelection = () => {
+export interface StarterSelectionProps {
+	getUserIsStarterSelected: () => void;
+}
+
+const StarterSelection: React.FC<StarterSelectionProps> = ({
+	getUserIsStarterSelected
+}) => {
 	const dispatch = useDispatch();
 	const auth = getAuth();
 	const user = auth.currentUser;
@@ -69,11 +75,10 @@ const StarterSelection = () => {
 				},
 				{ merge: true }
 			);
+			getUserIsStarterSelected();
 		}
 
-		setStartUserUpgrade();
-
-		async function getUserUpgrades() {
+		const getUserUpgrades = async () => {
 			if (!user) return;
 
 			const q = query(
@@ -101,8 +106,11 @@ const StarterSelection = () => {
 			});
 
 			dispatch(addUpgrades(upgrades));
-			dispatch(setIsStarterSelected(true));
-		}
+		};
+
+		setStartUserUpgrade();
+
+		getUserUpgrades();
 
 		// dispatch(addUpgrades([starterUpgrade]));
 

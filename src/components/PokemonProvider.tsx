@@ -15,16 +15,14 @@ import { db } from '../firebase/firebaseInit';
 
 export const PokemonProvider = (props: React.PropsWithChildren) => {
 	const [isLoading, setIsLoading] = useState<boolean>(false);
-	const isStarterSelected = useSelector(
-		(state: RootState) => state.upgrades.isStarterSelected
-	);
+	const [isStarterSelected, setIsStarterSelected] = useState<boolean>(false);
 
 	const { data, error, isLoading: isQuerying } = useGetPokemonsQuery();
 
 	const dispatch = useDispatch();
 
-	// const auth = getAuth();
-	// const user = auth.currentUser;
+	const auth = getAuth();
+	const user = auth.currentUser;
 
 	// async function initIsStarterSelected() {
 	// 	if (user !== null) {
@@ -84,6 +82,19 @@ export const PokemonProvider = (props: React.PropsWithChildren) => {
 	// 	return upgrade1.index - upgrade2.index;
 	// }
 
+	const getUserIsStarterSelected = async () => {
+		if (!user) return;
+
+		const q = query(collection(db, 'User'), where('uid', '==', user.uid));
+		const querySnapshot = await getDocs(q);
+
+		querySnapshot.docs.map(dataDetails => {
+			const currentDataDetails = dataDetails.data();
+
+			setIsStarterSelected(currentDataDetails.isStarterSelected);
+		});
+	};
+
 	useEffect(() => {
 		function getPokemons() {
 			if (isQuerying || error || !data) {
@@ -104,6 +115,7 @@ export const PokemonProvider = (props: React.PropsWithChildren) => {
 
 		// initIsStarterSelected();
 		getPokemons();
+		getUserIsStarterSelected();
 		// getUserUpgrades();
 	}, [data]);
 
@@ -120,7 +132,7 @@ export const PokemonProvider = (props: React.PropsWithChildren) => {
 	) : isStarterSelected ? (
 		props.children
 	) : (
-		<StarterSelection />
+		<StarterSelection getUserIsStarterSelected={getUserIsStarterSelected} />
 	);
 };
 
