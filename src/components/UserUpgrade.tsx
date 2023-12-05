@@ -5,6 +5,7 @@ import { UpgradeDetails } from '../types/upgrade';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../app/store';
 import { decrementMoneyByAmount } from '../features/moneySlice';
+import { incrementUpgradeLevelById } from '../features/upgradesSlice';
 
 interface UpgradeComponentProps {
 	upgrade: UpgradeDetails;
@@ -16,8 +17,6 @@ const UpgradeComponent: React.FC<UpgradeComponentProps> = ({ upgrade }) => {
 
 	const [errorMoneyMessage, setErrorMoneyMessage] = useState<string>('');
 
-	console.log('Money => ', money);
-
 	function onUpgrade(): void {
 		if (money < upgrade.cost) {
 			setErrorMoneyMessage('Not enough money !');
@@ -25,6 +24,7 @@ const UpgradeComponent: React.FC<UpgradeComponentProps> = ({ upgrade }) => {
 				setErrorMoneyMessage('');
 			}, 1000);
 		} else {
+			dispatch(incrementUpgradeLevelById(upgrade.id));
 			dispatch(decrementMoneyByAmount(upgrade.cost));
 		}
 	}

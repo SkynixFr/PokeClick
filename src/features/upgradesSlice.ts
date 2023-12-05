@@ -15,8 +15,15 @@ export const upgradesSlice = createSlice({
 		},
 		setIsStarterSelected: (state, action) => {
 			state.isStarterSelected = action.payload;
+		},
+		incrementUpgradeLevelById: (state, action: PayloadAction<number>) => {
+			const upgrade = state.value.find(
+				upgrade => upgrade.id === action.payload
+			);
+			if (upgrade) upgrade.level += 1;
 		}
 	}
 });
 
-export const { addUpgrades, setIsStarterSelected } = upgradesSlice.actions;
+export const { addUpgrades, setIsStarterSelected, incrementUpgradeLevelById } =
+	upgradesSlice.actions;
