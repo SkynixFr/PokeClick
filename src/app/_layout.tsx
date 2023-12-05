@@ -1,4 +1,9 @@
+import { NavigationContainer } from '@react-navigation/native';
 import { ReduxProvider } from '../components/ReduxProvider';
+
+
+import { db, fireBaseInit } from '../firebase/firebaseInit';
+import { AuthProvider } from '../components/AuthProvider';
 
 import { PokemonProvider } from '../components/PokemonProvider';
 import { Stack } from 'expo-router';
@@ -9,26 +14,14 @@ export default function RootLayout() {
 }
 
 function RootLayoutNav() {
+	// Initialize Firebase
+	fireBaseInit;
+	db;
 	return (
 		<ReduxProvider>
-			<PokemonProvider>
-				<SuccessProvider>
-					<Stack>
-						<Stack.Screen
-							name="index"
-							options={{
-								headerShown: false
-							}}
-						/>
-						<Stack.Screen
-							name="about"
-							options={{
-								headerShown: false
-							}}
-						/>
-					</Stack>
-				</SuccessProvider>
-			</PokemonProvider>
+			<NavigationContainer independent={true}>
+				<AuthProvider></AuthProvider>
+			</NavigationContainer>
 		</ReduxProvider>
 	);
 }

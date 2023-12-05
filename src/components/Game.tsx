@@ -7,6 +7,7 @@ import {
 	pokeBallToExpontential,
 	pokeDollarToExpontential
 } from '../app/store';
+import { useSelector } from 'react-redux';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { PokemonDetails } from '../types/pokemon';
