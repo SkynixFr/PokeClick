@@ -26,6 +26,10 @@ export const PokemonProvider = (props: React.PropsWithChildren) => {
 	const auth = getAuth();
 	const user = auth.currentUser;
 
+	function isEmpty(array: unknown[]) {
+		return array.length === 0;
+	}
+
 	async function initIsStarterSelected() {
 		if (user !== null) {
 			const uid = user.uid;
@@ -35,7 +39,7 @@ export const PokemonProvider = (props: React.PropsWithChildren) => {
 			);
 			const querySnapshot = await getDocs(q);
 
-			dispatch(setIsStarterSelected(querySnapshot.docs.length !== 0));
+			dispatch(setIsStarterSelected(!isEmpty(querySnapshot.docs)));
 		}
 	}
 
