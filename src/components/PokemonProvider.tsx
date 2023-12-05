@@ -60,14 +60,16 @@ export const PokemonProvider = (props: React.PropsWithChildren) => {
 					id: currentDataDetails.id,
 					name: currentDataDetails.name,
 					cost: currentDataDetails.cost,
+					basicCost: currentDataDetails.basicCost,
 					dpc: currentDataDetails.dpc,
+					basicDpc: currentDataDetails.basicDpc,
 					dps: currentDataDetails.dps,
+					basicDps: currentDataDetails.basicDps,
 					level: currentDataDetails.level,
 					index: currentDataDetails.index
 				};
 
 				upgrades.push(currentUpgrade);
-
 				// console.log('Upgrade added to the store => ', currentUpgrade);
 			});
 

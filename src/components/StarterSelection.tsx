@@ -42,8 +42,11 @@ const StarterSelection = () => {
 			id: starter.id,
 			name: starter.name,
 			cost: 20,
+			basicCost: 20,
 			dpc: 2,
+			basicDpc: 2,
 			dps: 0,
+			basicDps: 0,
 			level: 1,
 			index: 1
 		};
@@ -79,8 +82,11 @@ const StarterSelection = () => {
 						id: upgrade.id,
 						name: upgrade.name,
 						cost: upgrade.cost,
+						basicCost: upgrade.basicCost,
 						dpc: upgrade.dpc,
+						basicDpc: upgrade.basicDpc,
 						dps: upgrade.dps,
+						basicDps: upgrade.basicDps,
 						level: upgrade.level,
 						index: upgrade.index,
 						uid_user: uid

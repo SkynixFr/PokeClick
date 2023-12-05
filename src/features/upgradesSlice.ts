@@ -2,6 +2,9 @@ import { createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
 
 import { UpgradeDetails } from '../types/upgrade';
+import { computeCost } from '../utils/computeCost';
+import { computeDPC } from '../utils/computeDPC';
+import { computeDPS } from '../utils/computeDPS';
 
 export const upgradesSlice = createSlice({
 	name: 'upgrades',
@@ -20,7 +23,22 @@ export const upgradesSlice = createSlice({
 			const upgrade = state.value.find(
 				upgrade => upgrade.id === action.payload
 			);
-			if (upgrade) upgrade.level += 1;
+			if (upgrade) {
+				upgrade.level += 1;
+				upgrade.cost = Math.round(
+					computeCost(upgrade.basicCost, upgrade.level)
+				);
+
+				upgrade.dpc =
+					upgrade.dpc !== 0
+						? Math.round(computeDPC(upgrade.basicDpc, upgrade.level))
+						: 0;
+
+				upgrade.dps =
+					upgrade.dps !== 0
+						? Math.round(computeDPS(upgrade.basicDps, upgrade.level))
+						: 0;
+			}
 		}
 	}
 });
