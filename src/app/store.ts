@@ -9,6 +9,7 @@ import { moneySlice } from '../features/moneySlice';
 import { dpsSlice } from '../features/dpsSlice';
 import { upgradesSlice } from '../features/upgradesSlice';
 import { successSlice } from '../features/successSlice';
+import { toExponential } from '../utils/toExponential';
 export const store = configureStore({
 	reducer: {
 		[apiSlice.reducerPath]: apiSlice.reducer,
@@ -27,6 +28,22 @@ export const store = configureStore({
 });
 
 setupListeners(store.dispatch);
+
+export const dpcToExpontential = (number: number) => {
+	return toExponential(number);
+};
+
+export const dpsToExpontential = (number: number) => {
+	return toExponential(number);
+};
+
+export const pokeDollarToExpontential = (number: number) => {
+	return toExponential(number);
+};
+
+export const pokeBallToExpontential = (number: number) => {
+	return toExponential(number);
+};
 
 export type RootState = ReturnType<typeof store.getState>;
 

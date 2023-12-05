@@ -1,6 +1,12 @@
 import { Image, StyleSheet, Text, View } from 'react-native';
 import React, { useEffect, useRef, useState } from 'react';
-import { RootState } from '../app/store';
+import {
+	RootState,
+	dpcToExpontential,
+	dpsToExpontential,
+	pokeBallToExpontential,
+	pokeDollarToExpontential
+} from '../app/store';
 import { useSelector } from 'react-redux';
 
 import { PokemonDetails } from '../types/pokemon';
@@ -97,12 +103,13 @@ const Game = () => {
 				<View>
 					<Text>
 						Niveau {currentLevel} / Difficulté {currentDifficulty} /
-						Argent {currentPokedollar} / Pokeball {currentPokeball}
+						Argent {pokeDollarToExpontential(currentPokedollar)} /
+						Pokeball {pokeBallToExpontential(currentPokeball)}
 					</Text>
 				</View>
 				<View>
-					<Text>DPC : {currentDpc}</Text>
-					<Text>DPS : {currentDps}</Text>
+					<Text>DPC : {dpcToExpontential(currentDpc)}</Text>
+					<Text>DPS : {dpsToExpontential(currentDps)}</Text>
 				</View>
 			</View>
 
