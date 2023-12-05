@@ -5,4 +5,5 @@ export type UpgradeDetails = {
 	dpc: number;
 	dps: number;
 	level: number;
+	index: number;
 };

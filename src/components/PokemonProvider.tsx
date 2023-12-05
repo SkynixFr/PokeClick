@@ -26,10 +26,6 @@ export const PokemonProvider = (props: React.PropsWithChildren) => {
 	const auth = getAuth();
 	const user = auth.currentUser;
 
-	function isEmpty(array: unknown[]) {
-		return array.length === 0;
-	}
-
 	async function initIsStarterSelected() {
 		if (user !== null) {
 			const uid = user.uid;
@@ -66,17 +62,26 @@ export const PokemonProvider = (props: React.PropsWithChildren) => {
 					cost: currentDataDetails.cost,
 					dpc: currentDataDetails.dpc,
 					dps: currentDataDetails.dps,
-					level: currentDataDetails.level
+					level: currentDataDetails.level,
+					index: currentDataDetails.index
 				};
-
-				dispatch(incrementDpcByAmount(currentUpgrade.dpc));
 
 				upgrades.push(currentUpgrade);
 
 				// console.log('Upgrade added to the store => ', currentUpgrade);
 			});
+
+			upgrades.sort(compareId);
 			dispatch(addUpgrades(upgrades));
 		}
+	}
+
+	function isEmpty(array: unknown[]) {
+		return array.length === 0;
+	}
+
+	function compareId(upgrade1: UpgradeDetails, upgrade2: UpgradeDetails) {
+		return upgrade1.index - upgrade2.index;
 	}
 
 	useEffect(() => {
