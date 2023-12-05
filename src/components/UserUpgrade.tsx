@@ -4,7 +4,7 @@ import { StyleSheet, View, Text, Button } from 'react-native';
 import { UpgradeDetails } from '../types/upgrade';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../app/store';
-import { decrementMoneyByAmount } from '../features/moneySlice';
+import { decrementPokedollarMoneyByAmount } from '../features/moneySlice';
 import { incrementUpgradeLevelById } from '../features/upgradesSlice';
 
 interface UpgradeComponentProps {
@@ -12,7 +12,7 @@ interface UpgradeComponentProps {
 }
 
 const UpgradeComponent: React.FC<UpgradeComponentProps> = ({ upgrade }) => {
-	const money = useSelector((state: RootState) => state.money.value);
+	const money = useSelector((state: RootState) => state.money.pokeDollar);
 	const dispatch = useDispatch();
 
 	const [errorMoneyMessage, setErrorMoneyMessage] = useState<string>('');
@@ -25,7 +25,7 @@ const UpgradeComponent: React.FC<UpgradeComponentProps> = ({ upgrade }) => {
 			}, 1000);
 		} else {
 			dispatch(incrementUpgradeLevelById(upgrade.id));
-			dispatch(decrementMoneyByAmount(upgrade.cost));
+			dispatch(decrementPokedollarMoneyByAmount(upgrade.cost));
 		}
 	}
 

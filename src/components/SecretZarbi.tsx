@@ -3,16 +3,18 @@ import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../app/store';
 import { PokemonImgByPokemonId } from '../constants/PokemonImgByPokemonId';
-import { incrementMoneyByAmount } from '../features/moneySlice';
+import { incrementPokeDollarMoneyByAmount } from '../features/moneySlice';
 import { incrementDpcByAmount } from '../features/dpcSlice';
 
 const SecretZarbi = () => {
 	const dispatch = useDispatch();
 	const currentDpc = useSelector((state: RootState) => state.dpc.value);
-	const currentMoney = useSelector((state: RootState) => state.money.value);
+	const currentMoney = useSelector(
+		(state: RootState) => state.money.pokeDollar
+	);
 
 	function developperMode() {
-		dispatch(incrementMoneyByAmount(999999999999));
+		dispatch(incrementPokeDollarMoneyByAmount(999999999999));
 		dispatch(incrementDpcByAmount(999999999999));
 	}
 
