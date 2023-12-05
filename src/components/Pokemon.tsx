@@ -3,7 +3,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../app/store';
 
-import { incrementLevel } from '../features/levelSlice';
+import { decrementLevel, incrementLevel } from '../features/levelSlice';
 
 import { PokemonDetails } from '../types/pokemon';
 
@@ -24,6 +24,11 @@ type PokemonDetailsProps = {
 	startAutoAttack: () => void;
 	stopAutoAttack: () => void;
 	imgRef: React.MutableRefObject<Image | null>;
+	isLegendary: boolean;
+	setIsLegendary: (isLegendary: boolean) => void;
+	startTimerLegendary: () => void;
+	stopTimerLegendary: () => void;
+	legendaryBattleTimeRemaining: number | null;
 };
 
 const Pokemon: React.FC<PokemonDetailsProps> = ({
@@ -35,7 +40,12 @@ const Pokemon: React.FC<PokemonDetailsProps> = ({
 	setPokemonLife,
 	startAutoAttack,
 	stopAutoAttack,
-	imgRef
+	imgRef,
+	isLegendary,
+	setIsLegendary,
+	startTimerLegendary,
+	stopTimerLegendary,
+	legendaryBattleTimeRemaining
 }) => {
 	const dispatch = useDispatch();
 	const currentDpc = useSelector((state: RootState) => state.dpc.value);
@@ -69,7 +79,11 @@ const Pokemon: React.FC<PokemonDetailsProps> = ({
 		if (pokemonLife <= 0) {
 			if ((currentLevel + 1) % 100 === 0) {
 				randomLegendaryPokemon();
+				setIsLegendary(true);
+				startTimerLegendary();
 			} else {
+				stopTimerLegendary();
+				setIsLegendary(false);
 				randomPokemon();
 			}
 			dispatch(incrementLevel());
@@ -99,6 +113,16 @@ const Pokemon: React.FC<PokemonDetailsProps> = ({
 		}
 	}, [damageDisplay]);
 
+	useEffect(() => {
+		if (!isLegendary) {
+			if (currentLevel % 100 === 0) {
+				randomLegendaryPokemon();
+			} else {
+				randomPokemon();
+			}
+		}
+	}, [isLegendary]);
+
 	if (!pokemon) return null;
 
 	return (
@@ -106,7 +130,13 @@ const Pokemon: React.FC<PokemonDetailsProps> = ({
 			<View>
 				<View>
 					{imageLoaded && <Text>{pokemon.name}</Text>}
-
+					{imageLoaded && isLegendary && (
+						<View>
+							<Text>
+								Temps restant : {legendaryBattleTimeRemaining} s
+							</Text>
+						</View>
+					)}
 					<Pressable
 						onPress={event => {
 							if (imageLoaded) {

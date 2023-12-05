@@ -7,7 +7,7 @@ import {
 	pokeBallToExpontential,
 	pokeDollarToExpontential
 } from '../app/store';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { PokemonDetails } from '../types/pokemon';
 
@@ -15,8 +15,10 @@ import Pokemon from './Pokemon';
 import { computePokemonLife } from '../utils/computePokemonLife';
 import LegendaryMythicalPokemons from '../constants/LegendaryMythicalPokemon';
 import SecretZarbi from './SecretZarbi';
+import { decrementLevel } from '../features/levelSlice';
 
 const Game = () => {
+	const dispatch = useDispatch();
 	const currentLevel = useSelector((state: RootState) => state.level.value);
 	const currentPokedollar = useSelector(
 		(state: RootState) => state.money.pokeDollar
@@ -37,7 +39,12 @@ const Game = () => {
 	);
 
 	const autoAttackIntervalRef = useRef<NodeJS.Timeout | null>(null);
+	const legendaryBattleRef = useRef<NodeJS.Timeout | null>(null);
 	const pokemonImgRef = useRef<Image | null>(null);
+
+	const [isLegendary, setIsLegendary] = useState<boolean>(false);
+	const [legendaryBattleTimeRemaining, setLegendaryBattleTimeRemaining] =
+		useState<number | null>(null);
 
 	const getRandomPokemon = () => {
 		const nonLegendaryPokemonIds = pokemons.map(pokemon => pokemon.id);
@@ -82,9 +89,34 @@ const Game = () => {
 		}
 	};
 
+	const startTimerLegendary = () => {
+		let timeLeft = 30;
+		setLegendaryBattleTimeRemaining(timeLeft);
+		legendaryBattleRef.current = setInterval(() => {
+			timeLeft--;
+			setLegendaryBattleTimeRemaining(timeLeft);
+
+			if (timeLeft <= 0) {
+				dispatch(decrementLevel());
+				setLegendaryBattleTimeRemaining(null);
+				setIsLegendary(false);
+				stopTimerLegendary();
+			}
+		}, 1000);
+	};
+
+	const stopTimerLegendary = () => {
+		if (legendaryBattleRef.current) {
+			clearInterval(legendaryBattleRef.current);
+			legendaryBattleRef.current = null;
+		}
+	};
+
 	useEffect(() => {
 		if (currentLevel % 100 === 0) {
 			getRandomLegendaryPokemon();
+			setIsLegendary(true);
+			startTimerLegendary();
 		} else {
 			getRandomPokemon();
 		}
@@ -123,6 +155,11 @@ const Game = () => {
 				setPokemonLife={setCurrentPokemonLife}
 				startAutoAttack={startAutoAttack}
 				stopAutoAttack={stopAutoAttack}
+				isLegendary={isLegendary}
+				setIsLegendary={setIsLegendary}
+				startTimerLegendary={startTimerLegendary}
+				stopTimerLegendary={stopTimerLegendary}
+				legendaryBattleTimeRemaining={legendaryBattleTimeRemaining}
 			/>
 
 			<SecretZarbi />
