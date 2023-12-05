@@ -10,15 +10,21 @@ import {
 } from '../features/upgradesSlice';
 import { UpgradeDetails } from '../types/upgrade';
 import { db } from '../firebase/firebaseInit';
-import { doc, setDoc } from 'firebase/firestore';
+import {
+	collection,
+	doc,
+	getDocs,
+	query,
+	setDoc,
+	where
+} from 'firebase/firestore';
 import { getAuth } from 'firebase/auth';
-import { InitialUpgrades } from '../constants/InitialUpgrades';
+// import { InitialUpgrades } from '../constants/InitialUpgrades';
 
 const StarterSelection = () => {
 	const dispatch = useDispatch();
 	const auth = getAuth();
 	const user = auth.currentUser;
-	const uid = user?.uid;
 
 	const starters: Starter[] = [
 		{
@@ -36,64 +42,116 @@ const StarterSelection = () => {
 	];
 
 	function handlerStarterSelection(starter: Starter) {
-		const Upgrades: UpgradeDetails[] = InitialUpgrades;
+		// const Upgrades: UpgradeDetails[] = InitialUpgrades;
 
-		const starterUpgrade: UpgradeDetails = {
-			id: starter.id,
-			name: starter.name,
-			cost: 20,
-			dpc: 2,
-			dps: 0,
-			level: 1,
-			index: 1
-		};
+		async function setStartUserUpgrade() {
+			if (!user) return;
 
-		Upgrades.unshift(starterUpgrade);
-		createInitUpgrades();
+			setDoc(
+				doc(db, 'Upgrades', `${starter.name}_${user.uid}`),
+				{
+					id: starter.id,
+					name: starter.name,
+					cost: 20,
+					dpc: 2,
+					dps: 0,
+					level: 1,
+					index: 1,
+					uid_user: user.uid
+				},
+				{ merge: true }
+			);
 
-		setDoc(
-			doc(db, 'Upgrades', `${starterUpgrade.name}_${uid}`),
-			{
-				id: starterUpgrade.id,
-				name: starterUpgrade.name,
-				cost: starterUpgrade.cost,
-				dpc: starterUpgrade.dpc,
-				dps: starterUpgrade.dps,
-				level: starterUpgrade.level,
-				index: starterUpgrade.index,
-				uid_user: uid
-			},
-			{ merge: true }
-		);
+			setDoc(
+				doc(db, 'User', `${user.uid}`),
+				{
+					isStarterSelected: true
+				},
+				{ merge: true }
+			);
+		}
 
-		dispatch(addUpgrades(Upgrades));
-		dispatch(setIsStarterSelected(true));
+		setStartUserUpgrade();
+
+		async function getUserUpgrades() {
+			if (!user) return;
+
+			const q = query(
+				collection(db, 'Upgrades'),
+				where('uid_user', '==', user.uid)
+			);
+			const querySnapshot = await getDocs(q);
+
+			const upgrades: UpgradeDetails[] = [];
+
+			querySnapshot.docs.map(dataDetails => {
+				const currentDataDetails = dataDetails.data();
+
+				const currentUpgrade: UpgradeDetails = {
+					id: currentDataDetails.id,
+					name: currentDataDetails.name,
+					cost: currentDataDetails.cost,
+					dpc: currentDataDetails.dpc,
+					dps: currentDataDetails.dps,
+					level: currentDataDetails.level,
+					index: currentDataDetails.index
+				};
+
+				upgrades.push(currentUpgrade);
+			});
+
+			dispatch(addUpgrades(upgrades));
+			dispatch(setIsStarterSelected(true));
+		}
+
+		// dispatch(addUpgrades([starterUpgrade]));
+
+		// Upgrades.unshift(starterUpgrade);
+		// createInitUpgrades();
+
+		// setDoc(
+		// 	doc(db, 'Upgrades', `${starterUpgrade.name}_${uid}`),
+		// 	{
+		// 		id: starterUpgrade.id,
+		// 		name: starterUpgrade.name,
+		// 		cost: starterUpgrade.cost,
+		// 		dpc: starterUpgrade.dpc,
+		// 		dps: starterUpgrade.dps,
+		// 		level: starterUpgrade.level,
+		// 		index: starterUpgrade.index,
+		// 		uid_user: uid
+		// 	},
+		// 	{ merge: true }
+		// );
+
+		// dispatch(addUpgrades(Upgrades));
+		// dispatch(setIsStarterSelected(true));
 	}
 
-	function createInitUpgrades() {
-		InitialUpgrades.map(upgrade => {
-			try {
-				setDoc(
-					doc(db, 'Upgrades', `${upgrade.name}_${uid}`),
-					{
-						id: upgrade.id,
-						name: upgrade.name,
-						cost: upgrade.cost,
-						dpc: upgrade.dpc,
-						dps: upgrade.dps,
-						level: upgrade.level,
-						index: upgrade.index,
-						uid_user: uid
-					},
-					{ merge: true }
-				);
-			} catch (error) {
-				console.error(
-					`Error while initialize upgrade with name "${upgrade.name}" in firebase : ${error}`
-				);
-			}
-		});
-	}
+	// function createInitUpgrades() {
+	// 	InitialUpgrades.map(upgrade => {
+	// 		try {
+	// 			setDoc(
+	// 				doc(db, 'Upgrades', `${upgrade.name}_${uid}`),
+	// 				{
+	// 					id: upgrade.id,
+	// 					name: upgrade.name,
+	// 					cost: upgrade.cost,
+	// 					dpc: upgrade.dpc,
+	// 					dps: upgrade.dps,
+	// 					level: upgrade.level,
+	// 					index: upgrade.index,
+	// 					uid_user: uid
+	// 				},
+	// 				{ merge: true }
+	// 			);
+	// 		} catch (error) {
+	// 			console.error(
+	// 				`Error while initialize upgrade with name "${upgrade.name}" in firebase : ${error}`
+	// 			);
+	// 		}
+	// 	});
+	// }
 
 	return (
 		<View style={styles.container}>

@@ -7,19 +7,36 @@ import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
 import { isValidEmail } from '../../handler/isValid';
 import { isValidPassword } from '../../handler/isValid';
 import { createNewAccountInFireStore } from '../../firebase/createNewAccountInFirebase';
+import { doc, setDoc } from 'firebase/firestore';
+import { db } from '../../firebase/firebaseInit';
+import { InitialUpgrades } from '../../constants/InitialUpgrades';
 
-async function registerEmailPassword(
-	email: string,
-	username: string,
-	password: string
-) {
+async function registerEmailPassword(email: string, password: string) {
 	try {
 		const auth = getAuth();
 		await createUserWithEmailAndPassword(auth, email, password).then(() => {
 			// Signed in
 			const user = auth.currentUser;
 			const user_uid = user?.uid;
-			createNewAccountInFireStore(email, username, user_uid);
+			createNewAccountInFireStore(email, user_uid);
+
+			const initialUpgrade = InitialUpgrades;
+			initialUpgrade.map(upgrade => {
+				setDoc(
+					doc(db, 'Upgrades', `${upgrade.name}_${user_uid}`),
+					{
+						id: upgrade.id,
+						name: upgrade.name,
+						cost: upgrade.cost,
+						dpc: upgrade.dpc,
+						dps: upgrade.dps,
+						level: upgrade.level,
+						index: upgrade.index,
+						uid_user: user_uid
+					},
+					{ merge: true }
+				);
+			});
 		});
 	} catch (error: any) {
 		const errorCode = error.code;
@@ -35,23 +52,21 @@ export const Register = () => {
 	const [email, setEmail] = useState<string>('');
 	const [password, setPassword] = useState<string>('');
 	const [confirmPassword, setConfirmPassword] = useState<string>('');
-	const [username, setUsername] = useState<string>('');
 	const [emailError, setEmailError] = useState<string>('');
 	const [passwordError, setPasswordError] = useState<string>('');
 	const [confirmPasswordError, setConfirmPasswordError] = useState<string>('');
 
 	const handleRegister = (
 		email: string,
-		username: string,
 		password: string,
 		confirmPassword: string
 	) => {
-		if (!email || !username || !password || !confirmPassword) {
+		if (!email || !password || !confirmPassword) {
 			Alert.alert('Validation Error', 'Please enter all fields.');
 			return;
 		}
 		if (!emailError && !passwordError && !confirmPasswordError) {
-			registerEmailPassword(email, username, password);
+			registerEmailPassword(email, password);
 		}
 	};
 
@@ -74,11 +89,6 @@ export const Register = () => {
 					value={email}
 					autoCapitalize="none"
 					placeholder="Your Email"
-				/>
-				<TextInput
-					onChangeText={setUsername}
-					value={username}
-					placeholder="Your Username"
 				/>
 				{passwordError ? (
 					<Text style={{ color: 'red' }}>{passwordError}</Text>
@@ -118,9 +128,7 @@ export const Register = () => {
 				/>
 				<Button
 					title="Register"
-					onPress={() =>
-						handleRegister(email, username, password, confirmPassword)
-					}
+					onPress={() => handleRegister(email, password, confirmPassword)}
 				/>
 			</View>
 		</>
