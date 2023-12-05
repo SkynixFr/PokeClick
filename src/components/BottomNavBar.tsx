@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
 
-import Upgrade from './Upgrade';
+
+import Upgrade from './Upgrades';
 import Success from './Success';
 import Shop from './Shop';
 
