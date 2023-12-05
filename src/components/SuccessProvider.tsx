@@ -18,7 +18,9 @@ export const SuccessProvider = (props: React.PropsWithChildren) => {
 				{
 					id: '1',
 					name: 'Gourou de la Gravité',
+					icon: 'sort-amount-up',
 					levels: [10, 50, 100, 500, 1000],
+					lastRewardIndexClaimed: 0,
 					rewards: [
 						{ amount: 10, claimed: false },
 						{ amount: 20, claimed: false },
@@ -30,7 +32,9 @@ export const SuccessProvider = (props: React.PropsWithChildren) => {
 				{
 					id: '2',
 					name: 'Tyran du Tapotage',
+					icon: 'hand-pointer',
 					levels: [100, 1000, 10000, 100000, 1000000],
+					lastRewardIndexClaimed: 0,
 					rewards: [
 						{
 							amount: 10,
@@ -85,8 +89,6 @@ export const SuccessProvider = (props: React.PropsWithChildren) => {
 	}, [successList, currentLevel]);
 
 	useEffect(() => {
-		console.log(currentClicks);
-
 		successList.forEach((success: SuccessDetails, index) => {
 			if (success.id === '2' && success.levels.includes(currentClicks)) {
 				ToastAndroid.show(

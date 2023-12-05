@@ -2,10 +2,11 @@ import React, { useState } from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
 
 import Upgrade from './Upgrades';
-import Quests from './Quests';
+import Success from './Success';
 import Shop from './Shop';
 
 import FaIcon from '@expo/vector-icons/FontAwesome5';
+import { AntDesign } from '@expo/vector-icons';
 
 import bottomNavbarStyle from '../styles/bottomNavbar';
 import overlayStyle from '../styles/overlay';
@@ -17,8 +18,8 @@ const BottomNavBar = () => {
 		switch (selectedComponent) {
 			case 'Upgrades':
 				return <Upgrade />;
-			case 'Quests':
-				return <Quests />;
+			case 'Success':
+				return <Success />;
 			case 'Shop':
 				return <Shop />;
 			default:
@@ -41,22 +42,23 @@ const BottomNavBar = () => {
 			)}
 			<View style={bottomNavbarStyle.bottomNavBar}>
 				<TouchableOpacity
-					onPress={() => handleComponent('Quests')}
+					onPress={() => handleComponent('Success')}
 					style={bottomNavbarStyle.navBtn}
 				>
-					<FaIcon
-						name="tasks"
+					<AntDesign
+						name="star"
 						size={25}
 						style={{
-							color: selectedComponent === 'Quests' ? '#3A75C4' : '#000'
+							color: selectedComponent === 'Success' ? '#3A75C4' : '#000'
 						}}
 					/>
+
 					<Text
 						style={{
-							color: selectedComponent === 'Quests' ? '#3A75C4' : '#000'
+							color: selectedComponent === 'Success' ? '#3A75C4' : '#000'
 						}}
 					>
-						Quêtes
+						Succès
 					</Text>
 				</TouchableOpacity>
 				<TouchableOpacity
