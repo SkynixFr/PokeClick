@@ -4,7 +4,6 @@ import { InsideLayout } from './InsideLayout';
 import Login from '../app/(auth)/login';
 import Register from '../app/(auth)/register';
 import { User, getAuth, onAuthStateChanged } from 'firebase/auth';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export const AuthProvider = (props: React.PropsWithChildren) => {
 	const [isAuthenticated, setIsAuthenticated] = React.useState<boolean>(false);
@@ -17,14 +16,9 @@ export const AuthProvider = (props: React.PropsWithChildren) => {
 		const unsubscribe = onAuthStateChanged(auth, user => {
 			if (user) {
 				// Store user data in AsyncStorage
-				AsyncStorage.setItem('user', JSON.stringify(user))
-					.then(() => {
-						setUser(user);
-						setIsAuthenticated(true);
-					})
-					.catch(error => {
-						console.error('Error storing user data:', error);
-					});
+
+				setUser(user);
+				setIsAuthenticated(true);
 			} else {
 				setUser(null);
 				setIsAuthenticated(false);
