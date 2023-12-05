@@ -49,7 +49,6 @@ const StarterSelection = () => {
 		};
 
 		Upgrades.unshift(starterUpgrade);
-
 		createInitUpgrades();
 
 		setDoc(
