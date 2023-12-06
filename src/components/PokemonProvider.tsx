@@ -12,6 +12,8 @@ import { incrementDpcByAmount } from '../features/dpcSlice';
 import { getAuth } from 'firebase/auth';
 import { collection, getDocs, query, where } from 'firebase/firestore';
 import { db } from '../firebase/firebaseInit';
+import { incrementLevelByAmount } from '../features/levelSlice';
+import { incrementPokeBallMoneyByAmount, incrementPokeDollarMoneyByAmount } from '../features/moneySlice';
 
 export const PokemonProvider = (props: React.PropsWithChildren) => {
 	const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -34,7 +36,6 @@ export const PokemonProvider = (props: React.PropsWithChildren) => {
 			const currentDataDetails = dataDetails.data();
 
 			setIsStarterSelected(currentDataDetails.isStarterSelected);
-			console.log(isStarterSelected);
 		});
 	};
 
@@ -68,6 +69,21 @@ export const PokemonProvider = (props: React.PropsWithChildren) => {
 		dispatch(addUpgrades(upgrades));
 	};
 
+	const getUserInfos = async () => {
+		if (!user) return;
+
+		const q = query(collection(db, 'User'), where('uid', '==', user.uid));
+		const querySnapshot = await getDocs(q);
+
+		querySnapshot.docs.map(dataDetails => {
+			const currentDataDetails = dataDetails.data();
+
+			dispatch(incrementLevelByAmount(currentDataDetails.level));
+			dispatch(incrementPokeDollarMoneyByAmount(currentDataDetails.pokeDollars));
+			dispatch(incrementPokeBallMoneyByAmount(currentDataDetails.pokeBalls));
+		});
+	}
+
 	useEffect(() => {
 		async function getPokemons() {
 			if (isQuerying || error || !data) {
@@ -78,6 +94,7 @@ export const PokemonProvider = (props: React.PropsWithChildren) => {
 			await getUserIsStarterSelected();
 
 			if (isStarterSelected) {
+				await getUserInfos();
 				await getUserUpgrades();
 			}
 			setTimeout(() => {
