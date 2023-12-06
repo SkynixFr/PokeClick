@@ -8,6 +8,9 @@ export const dpcSlice = createSlice({
 		nbClicks: 0
 	},
 	reducers: {
+		setDpc: (state, action: PayloadAction<number>) => {
+			state.value = action.payload;
+		},
 		incrementDpc: state => {
 			state.value += 1;
 		},
@@ -24,6 +27,7 @@ export const dpcSlice = createSlice({
 });
 
 export const {
+	setDpc,
 	incrementDpc,
 	decrementDpc,
 	incrementDpcByAmount,
