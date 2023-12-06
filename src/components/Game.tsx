@@ -8,7 +8,8 @@ import {
 	pokeDollarToExpontential
 } from '../app/store';
 import { useDispatch, useSelector } from 'react-redux';
-import Swiper from 'react-native-swiper';
+import Carousel from 'react-native-reanimated-carousel';
+import type { ICarouselInstance } from 'react-native-reanimated-carousel';
 
 import { PokemonDetails } from '../types/pokemon';
 
@@ -47,7 +48,7 @@ const Game = () => {
 	const [legendaryBattleTimeRemaining, setLegendaryBattleTimeRemaining] =
 		useState<number | null>(null);
 
-	const carouselRef = useRef<Swiper | null>(null);
+	const carrouselRef = useRef<ICarouselInstance>(null);
 
 	const getRandomPokemon = () => {
 		const nonLegendaryPokemonIds = pokemons.map(pokemon => pokemon.id);
@@ -133,8 +134,8 @@ const Game = () => {
 		);
 
 	const renderItem = (item: number, index: number) => (
-		<View key={index} style={styles.carouselItem}>
-			<Text>{index}</Text>
+		<View key={index}>
+			<Text>{item}</Text>
 		</View>
 	);
 
@@ -148,6 +149,7 @@ const Game = () => {
 							style={{ width: 30, height: 30 }}
 						/>
 						<Text>{currentPokedollar}</Text>
+						<Text>{currentLevel}</Text>
 					</View>
 					<View style={styles.pokeBalls}>
 						<Image
@@ -175,16 +177,31 @@ const Game = () => {
 				</View>
 			</View>
 
-			<Swiper
-				ref={carouselRef}
-				loop={false}
-				showsPagination={false}
-				onIndexChanged={index => {}}
-			>
-				{Array.from({ length: 9 }, (_, i) => currentLevel + i).map(
-					(item, index) => renderItem(item, index)
-				)}
-			</Swiper>
+			<Carousel
+				data={Array.from({ length: 9 }, (_, i) => currentLevel - 4 + i)}
+				renderItem={({ item, index }) => renderItem(item, index)}
+				ref={carrouselRef}
+				width={60}
+				height={40}
+				loop={true}
+				style={{
+					width: '100%',
+					height: 40,
+					justifyContent: 'center',
+					alignItems: 'center',
+					borderBottomWidth: 1,
+					borderBottomColor: '#0071fa'
+				}}
+			/>
+
+			{/* <Carousel
+				data={Array.from({ length: 9 }, (_, i) => currentLevel - 4 + i)}
+				renderItem={({ item, index }) => renderItem(item, index)}
+				itemWidth={60} // Ajustez la largeur selon vos besoins
+				separatorWidth={5} // Espace horizontal entre les blocs
+				inactiveOpacity={0.5}
+				containerWidth={300} // Ajustez la largeur du conteneur selon vos besoins
+			/> */}
 
 			<Pokemon
 				imgRef={pokemonImgRef}
@@ -259,5 +276,14 @@ const styles = StyleSheet.create({
 		fontSize: 18,
 		fontWeight: 'bold',
 		color: 'white'
+	},
+	carouselItem: {
+		width: 50,
+		height: 50,
+		borderRadius: 10,
+		backgroundColor: '#3498db',
+		justifyContent: 'center',
+		alignItems: 'center',
+		marginHorizontal: 5
 	}
 });
