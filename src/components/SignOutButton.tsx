@@ -9,9 +9,18 @@ import {
 	where
 } from 'firebase/firestore';
 import { db } from '../firebase/firebaseInit';
-import { store } from '../app/store';
+import { RootState, store } from '../app/store';
+import { useDispatch, useSelector } from 'react-redux';
+import { resetLevel } from '../features/levelSlice';
+import {
+	decrementPokeBallMoneyByAmount,
+	decrementPokedollarMoneyByAmount
+} from '../features/moneySlice';
 
 export const SignOutButton = () => {
+	const dispatch = useDispatch();
+	const pokeDollar = useSelector((state: RootState) => state.money.pokeDollar);
+	const pokeBall = useSelector((state: RootState) => state.money.pokeBall);
 	const auth = getAuth();
 	const user = auth.currentUser;
 	return (
@@ -45,6 +54,9 @@ export const SignOutButton = () => {
 									{ merge: true }
 								);
 							});
+							dispatch(resetLevel());
+							dispatch(decrementPokedollarMoneyByAmount(pokeDollar));
+							dispatch(decrementPokeBallMoneyByAmount(pokeBall));
 						})
 						.catch(error => {
 							// An error happened.
