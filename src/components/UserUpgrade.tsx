@@ -59,11 +59,6 @@ const UpgradeComponent: React.FC<UpgradeComponentProps> = ({ upgrade }) => {
 				});
 				totalDps = totalDps - upgrade.dps + nextDps;
 
-				console.log('upgrade.dps => ', upgrade.dps);
-				console.log('nextDps => ', nextDps);
-
-				console.log('totalDps => ', totalDps);
-
 				dispatch(setDps(totalDps));
 			}
 		}
