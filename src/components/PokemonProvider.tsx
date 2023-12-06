@@ -12,12 +12,12 @@ import { incrementDpcByAmount } from '../features/dpcSlice';
 import { getAuth } from 'firebase/auth';
 import { collection, getDocs, query, where } from 'firebase/firestore';
 import { db } from '../firebase/firebaseInit';
+import { incrementLevelByAmount } from '../features/levelSlice';
+import { incrementPokeBallMoneyByAmount, incrementPokeDollarMoneyByAmount } from '../features/moneySlice';
 
 export const PokemonProvider = (props: React.PropsWithChildren) => {
 	const [isLoading, setIsLoading] = useState<boolean>(false);
-	const isStarterSelected = useSelector(
-		(state: RootState) => state.upgrades.isStarterSelected
-	);
+	const [isStarterSelected, setIsStarterSelected] = useState<boolean>(false);
 
 	const { data, error, isLoading: isQuerying } = useGetPokemonsQuery();
 
@@ -26,70 +26,77 @@ export const PokemonProvider = (props: React.PropsWithChildren) => {
 	const auth = getAuth();
 	const user = auth.currentUser;
 
-	async function initIsStarterSelected() {
-		if (user !== null) {
-			const uid = user.uid;
-			const q = query(
-				collection(db, 'Upgrades'),
-				where('uid_user', '==', uid)
-			);
-			const querySnapshot = await getDocs(q);
+	const getUserIsStarterSelected = async () => {
+		if (!user) return;
 
-			dispatch(setIsStarterSelected(!isEmpty(querySnapshot.docs)));
-		}
-	}
+		const q = query(collection(db, 'User'), where('uid', '==', user.uid));
+		const querySnapshot = await getDocs(q);
 
-	async function getUserUpgrades() {
-		if (!isStarterSelected) return;
+		querySnapshot.docs.map(dataDetails => {
+			const currentDataDetails = dataDetails.data();
 
-		if (user !== null) {
-			const uid = user.uid;
+			setIsStarterSelected(currentDataDetails.isStarterSelected);
+		});
+	};
 
-			const q = query(
-				collection(db, 'Upgrades'),
-				where('uid_user', '==', uid)
-			);
-			const querySnapshot = await getDocs(q);
+	const getUserUpgrades = async () => {
+		if (!user) return;
 
-			const upgrades: UpgradeDetails[] = [];
+		const q = query(
+			collection(db, 'Upgrades'),
+			where('uid_user', '==', user.uid)
+		);
+		const querySnapshot = await getDocs(q);
 
-			querySnapshot.docs.map(dataDetails => {
-				const currentDataDetails = dataDetails.data();
+		const upgrades: UpgradeDetails[] = [];
 
-				const currentUpgrade: UpgradeDetails = {
-					id: currentDataDetails.id,
-					name: currentDataDetails.name,
-					cost: currentDataDetails.cost,
-					dpc: currentDataDetails.dpc,
-					dps: currentDataDetails.dps,
-					level: currentDataDetails.level,
-					index: currentDataDetails.index
-				};
+		querySnapshot.docs.map(dataDetails => {
+			const currentDataDetails = dataDetails.data();
 
-				upgrades.push(currentUpgrade);
+			const currentUpgrade: UpgradeDetails = {
+				id: currentDataDetails.id,
+				name: currentDataDetails.name,
+				cost: currentDataDetails.cost,
+				dpc: currentDataDetails.dpc,
+				dps: currentDataDetails.dps,
+				level: currentDataDetails.level,
+				index: currentDataDetails.index
+			};
 
-				// console.log('Upgrade added to the store => ', currentUpgrade);
-			});
+			upgrades.push(currentUpgrade);
+		});
 
-			upgrades.sort(compareId);
-			dispatch(addUpgrades(upgrades));
-		}
-	}
+		dispatch(addUpgrades(upgrades));
+	};
 
-	function isEmpty(array: unknown[]) {
-		return array.length === 0;
-	}
+	const getUserInfos = async () => {
+		if (!user) return;
 
-	function compareId(upgrade1: UpgradeDetails, upgrade2: UpgradeDetails) {
-		return upgrade1.index - upgrade2.index;
+		const q = query(collection(db, 'User'), where('uid', '==', user.uid));
+		const querySnapshot = await getDocs(q);
+
+		querySnapshot.docs.map(dataDetails => {
+			const currentDataDetails = dataDetails.data();
+
+			dispatch(incrementLevelByAmount(currentDataDetails.level));
+			dispatch(incrementPokeDollarMoneyByAmount(currentDataDetails.pokeDollars));
+			dispatch(incrementPokeBallMoneyByAmount(currentDataDetails.pokeBalls));
+		});
 	}
 
 	useEffect(() => {
-		function getPokemons() {
+		async function getPokemons() {
 			if (isQuerying || error || !data) {
 				return;
 			}
 			setIsLoading(true);
+
+			await getUserIsStarterSelected();
+
+			if (isStarterSelected) {
+				await getUserInfos();
+				await getUserUpgrades();
+			}
 			setTimeout(() => {
 				const filteredPokemons = data.results.filter(
 					pokemon =>
@@ -98,14 +105,13 @@ export const PokemonProvider = (props: React.PropsWithChildren) => {
 						)
 				);
 				dispatch(addPokemons(filteredPokemons));
+
 				setIsLoading(false);
 			}, 1000);
 		}
 
-		initIsStarterSelected();
 		getPokemons();
-		getUserUpgrades();
-	}, [data, isStarterSelected]);
+	}, [data]);
 
 	return isLoading || isQuerying ? (
 		<View style={styles.container}>
@@ -114,13 +120,17 @@ export const PokemonProvider = (props: React.PropsWithChildren) => {
 				style={styles.loader}
 				resizeMode="contain"
 			>
-				<Text style={styles.text}>Chargement des assets...</Text>
+				<Text style={styles.text}>Chargement...</Text>
 			</ImageBackground>
 		</View>
 	) : isStarterSelected ? (
 		props.children
 	) : (
-		<StarterSelection />
+		<StarterSelection
+			getUserIsStarterSelected={getUserIsStarterSelected}
+			getUserUpgrades={getUserUpgrades}
+			setIsLoading={setIsLoading}
+		/>
 	);
 };
 

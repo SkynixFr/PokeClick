@@ -3,22 +3,24 @@ import React from 'react';
 import { PokemonImgByPokemonId } from '../constants/PokemonImgByPokemonId';
 import { Starter } from '../types/starter';
 import { useDispatch } from 'react-redux';
-import {
-	addUpgrades,
-	setIsStarterSelected,
-	upgradesSlice
-} from '../features/upgradesSlice';
-import { UpgradeDetails } from '../types/upgrade';
 import { db } from '../firebase/firebaseInit';
 import { doc, setDoc } from 'firebase/firestore';
 import { getAuth } from 'firebase/auth';
-import { InitialUpgrades } from '../constants/InitialUpgrades';
+// import { InitialUpgrades } from '../constants/InitialUpgrades';
 
-const StarterSelection = () => {
-	const dispatch = useDispatch();
+export interface StarterSelectionProps {
+	getUserIsStarterSelected: () => void;
+	getUserUpgrades: () => void;
+	setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+const StarterSelection: React.FC<StarterSelectionProps> = ({
+	getUserIsStarterSelected,
+	getUserUpgrades,
+	setIsLoading
+}) => {
 	const auth = getAuth();
 	const user = auth.currentUser;
-	const uid = user?.uid;
 
 	const starters: Starter[] = [
 		{
@@ -35,64 +37,39 @@ const StarterSelection = () => {
 		}
 	];
 
-	function handlerStarterSelection(starter: Starter) {
-		const Upgrades: UpgradeDetails[] = InitialUpgrades;
+	async function handlerStarterSelection(starter: Starter) {
+		async function setStartUserUpgrade() {
+			if (!user) return;
 
-		const starterUpgrade: UpgradeDetails = {
-			id: starter.id,
-			name: starter.name,
-			cost: 20,
-			dpc: 2,
-			dps: 0,
-			level: 1,
-			index: 1
-		};
+			setIsLoading(true);
+			await setDoc(
+				doc(db, 'Upgrades', `${starter.name}_${user.uid}`),
+				{
+					id: starter.id,
+					name: starter.name,
+					cost: 20,
+					dpc: 2,
+					dps: 0,
+					level: 1,
+					index: 1,
+					uid_user: user.uid
+				},
+				{ merge: true }
+			);
 
-		Upgrades.unshift(starterUpgrade);
-		createInitUpgrades();
+			await setDoc(
+				doc(db, 'User', `${user.uid}`),
+				{
+					isStarterSelected: true
+				},
+				{ merge: true }
+			);
+		}
 
-		setDoc(
-			doc(db, 'Upgrades', `${starterUpgrade.name}_${uid}`),
-			{
-				id: starterUpgrade.id,
-				name: starterUpgrade.name,
-				cost: starterUpgrade.cost,
-				dpc: starterUpgrade.dpc,
-				dps: starterUpgrade.dps,
-				level: starterUpgrade.level,
-				index: starterUpgrade.index,
-				uid_user: uid
-			},
-			{ merge: true }
-		);
-
-		dispatch(addUpgrades(Upgrades));
-		dispatch(setIsStarterSelected(true));
-	}
-
-	function createInitUpgrades() {
-		InitialUpgrades.map(upgrade => {
-			try {
-				setDoc(
-					doc(db, 'Upgrades', `${upgrade.name}_${uid}`),
-					{
-						id: upgrade.id,
-						name: upgrade.name,
-						cost: upgrade.cost,
-						dpc: upgrade.dpc,
-						dps: upgrade.dps,
-						level: upgrade.level,
-						index: upgrade.index,
-						uid_user: uid
-					},
-					{ merge: true }
-				);
-			} catch (error) {
-				console.error(
-					`Error while initialize upgrade with name "${upgrade.name}" in firebase : ${error}`
-				);
-			}
-		});
+		await setStartUserUpgrade();
+		await getUserIsStarterSelected();
+		await getUserUpgrades();
+		setIsLoading(false);
 	}
 
 	return (
@@ -102,7 +79,7 @@ const StarterSelection = () => {
 				{starters.map((starter: Starter) => (
 					<TouchableOpacity
 						key={starter.id}
-						onPress={() => handlerStarterSelection(starter)}
+						onPress={async () => await handlerStarterSelection(starter)}
 					>
 						<View>
 							<Image
