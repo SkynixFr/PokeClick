@@ -1,11 +1,15 @@
 // UpgradeComponent.tsx
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { StyleSheet, View, Text, Button } from 'react-native';
 import { UpgradeDetails } from '../types/upgrade';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../app/store';
 import { decrementPokedollarMoneyByAmount } from '../features/moneySlice';
-import { incrementUpgradeLevelById } from '../features/upgradesSlice';
+import { handleUpgradeBoughtById } from '../features/upgradesSlice';
+import { setDpc } from '../features/dpcSlice';
+import { setDps } from '../features/dpsSlice';
+import { computeDPC } from '../utils/computeDPC';
+import { computeDPS } from '../utils/computeDPS';
 
 interface UpgradeComponentProps {
 	upgrade: UpgradeDetails;
@@ -13,9 +17,22 @@ interface UpgradeComponentProps {
 
 const UpgradeComponent: React.FC<UpgradeComponentProps> = ({ upgrade }) => {
 	const money = useSelector((state: RootState) => state.money.pokeDollar);
+	const upgrades = useSelector((state: RootState) => state.upgrades.value);
 	const dispatch = useDispatch();
 
 	const [errorMoneyMessage, setErrorMoneyMessage] = useState<string>('');
+
+	const nextUpgradeValues = (
+		basicDpc: number,
+		basicDps: number,
+		dps: number,
+		level: number
+	) => {
+		return {
+			nextDpc: computeDPC(basicDpc, level),
+			nextDps: computeDPS(basicDps, dps, level)
+		};
+	};
 
 	function onUpgrade(): void {
 		if (money < upgrade.cost) {
@@ -24,12 +41,28 @@ const UpgradeComponent: React.FC<UpgradeComponentProps> = ({ upgrade }) => {
 				setErrorMoneyMessage('');
 			}, 1000);
 		} else {
-			dispatch(incrementUpgradeLevelById(upgrade.id));
+			const { nextDpc, nextDps } = nextUpgradeValues(
+				upgrade.dpc,
+				upgrade.basicDps,
+				upgrade.dps,
+				upgrade.level + 1
+			);
+
+			dispatch(handleUpgradeBoughtById(upgrade.id));
 			dispatch(decrementPokedollarMoneyByAmount(upgrade.cost));
+
+			if (upgrade.basicDpc !== 0) dispatch(setDpc(nextDpc));
+			if (upgrade.basicDps !== 0) {
+				let totalDps = 0;
+				upgrades.map(u => {
+					totalDps += u.dps;
+				});
+				totalDps = totalDps - upgrade.dps + nextDps;
+
+				dispatch(setDps(totalDps));
+			}
 		}
 	}
-
-	useEffect(() => {});
 
 	return (
 		<View style={styles.container}>

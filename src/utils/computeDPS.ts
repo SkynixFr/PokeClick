@@ -1,5 +1,6 @@
+// Chaque nouvelle amélioration augmente le DPS de <increaseFactor> fois.
 const increaseFactor = 1.5;
 
-export function computeDPS(basicDps: number, level: number) {
-	return basicDps * increaseFactor ** level;
+export function computeDPS(basicDps: number, dps: number, level: number) {
+	return Math.floor(basicDps + dps * increaseFactor ** level);
 }

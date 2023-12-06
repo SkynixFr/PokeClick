@@ -7,6 +7,9 @@ export const dpsSlice = createSlice({
 		value: 0
 	},
 	reducers: {
+		setDps: (state, action: PayloadAction<number>) => {
+			state.value = action.payload;
+		},
 		incrementDps: state => {
 			state.value += 1;
 		},
@@ -19,5 +22,5 @@ export const dpsSlice = createSlice({
 	}
 });
 
-export const { incrementDps, decrementDps, incrementDpsByAmount } =
+export const { setDps, incrementDps, decrementDps, incrementDpsByAmount } =
 	dpsSlice.actions;

@@ -1,8 +1,5 @@
-const bonusLevel: number = 5;
+const bonusLevel: number = 10;
 
 export function computeDPC(basicDPC: number, level: number) {
-	const res = Math.round(basicDPC + bonusLevel * level);
-	console.log(`${basicDPC} + ${bonusLevel} * ${level} = ${res}`);
-
-	return res;
+	return Math.floor(basicDPC + bonusLevel * level);
 }

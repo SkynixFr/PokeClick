@@ -3,11 +3,8 @@ import React from 'react';
 import { PokemonImgByPokemonId } from '../constants/PokemonImgByPokemonId';
 import { Starter } from '../types/starter';
 import { useDispatch } from 'react-redux';
-import {
-	addUpgrades,
-	setIsStarterSelected,
-	upgradesSlice
-} from '../features/upgradesSlice';
+import { addUpgrades, setIsStarterSelected } from '../features/upgradesSlice';
+import { incrementDpcByAmount } from '../features/dpcSlice';
 import { UpgradeDetails } from '../types/upgrade';
 import { db } from '../firebase/firebaseInit';
 import { doc, setDoc } from 'firebase/firestore';
@@ -41,10 +38,10 @@ const StarterSelection = () => {
 		const starterUpgrade: UpgradeDetails = {
 			id: starter.id,
 			name: starter.name,
-			cost: 20,
-			basicCost: 20,
-			dpc: 2,
-			basicDpc: 2,
+			cost: 10,
+			basicCost: 10,
+			dpc: 5,
+			basicDpc: 5,
 			dps: 0,
 			basicDps: 0,
 			level: 1,
@@ -69,6 +66,7 @@ const StarterSelection = () => {
 			{ merge: true }
 		);
 
+		dispatch(incrementDpcByAmount(starterUpgrade.dpc));
 		dispatch(addUpgrades(Upgrades));
 		dispatch(setIsStarterSelected(true));
 	}

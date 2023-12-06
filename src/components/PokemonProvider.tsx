@@ -74,6 +74,7 @@ export const PokemonProvider = (props: React.PropsWithChildren) => {
 			});
 
 			upgrades.sort(compareId);
+			dispatch(incrementDpcByAmount(upgrades[0].dpc));
 			dispatch(addUpgrades(upgrades));
 		}
 	}

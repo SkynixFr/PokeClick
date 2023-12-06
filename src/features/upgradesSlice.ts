@@ -19,29 +19,29 @@ export const upgradesSlice = createSlice({
 		setIsStarterSelected: (state, action) => {
 			state.isStarterSelected = action.payload;
 		},
-		incrementUpgradeLevelById: (state, action: PayloadAction<number>) => {
+		handleUpgradeBoughtById: (state, action: PayloadAction<number>) => {
 			const upgrade = state.value.find(
 				upgrade => upgrade.id === action.payload
 			);
 			if (upgrade) {
 				upgrade.level += 1;
-				upgrade.cost = Math.round(
-					computeCost(upgrade.basicCost, upgrade.level)
-				);
+				upgrade.cost = computeCost(upgrade.cost, upgrade.level);
 
-				upgrade.dpc =
-					upgrade.dpc !== 0
-						? Math.round(computeDPC(upgrade.basicDpc, upgrade.level))
-						: 0;
+				if (upgrade.basicDpc !== 0) {
+					upgrade.dpc = computeDPC(upgrade.dpc, upgrade.level);
+				}
 
-				upgrade.dps =
-					upgrade.dps !== 0
-						? Math.round(computeDPS(upgrade.basicDps, upgrade.level))
-						: 0;
+				if (upgrade.basicDps !== 0) {
+					upgrade.dps = computeDPS(
+						upgrade.basicDps,
+						upgrade.dps,
+						upgrade.level
+					);
+				}
 			}
 		}
 	}
 });
 
-export const { addUpgrades, setIsStarterSelected, incrementUpgradeLevelById } =
+export const { addUpgrades, setIsStarterSelected, handleUpgradeBoughtById } =
 	upgradesSlice.actions;
