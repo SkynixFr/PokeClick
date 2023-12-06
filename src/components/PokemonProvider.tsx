@@ -13,7 +13,10 @@ import { getAuth } from 'firebase/auth';
 import { collection, getDocs, query, where } from 'firebase/firestore';
 import { db } from '../firebase/firebaseInit';
 import { incrementLevelByAmount } from '../features/levelSlice';
-import { incrementPokeBallMoneyByAmount, incrementPokeDollarMoneyByAmount } from '../features/moneySlice';
+import {
+	incrementPokeBallMoneyByAmount,
+	incrementPokeDollarMoneyByAmount
+} from '../features/moneySlice';
 
 export const PokemonProvider = (props: React.PropsWithChildren) => {
 	const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -32,11 +35,11 @@ export const PokemonProvider = (props: React.PropsWithChildren) => {
 		const q = query(collection(db, 'User'), where('uid', '==', user.uid));
 		const querySnapshot = await getDocs(q);
 
-		querySnapshot.docs.map(dataDetails => {
-			const currentDataDetails = dataDetails.data();
+		if (!querySnapshot.docs[0]) return;
+		const currentDataDetails = querySnapshot.docs[0].data();
 
-			setIsStarterSelected(currentDataDetails.isStarterSelected);
-		});
+		setIsStarterSelected(currentDataDetails.isStarterSelected);
+		return currentDataDetails.isStarterSelected;
 	};
 
 	const getUserUpgrades = async () => {
@@ -79,10 +82,12 @@ export const PokemonProvider = (props: React.PropsWithChildren) => {
 			const currentDataDetails = dataDetails.data();
 
 			dispatch(incrementLevelByAmount(currentDataDetails.level));
-			dispatch(incrementPokeDollarMoneyByAmount(currentDataDetails.pokeDollars));
+			dispatch(
+				incrementPokeDollarMoneyByAmount(currentDataDetails.pokeDollars)
+			);
 			dispatch(incrementPokeBallMoneyByAmount(currentDataDetails.pokeBalls));
 		});
-	}
+	};
 
 	useEffect(() => {
 		async function getPokemons() {
@@ -91,9 +96,9 @@ export const PokemonProvider = (props: React.PropsWithChildren) => {
 			}
 			setIsLoading(true);
 
-			await getUserIsStarterSelected();
+			const isLocalStarterSelected = await getUserIsStarterSelected();
 
-			if (isStarterSelected) {
+			if (isLocalStarterSelected) {
 				await getUserInfos();
 				await getUserUpgrades();
 			}
