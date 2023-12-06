@@ -50,9 +50,12 @@ const StarterSelection: React.FC<StarterSelectionProps> = ({
 				{
 					id: starter.id,
 					name: starter.name,
-					cost: 20,
-					dpc: 2,
+					cost: 10,
+					basicCost: 10,
+					dpc: 5,
+					basicDpc: 5,
 					dps: 0,
+					basicDps: 0,
 					level: 1,
 					index: 1,
 					uid_user: user.uid

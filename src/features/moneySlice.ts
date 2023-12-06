@@ -3,7 +3,7 @@ import { createSlice } from '@reduxjs/toolkit';
 export const moneySlice = createSlice({
 	name: 'money',
 	initialState: {
-		pokeDollar: 0,
+		pokeDollar: 10000,
 		pokeBall: 0
 	},
 	reducers: {

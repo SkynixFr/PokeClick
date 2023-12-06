@@ -4,7 +4,7 @@ import type { PayloadAction } from '@reduxjs/toolkit';
 export const dpcSlice = createSlice({
 	name: 'dpc',
 	initialState: {
-		value: 556554626545648,
+		value: 0,
 		nbClicks: 0
 	},
 	reducers: {

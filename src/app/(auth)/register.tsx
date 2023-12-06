@@ -28,8 +28,11 @@ async function registerEmailPassword(email: string, password: string) {
 						id: upgrade.id,
 						name: upgrade.name,
 						cost: upgrade.cost,
+						basicCost: upgrade.basicCost,
 						dpc: upgrade.dpc,
+						basicDpc: upgrade.basicDpc,
 						dps: upgrade.dps,
+						basicDps: upgrade.basicDps,
 						level: upgrade.level,
 						index: upgrade.index,
 						uid_user: user_uid

@@ -4,9 +4,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useGetPokemonsQuery } from '../features/api/apiSlice';
 import { addPokemons } from '../features/pokemonsSlice';
 import StarterSelection from './StarterSelection';
-import { RootState } from '../app/store';
 import LegendaryMythicalPokemons from '../constants/LegendaryMythicalPokemon';
-import { addUpgrades, setIsStarterSelected } from '../features/upgradesSlice';
+import { addUpgrades } from '../features/upgradesSlice';
 import { UpgradeDetails } from '../types/upgrade';
 import { incrementDpcByAmount } from '../features/dpcSlice';
 import { getAuth } from 'firebase/auth';
@@ -17,6 +16,7 @@ import {
 	incrementPokeBallMoneyByAmount,
 	incrementPokeDollarMoneyByAmount
 } from '../features/moneySlice';
+import { setDps } from '../features/dpsSlice';
 
 export const PokemonProvider = (props: React.PropsWithChildren) => {
 	const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -53,6 +53,8 @@ export const PokemonProvider = (props: React.PropsWithChildren) => {
 
 		const upgrades: UpgradeDetails[] = [];
 
+		let totalDps = 0;
+
 		querySnapshot.docs.map(dataDetails => {
 			const currentDataDetails = dataDetails.data();
 
@@ -60,16 +62,23 @@ export const PokemonProvider = (props: React.PropsWithChildren) => {
 				id: currentDataDetails.id,
 				name: currentDataDetails.name,
 				cost: currentDataDetails.cost,
+				basicCost: currentDataDetails.basicCost,
 				dpc: currentDataDetails.dpc,
+				basicDpc: currentDataDetails.basicDpc,
 				dps: currentDataDetails.dps,
+				basicDps: currentDataDetails.basicDps,
 				level: currentDataDetails.level,
 				index: currentDataDetails.index
 			};
 
 			upgrades.push(currentUpgrade);
+			totalDps += currentUpgrade.dps;
 		});
 
+		upgrades.sort(compareId);
+		dispatch(incrementDpcByAmount(upgrades[0].dpc));
 		dispatch(addUpgrades(upgrades));
+		dispatch(setDps(totalDps));
 	};
 
 	const getUserInfos = async () => {
@@ -88,6 +97,10 @@ export const PokemonProvider = (props: React.PropsWithChildren) => {
 			dispatch(incrementPokeBallMoneyByAmount(currentDataDetails.pokeBalls));
 		});
 	};
+
+	function compareId(upgrade1: UpgradeDetails, upgrade2: UpgradeDetails) {
+		return upgrade1.index - upgrade2.index;
+	}
 
 	useEffect(() => {
 		async function getPokemons() {
