@@ -129,8 +129,8 @@ const styles = StyleSheet.create({
 		gap: 10
 	},
 	imageStarter: {
-		width: '100%',
-		height: '100%',
+		width: '85%',
+		height: '85%',
 		resizeMode: 'contain',
 	},
 	textStarter: {
