@@ -46,7 +46,7 @@ async function registerEmailPassword(email: string, password: string) {
 	} catch (error: any) {
 		const errorCode = error.code;
 		const errorMessage = error.message;
-		console.log(errorCode + ' ' + errorMessage);
+		console.error(errorCode + ' ' + errorMessage);
 		if (errorCode == 'auth/email-already-in-use') {
 			Alert.alert('Error', 'Email déjà utilisé.');
 		}

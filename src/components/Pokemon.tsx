@@ -9,7 +9,7 @@ import {
 import React, { useState, useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../app/store';
-import { ProgressBar, MD3Colors } from 'react-native-paper';
+import { ProgressBar, MD3Colors, Surface } from 'react-native-paper';
 
 import { decrementLevel, incrementLevel } from '../features/levelSlice';
 
@@ -22,15 +22,16 @@ import { incrementPokeDollarMoneyByAmount } from '../features/moneySlice';
 import { computeMoney } from '../utils/computeMoney';
 import { incrementClicks } from '../features/dpcSlice';
 import { toExponential } from '../utils/toExponential';
-import { number } from 'zod';
 
 type PokemonDetailsProps = {
 	pokemon: PokemonDetails | null;
 	pokemonLife: number;
+	pokemonMaxLife: number;
 	randomPokemon: () => void;
 	randomLegendaryPokemon: () => void;
 	battleDpc: (damage: number) => void;
 	setPokemonLife: (life: number) => void;
+	setPokemonMaxLife: (life: number) => void;
 	startAutoAttack: () => void;
 	stopAutoAttack: () => void;
 	imgRef: React.MutableRefObject<Image | null>;
@@ -44,10 +45,12 @@ type PokemonDetailsProps = {
 const Pokemon: React.FC<PokemonDetailsProps> = ({
 	pokemon,
 	pokemonLife,
+	pokemonMaxLife,
 	randomPokemon,
 	randomLegendaryPokemon,
 	battleDpc,
 	setPokemonLife,
+	setPokemonMaxLife,
 	startAutoAttack,
 	stopAutoAttack,
 	imgRef,
@@ -64,8 +67,7 @@ const Pokemon: React.FC<PokemonDetailsProps> = ({
 	const currentDifficulty = useSelector(
 		(state: RootState) => state.difficulty.value
 	);
-
-	const [pokemonMaxLife, setPokemonMaxLife] = useState<number>(0);
+	const [lifeProgress, setLifeProgress] = useState<number>(1);
 
 	const [imageLoaded, setImageLoaded] = useState<boolean>(true);
 	const [damageDisplay, setDamageDisplay] = useState<{
@@ -79,7 +81,7 @@ const Pokemon: React.FC<PokemonDetailsProps> = ({
 	};
 
 	useEffect(() => {
-		if (currentDps > 0) {
+		if (currentDps >= 0) {
 			startAutoAttack();
 		}
 		return () => {
@@ -88,6 +90,7 @@ const Pokemon: React.FC<PokemonDetailsProps> = ({
 	}, [currentDps]);
 
 	useEffect(() => {
+		setLifeProgress(pokemonLife / pokemonMaxLife);
 		if (pokemonLife <= 0) {
 			if ((currentLevel + 1) % 100 === 0) {
 				randomLegendaryPokemon();
@@ -112,6 +115,9 @@ const Pokemon: React.FC<PokemonDetailsProps> = ({
 
 	useEffect(() => {
 		setPokemonLife(computePokemonLife(currentDifficulty, 10, currentLevel));
+		setPokemonMaxLife(
+			computePokemonLife(currentDifficulty, 10, currentLevel)
+		);
 	}, [currentLevel, currentDifficulty]);
 
 	useEffect(() => {
@@ -135,10 +141,6 @@ const Pokemon: React.FC<PokemonDetailsProps> = ({
 		}
 	}, [isLegendary]);
 
-	useEffect(() => {
-		setPokemonMaxLife(pokemonLife);
-	}, []);
-
 	if (!pokemon) return null;
 
 	return (
@@ -152,14 +154,16 @@ const Pokemon: React.FC<PokemonDetailsProps> = ({
 
 				{imageLoaded && (
 					<View style={styles.pokemonInfos}>
-						<View>
+						<View style={styles.pokemonName}>
 							<Text>{pokemon.name.toUpperCase()}</Text>
+							<Text>Lv.{currentLevel}</Text>
 						</View>
-						<View>
+						<View style={styles.progressBarContainer}>
 							<ProgressBar
-								progress={0.5}
-								color={MD3Colors.error50}
+								animatedValue={lifeProgress}
+								color={'#1e8449'}
 								style={styles.progressBar}
+								indeterminate={false}
 							/>
 						</View>
 						<View style={styles.pokemonLife}>
@@ -224,16 +228,27 @@ const styles = StyleSheet.create({
 		marginRight: '20%',
 		height: 75,
 		padding: 10,
-		backgroundColor: 'rgba(255, 255, 255, 0.9)',
-		borderWidth: 2,
+		backgroundColor: '#f8f9f9',
+		borderWidth: 1,
 		borderTopLeftRadius: 10,
 		borderBottomRightRadius: 10,
-		gap: 5
+		gap: 5,
+		elevation: 20,
+		shadowColor: '#52006A'
+	},
+	pokemonName: {
+		flexDirection: 'row',
+		justifyContent: 'space-between',
+		alignItems: 'center'
+	},
+	progressBarContainer: {
+		width: '90%',
+		marginLeft: '10%'
 	},
 	progressBar: {
-		width: '90%',
-		height: 10,
-		marginLeft: '10%'
+		width: '100%',
+		borderRadius: 10,
+		height: 10
 	},
 	pokemonLife: {
 		width: '100%',
@@ -241,8 +256,8 @@ const styles = StyleSheet.create({
 		alignItems: 'flex-end'
 	},
 	pokemonImage: {
-		width: 175,
-		height: 150
+		width: 200,
+		height: 225
 	},
 	damageDisplay: {
 		position: 'absolute',

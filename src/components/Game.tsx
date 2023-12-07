@@ -1,12 +1,6 @@
 import { Image, StyleSheet, Text, View } from 'react-native';
 import React, { useEffect, useRef, useState } from 'react';
-import {
-	RootState,
-	dpcToExpontential,
-	dpsToExpontential,
-	pokeBallToExpontential,
-	pokeDollarToExpontential
-} from '../app/store';
+import { RootState, store } from '../app/store';
 import { useDispatch, useSelector } from 'react-redux';
 import Carousel from 'react-native-reanimated-carousel';
 import type { ICarouselInstance } from 'react-native-reanimated-carousel';
@@ -19,6 +13,7 @@ import LegendaryMythicalPokemons from '../constants/LegendaryMythicalPokemon';
 import SecretZarbi from './SecretZarbi';
 import { decrementLevel } from '../features/levelSlice';
 import { toExponential } from '../utils/toExponential';
+import { PokemonImgByPokemonId } from '../constants/PokemonImgByPokemonId';
 
 const Game = () => {
 	const dispatch = useDispatch();
@@ -40,6 +35,9 @@ const Game = () => {
 	const [currentPokemonLife, setCurrentPokemonLife] = useState<number>(
 		computePokemonLife(currentDifficulty, 10, currentLevel)
 	);
+	const [pokemonMaxLife, setPokemonMaxLife] = useState<number>(
+		computePokemonLife(currentDifficulty, 10, currentLevel)
+	);
 
 	const autoAttackIntervalRef = useRef<NodeJS.Timeout | null>(null);
 	const legendaryBattleRef = useRef<NodeJS.Timeout | null>(null);
@@ -56,6 +54,7 @@ const Game = () => {
 		const randomPosition = Math.floor(
 			Math.random() * nonLegendaryPokemonIds.length
 		);
+		if (!PokemonImgByPokemonId[randomPosition]) getRandomPokemon();
 		const selectedPokemon = pokemons[randomPosition];
 		setPokemon(selectedPokemon!);
 	};
@@ -83,8 +82,8 @@ const Game = () => {
 
 	const startAutoAttack = () => {
 		autoAttackIntervalRef.current = setInterval(() => {
-			battleDps(currentDps);
-		}, 1000);
+			battleDps(Math.round((store.getState().dps.value ?? 0) / 20));
+		}, 50);
 	};
 
 	const stopAutoAttack = () => {
@@ -201,7 +200,9 @@ const Game = () => {
 				randomLegendaryPokemon={getRandomLegendaryPokemon}
 				battleDpc={battleDpc}
 				pokemonLife={currentPokemonLife}
+				pokemonMaxLife={pokemonMaxLife}
 				setPokemonLife={setCurrentPokemonLife}
+				setPokemonMaxLife={setPokemonMaxLife}
 				startAutoAttack={startAutoAttack}
 				stopAutoAttack={stopAutoAttack}
 				isLegendary={isLegendary}

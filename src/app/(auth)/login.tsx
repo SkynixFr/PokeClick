@@ -25,7 +25,7 @@ async function loginFirebase(email: string, password: string) {
 	} catch (error: any) {
 		const errorCode = error.code;
 		const errorMessage = error.message;
-		console.log(errorCode + ' ' + errorMessage);
+		console.error(errorCode + ' ' + errorMessage);
 
 		// Erreur de connexion
 		if (errorCode === 'auth/invalid-credential') {
