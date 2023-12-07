@@ -10,7 +10,7 @@ const BottomNavBarStyle = StyleSheet.create({
 		justifyContent: 'space-around',
 		alignItems: 'center',
 		flexDirection: 'row',
-		backgroundColor: '#fff',
+		backgroundColor: 'rgba(255,255,255,0.8)',
 		borderTopLeftRadius: 20,
 		borderTopRightRadius: 20,
 		zIndex: 10

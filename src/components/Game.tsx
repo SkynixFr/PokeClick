@@ -8,6 +8,8 @@ import {
 	pokeDollarToExpontential
 } from '../app/store';
 import { useDispatch, useSelector } from 'react-redux';
+import Carousel from 'react-native-reanimated-carousel';
+import type { ICarouselInstance } from 'react-native-reanimated-carousel';
 
 import { PokemonDetails } from '../types/pokemon';
 
@@ -16,6 +18,7 @@ import { computePokemonLife } from '../utils/computePokemonLife';
 import LegendaryMythicalPokemons from '../constants/LegendaryMythicalPokemon';
 import SecretZarbi from './SecretZarbi';
 import { decrementLevel } from '../features/levelSlice';
+import { toExponential } from '../utils/toExponential';
 
 const Game = () => {
 	const dispatch = useDispatch();
@@ -45,6 +48,8 @@ const Game = () => {
 	const [isLegendary, setIsLegendary] = useState<boolean>(false);
 	const [legendaryBattleTimeRemaining, setLegendaryBattleTimeRemaining] =
 		useState<number | null>(null);
+
+	const carrouselRef = useRef<ICarouselInstance>(null);
 
 	const getRandomPokemon = () => {
 		const nonLegendaryPokemonIds = pokemons.map(pokemon => pokemon.id);
@@ -129,21 +134,65 @@ const Game = () => {
 			</View>
 		);
 
+	const renderItem = (item: number, index: number) => (
+		<View key={index}>
+			<Text>{item}</Text>
+		</View>
+	);
+
 	return (
-		<>
-			<View>
-				<View>
-					<Text>
-						Niveau {currentLevel} / Difficulté {currentDifficulty} /
-						Argent {pokeDollarToExpontential(currentPokedollar)} /
-						Pokeball {pokeBallToExpontential(currentPokeball)}
-					</Text>
+		<View style={styles.container}>
+			<View style={styles.gameInfos}>
+				<View style={styles.moneys}>
+					<View style={styles.pokeDollars}>
+						<Image
+							source={require('../../assets/pokeDollar.png')}
+							style={{ width: 30, height: 30 }}
+						/>
+						<Text>{toExponential(currentPokedollar)}</Text>
+					</View>
+					<View style={styles.pokeBalls}>
+						<Image
+							source={require('../../assets/pokeBall.png')}
+							style={{ width: 30, height: 30 }}
+						/>
+						<Text>{toExponential(currentPokeball)}</Text>
+					</View>
 				</View>
-				<View>
-					<Text>DPC : {dpcToExpontential(currentDpc)}</Text>
-					<Text>DPS : {dpsToExpontential(currentDps)}</Text>
+				<View style={styles.damage}>
+					<View style={styles.dpc}>
+						<Image
+							source={require('../../assets/dpc.png')}
+							style={{ width: 30, height: 30 }}
+						/>
+						<Text>{toExponential(currentDpc)}</Text>
+					</View>
+					<View style={styles.dps}>
+						<Image
+							source={require('../../assets/dps.png')}
+							style={{ width: 30, height: 30 }}
+						/>
+						<Text>{toExponential(currentDps)}</Text>
+					</View>
 				</View>
 			</View>
+
+			{/* <Carousel
+				data={Array.from({ length: 9 }, (_, i) => currentLevel - 4 + i)}
+				renderItem={({ item, index }) => renderItem(item, index)}
+				ref={carrouselRef}
+				width={60}
+				height={40}
+				loop={true}
+				style={{
+					width: '100%',
+					height: 40,
+					justifyContent: 'center',
+					alignItems: 'center',
+					borderBottomWidth: 1,
+					borderBottomColor: '#0071fa'
+				}}
+			/> */}
 
 			<Pokemon
 				imgRef={pokemonImgRef}
@@ -163,10 +212,69 @@ const Game = () => {
 			/>
 
 			<SecretZarbi />
-		</>
+		</View>
 	);
 };
 
 export default Game;
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+	container: {
+		width: '100%',
+		height: '100%'
+	},
+	gameInfos: {
+		width: '100%',
+		justifyContent: 'space-around',
+		flexDirection: 'row',
+		paddingTop: 45,
+		paddingBottom: 15,
+		backgroundColor: 'rgba(255, 255, 255, 0.8)',
+		borderBottomLeftRadius: 20,
+		borderBottomRightRadius: 20
+	},
+	moneys: {
+		width: 100,
+		flexDirection: 'column',
+		gap: 10
+	},
+	pokeDollars: {
+		flexDirection: 'row',
+		alignItems: 'center',
+		gap: 10
+	},
+	pokeBalls: {
+		flexDirection: 'row',
+		alignItems: 'center',
+		gap: 10
+	},
+	damage: {
+		width: 100,
+		flexDirection: 'column',
+		gap: 10
+	},
+	dpc: {
+		flexDirection: 'row',
+		alignItems: 'center',
+		gap: 10
+	},
+	dps: {
+		flexDirection: 'row',
+		alignItems: 'center',
+		gap: 10
+	},
+	levelText: {
+		fontSize: 18,
+		fontWeight: 'bold',
+		color: 'white'
+	},
+	carouselItem: {
+		width: 50,
+		height: 50,
+		borderRadius: 10,
+		backgroundColor: '#3498db',
+		justifyContent: 'center',
+		alignItems: 'center',
+		marginHorizontal: 5
+	}
+});

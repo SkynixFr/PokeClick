@@ -1,7 +1,15 @@
-import { StyleSheet, Text, View, Image, Pressable } from 'react-native';
+import {
+	StyleSheet,
+	Text,
+	View,
+	Image,
+	Pressable,
+	Dimensions
+} from 'react-native';
 import React, { useState, useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../app/store';
+import { ProgressBar, MD3Colors } from 'react-native-paper';
 
 import { decrementLevel, incrementLevel } from '../features/levelSlice';
 
@@ -13,6 +21,8 @@ import { incrementDifficulty } from '../features/difficultySlice';
 import { incrementPokeDollarMoneyByAmount } from '../features/moneySlice';
 import { computeMoney } from '../utils/computeMoney';
 import { incrementClicks } from '../features/dpcSlice';
+import { toExponential } from '../utils/toExponential';
+import { number } from 'zod';
 
 type PokemonDetailsProps = {
 	pokemon: PokemonDetails | null;
@@ -54,6 +64,8 @@ const Pokemon: React.FC<PokemonDetailsProps> = ({
 	const currentDifficulty = useSelector(
 		(state: RootState) => state.difficulty.value
 	);
+
+	const [pokemonMaxLife, setPokemonMaxLife] = useState<number>(0);
 
 	const [imageLoaded, setImageLoaded] = useState<boolean>(true);
 	const [damageDisplay, setDamageDisplay] = useState<{
@@ -123,76 +135,118 @@ const Pokemon: React.FC<PokemonDetailsProps> = ({
 		}
 	}, [isLegendary]);
 
+	useEffect(() => {
+		setPokemonMaxLife(pokemonLife);
+	}, []);
+
 	if (!pokemon) return null;
 
 	return (
-		<>
-			<View>
-				<View>
-					{imageLoaded && <Text>{pokemon.name}</Text>}
-					{imageLoaded && isLegendary && (
+		<View style={styles.container}>
+			<View style={styles.pokemonWrapper}>
+				{imageLoaded && isLegendary && (
+					<View>
+						<Text>Temps restant : {legendaryBattleTimeRemaining} s</Text>
+					</View>
+				)}
+
+				{imageLoaded && (
+					<View style={styles.pokemonInfos}>
 						<View>
+							<Text>{pokemon.name.toUpperCase()}</Text>
+						</View>
+						<View>
+							<ProgressBar
+								progress={0.5}
+								color={MD3Colors.error50}
+								style={styles.progressBar}
+							/>
+						</View>
+						<View style={styles.pokemonLife}>
 							<Text>
-								Temps restant : {legendaryBattleTimeRemaining} s
+								{toExponential(pokemonLife)} /{' '}
+								{toExponential(pokemonMaxLife)}
 							</Text>
 						</View>
-					)}
-					<Pressable
-						onPress={event => {
-							if (imageLoaded) {
-								const { locationX, locationY } = event.nativeEvent;
-								setDamageDisplay({ x: locationX, y: locationY });
-								clickDamage();
-							}
-						}}
-					>
-						<Image
-							ref={imgRef}
-							source={PokemonImgByPokemonId[pokemon.id]}
-							style={{ width: 300, height: 400 }}
-							resizeMode="contain"
-							onLoadStart={() => {
-								setImageLoaded(false);
-							}}
-							onLoad={() => {
-								setImageLoaded(true);
-							}}
-							onError={err => {
-								setImageLoaded(true);
-							}}
-						/>
-					</Pressable>
-					{damageDisplay && (
-						<View
-							style={[
-								styles.damageDisplay,
-								{
-									top: damageDisplay.y,
-									left: damageDisplay.x - 25
-								}
-							]}
-						>
-							<Text style={styles.damageDisplayText}>{currentDpc}</Text>
-						</View>
-					)}
-				</View>
+					</View>
+				)}
 
-				<View>
-					{imageLoaded && (
-						<Text>Point de vie: {Math.round(pokemonLife)}</Text>
-					)}
-				</View>
+				<Pressable
+					onPress={event => {
+						if (imageLoaded) {
+							const { locationX, locationY } = event.nativeEvent;
+							setDamageDisplay({ x: locationX, y: locationY });
+							clickDamage();
+						}
+					}}
+				>
+					<Image
+						ref={imgRef}
+						source={PokemonImgByPokemonId[pokemon.id]}
+						resizeMode="contain"
+						style={styles.pokemonImage}
+						onLoadStart={() => {
+							setImageLoaded(false);
+						}}
+						onLoad={() => {
+							setImageLoaded(true);
+						}}
+						onError={err => {
+							setImageLoaded(true);
+						}}
+					/>
+				</Pressable>
 			</View>
-		</>
+		</View>
 	);
 };
 
 export default Pokemon;
 
 const styles = StyleSheet.create({
+	container: {
+		width: '100%',
+		height: Dimensions.get('window').height - 164
+	},
+	pokemonWrapper: {
+		position: 'absolute',
+		bottom: 70,
+		width: '100%',
+		height: '100%',
+		display: 'flex',
+		justifyContent: 'flex-end',
+		alignItems: 'center',
+		gap: 25
+	},
+	pokemonInfos: {
+		width: '60%',
+		marginLeft: '20%',
+		marginRight: '20%',
+		height: 75,
+		padding: 10,
+		backgroundColor: 'rgba(255, 255, 255, 0.9)',
+		borderWidth: 2,
+		borderTopLeftRadius: 10,
+		borderBottomRightRadius: 10,
+		gap: 5
+	},
+	progressBar: {
+		width: '90%',
+		height: 10,
+		marginLeft: '10%'
+	},
+	pokemonLife: {
+		width: '100%',
+		justifyContent: 'flex-end',
+		alignItems: 'flex-end'
+	},
+	pokemonImage: {
+		width: 175,
+		height: 150
+	},
 	damageDisplay: {
 		position: 'absolute',
-		zIndex: 1
+		zIndex: 1000
 	},
 	damageDisplayText: {
 		fontWeight: 'bold',

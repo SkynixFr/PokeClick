@@ -40,7 +40,7 @@ export default SecretZarbi;
 const styles = StyleSheet.create({
 	container: {
 		position: 'absolute',
-		top: 30,
-		left: 5
+		bottom: 180,
+		right: 0
 	}
 });
