@@ -82,8 +82,8 @@ const Game = () => {
 
 	const startAutoAttack = () => {
 		autoAttackIntervalRef.current = setInterval(() => {
-			battleDps(Math.round((store.getState().dps.value ?? 0) / 20));
-		}, 50);
+			battleDps(Math.round((store.getState().dps.value ?? 0) / 10));
+		}, 100);
 	};
 
 	const stopAutoAttack = () => {

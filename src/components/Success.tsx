@@ -39,15 +39,23 @@ const Quests = () => {
 	};
 
 	const getProgressText = (success: SuccessDetails) => {
+		const isAllRewardsClaimed = success.rewards.every(
+			reward => reward.claimed
+		);
+
 		switch (success.id) {
 			case '1':
-				return `Niveau : ${currentLevel} / ${
-					success.levels[successLevels()[success.id]]
-				}`;
+				return isAllRewardsClaimed
+					? 'Niveaux max atteint'
+					: `Niveau : ${currentLevel} / ${
+							success.levels[successLevels()[success.id]]
+					  }`;
 			case '2':
-				return `Clic : ${currentClicks} / ${
-					success.levels[successLevels()[success.id]]
-				}`;
+				return isAllRewardsClaimed
+					? 'Niveaux max atteint'
+					: `Clic : ${currentClicks} / ${
+							success.levels[successLevels()[success.id]]
+					  }`;
 			default:
 				return '';
 		}

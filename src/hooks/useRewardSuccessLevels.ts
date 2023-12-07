@@ -15,6 +15,9 @@ export const useRewardSuccessLevels = () => {
 	const clickSuccessLevel = () => {
 		const success = successes.find(success => success.id === '2');
 		if (!success) return -1;
+
+		if (currentClicks > success.levels[success.levels.length - 1])
+			return success.levels.length;
 		return success.levels.findIndex(level => level > currentClicks);
 	};
 
