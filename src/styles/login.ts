@@ -31,7 +31,8 @@ const Loginstyle = StyleSheet.create({
 		height: 40,
 		borderColor: 'gray',
 		marginBottom: 5,
-		paddingLeft: 10
+		paddingLeft: 10,
+		width: '85%'
 	},
 	inputContainer: {
 		flexDirection: 'row',
@@ -48,9 +49,7 @@ const Loginstyle = StyleSheet.create({
 	Button: {
 		marginVertical: 100
 	},
-	iconPassword: {
-		marginLeft: '45%'
-	}
+	iconPassword: {}
 });
 
 export default Loginstyle;

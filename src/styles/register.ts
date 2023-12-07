@@ -25,7 +25,8 @@ const RegisterStyle = StyleSheet.create({
 		height: 40,
 		borderColor: 'gray',
 		marginBottom: 5,
-		paddingLeft: 10
+		paddingLeft: 10,
+		width: '85%'
 	},
 	emailContainer: {
 		height: 40,
@@ -48,9 +49,7 @@ const RegisterStyle = StyleSheet.create({
 		color: 'red',
 		marginBottom: 10
 	},
-	iconPassword: {
-		marginLeft: 110
-	}
+	iconPassword: {}
 });
 
 export default RegisterStyle;
