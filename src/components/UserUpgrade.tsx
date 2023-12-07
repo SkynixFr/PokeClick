@@ -1,5 +1,5 @@
 // UpgradeComponent.tsx
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
 	StyleSheet,
 	View,
@@ -32,10 +32,11 @@ const UpgradeComponent: React.FC<UpgradeComponentProps> = ({ upgrade }) => {
 	const upgrades = useSelector((state: RootState) => state.upgrades.value);
 	const dispatch = useDispatch();
 
+	const [localMoney, setLocalMoney] = useState<number>(money);
+
 	const nextUpgradeValues = (
 		basicDpc: number,
 		basicDps: number,
-		dps: number,
 		level: number
 	) => {
 		return {
@@ -54,7 +55,6 @@ const UpgradeComponent: React.FC<UpgradeComponentProps> = ({ upgrade }) => {
 			const { nextDpc, nextDps } = nextUpgradeValues(
 				upgrade.dpc,
 				upgrade.basicDps,
-				upgrade.dps,
 				upgrade.level + 1
 			);
 
@@ -71,8 +71,12 @@ const UpgradeComponent: React.FC<UpgradeComponentProps> = ({ upgrade }) => {
 
 				dispatch(setDps(totalDps));
 			}
+
+			setLocalMoney(money - upgrade.cost);
 		}
 	}
+
+	useEffect(() => {}, [money]);
 
 	return (
 		<View style={styles.container}>
@@ -82,7 +86,9 @@ const UpgradeComponent: React.FC<UpgradeComponentProps> = ({ upgrade }) => {
 			/>
 			<View style={styles.dataColumn}>
 				<View>
-					<Text style={styles.label}>{upgrade.name}</Text>
+					<Text style={styles.label} numberOfLines={1}>
+						{upgrade.name}
+					</Text>
 				</View>
 
 				<View>
@@ -104,7 +110,13 @@ const UpgradeComponent: React.FC<UpgradeComponentProps> = ({ upgrade }) => {
 			</View>
 
 			<View style={styles.buttonColumn}>
-				<TouchableOpacity style={buttonStyle} onPress={onUpgrade}>
+				<TouchableOpacity
+					style={
+						money < upgrade.cost ? styles.buttonDisabled : styles.button
+					}
+					onPress={onUpgrade}
+					disabled={money < upgrade.cost}
+				>
 					<Text style={styles.buttonText}>Upgrade</Text>
 					<Text style={styles.buttonText}>
 						{pokeDollarToExpontential(upgrade.cost)}
@@ -156,10 +168,10 @@ const styles = StyleSheet.create({
 		// borderWidth: 1
 	},
 	label: {
-		fontSize: 16
+		fontSize: 15
 	},
 	smallLabel: {
-		fontSize: 12
+		fontSize: 11
 	},
 
 	button: {
@@ -170,6 +182,12 @@ const styles = StyleSheet.create({
 	},
 	buttonRed: {
 		backgroundColor: 'red',
+		padding: 10,
+		borderRadius: 5,
+		alignItems: 'center'
+	},
+	buttonDisabled: {
+		backgroundColor: '#CCCCCC',
 		padding: 10,
 		borderRadius: 5,
 		alignItems: 'center'
