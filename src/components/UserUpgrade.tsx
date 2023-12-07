@@ -112,7 +112,7 @@ const UpgradeComponent: React.FC<UpgradeComponentProps> = ({ upgrade }) => {
 					<Text style={styles.buttonText}>
 						{pokeDollarToExpontential(upgrade.cost)}
 						<Image
-							source={require('../../assets/PokeDollar.png')}
+							source={require('../../assets/pokeDollar.png')}
 							style={{ width: 15, height: 15 }}
 						></Image>
 					</Text>

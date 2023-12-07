@@ -80,19 +80,19 @@ const StarterSelection: React.FC<StarterSelectionProps> = ({
 
 	return (
 		<View style={styles.container}>
-			<Text>Choisis ton Pokémon de départ !</Text>
+			<Text style={styles.text}>Choisis ton Pokémon de départ !</Text>
 			<View style={styles.list}>
 				{starters.map((starter: Starter) => (
 					<TouchableOpacity
 						key={starter.id}
 						onPress={async () => await handlerStarterSelection(starter)}
 					>
-						<View>
+						<View style={styles.imageStarterContainer}>
 							<Image
 								source={PokemonImgByPokemonId[starter.id]}
-								style={{ width: 100, height: 100 }}
+								style={styles.imageStarter}
 							/>
-							<Text>{starter.name}</Text>
+							<Text style={styles.textStarter}>{starter.name}</Text>
 						</View>
 					</TouchableOpacity>
 				))}
@@ -111,9 +111,29 @@ const styles = StyleSheet.create({
 		alignContent: 'center',
 		gap: 50
 	},
+	text: {
+		fontSize: 20
+	},
 	list: {
 		width: '100%',
 		flexDirection: 'row',
-		justifyContent: 'space-around'
+		justifyContent: 'space-around',
+		gap: 5
+	},
+	imageStarterContainer: {
+		width: 125,
+		height: 150,
+		justifyContent: 'center',
+		alignItems: 'center',
+		padding: 15,
+		gap: 10
+	},
+	imageStarter: {
+		width: '100%',
+		height: '100%'
+	},
+	textStarter: {
+		textAlign: 'center',
+		fontSize: 20
 	}
 });
