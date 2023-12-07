@@ -32,12 +32,8 @@ const Game = () => {
 	const pokemons = useSelector((state: RootState) => state.pokemons.value);
 
 	const [pokemon, setPokemon] = useState<PokemonDetails | null>(null);
-	const [currentPokemonLife, setCurrentPokemonLife] = useState<number>(
-		computePokemonLife(currentDifficulty, 10, currentLevel)
-	);
-	const [pokemonMaxLife, setPokemonMaxLife] = useState<number>(
-		computePokemonLife(currentDifficulty, 10, currentLevel)
-	);
+	const [currentPokemonLife, setCurrentPokemonLife] = useState<number>(0);
+	const [pokemonMaxLife, setPokemonMaxLife] = useState<number>(0);
 
 	const autoAttackIntervalRef = useRef<NodeJS.Timeout | null>(null);
 	const legendaryBattleRef = useRef<NodeJS.Timeout | null>(null);
@@ -57,6 +53,12 @@ const Game = () => {
 		if (!PokemonImgByPokemonId[randomPosition]) getRandomPokemon();
 		const selectedPokemon = pokemons[randomPosition];
 		setPokemon(selectedPokemon!);
+		setCurrentPokemonLife(
+			computePokemonLife(currentDifficulty, 10, currentLevel, false)
+		);
+		setPokemonMaxLife(
+			computePokemonLife(currentDifficulty, 10, currentLevel, false)
+		);
 	};
 
 	const getRandomLegendaryPokemon = () => {
@@ -69,6 +71,12 @@ const Game = () => {
 			url: `https://pokeapi.co/api/v2/pokemon/${selectedPokemon.id}/`
 		};
 		setPokemon(newPokemonDetails);
+		setCurrentPokemonLife(
+			computePokemonLife(currentDifficulty, 10, currentLevel, true)
+		);
+		setPokemonMaxLife(
+			computePokemonLife(currentDifficulty, 10, currentLevel, true)
+		);
 	};
 
 	const battleDpc = (damage: number) => {
@@ -82,8 +90,8 @@ const Game = () => {
 
 	const startAutoAttack = () => {
 		autoAttackIntervalRef.current = setInterval(() => {
-			battleDps(Math.round((store.getState().dps.value ?? 0) / 20));
-		}, 50);
+			battleDps(Math.round((store.getState().dps.value ?? 0) / 10));
+		}, 100);
 	};
 
 	const stopAutoAttack = () => {

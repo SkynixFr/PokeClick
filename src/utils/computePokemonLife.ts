@@ -1,7 +1,10 @@
 export function computePokemonLife(
 	difficulty: number,
 	baseLife: 10,
-	level: number
+	level: number,
+	isLegendary: boolean
 ): number {
-	return level ** 2 * (baseLife + difficulty * level);
+	const pokemonLife = level ** 2 * (baseLife + difficulty * level);
+	if (isLegendary) return pokemonLife * 100;
+	return pokemonLife;
 }

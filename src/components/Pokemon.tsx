@@ -114,13 +114,6 @@ const Pokemon: React.FC<PokemonDetailsProps> = ({
 	}, [currentLevel]);
 
 	useEffect(() => {
-		setPokemonLife(computePokemonLife(currentDifficulty, 10, currentLevel));
-		setPokemonMaxLife(
-			computePokemonLife(currentDifficulty, 10, currentLevel)
-		);
-	}, [currentLevel, currentDifficulty]);
-
-	useEffect(() => {
 		if (damageDisplay) {
 			const timer = setTimeout(() => {
 				setDamageDisplay(null);

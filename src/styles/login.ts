@@ -40,7 +40,7 @@ const Loginstyle = StyleSheet.create({
 		textAlign: 'center',
 		borderColor: 'gray',
 		borderWidth: 1,
-		marginBottom: 10
+		marginBottom: '3%'
 	},
 	errorText: {
 		color: 'red',

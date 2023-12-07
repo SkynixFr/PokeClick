@@ -22,24 +22,24 @@ const RegisterStyle = StyleSheet.create({
 		elevation: 5
 	},
 	input: {
-		height: 40,
+		height: 45,
 		borderColor: 'gray',
-		marginBottom: 5,
+		marginBottom: '1%',
 		paddingLeft: 10,
 		width: '85%'
 	},
 	emailContainer: {
-		height: 40,
+		height: 50,
 		borderColor: 'gray',
-		marginLeft: 10,
-		marginBottom: 10
+		marginLeft: 10
 	},
 	inputContainer: {
 		flexDirection: 'row',
 		alignItems: 'center',
 		borderColor: 'gray',
 		borderWidth: 1,
-		marginBottom: 10
+		marginBottom: '1%',
+		marginTop: '1%'
 	},
 	ronflex: {
 		width: '100%',

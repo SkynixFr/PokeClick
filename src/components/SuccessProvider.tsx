@@ -19,7 +19,7 @@ export const SuccessProvider = (props: React.PropsWithChildren) => {
 					id: '1',
 					name: 'Gourou de la Gravité',
 					icon: 'sort-amount-up',
-					levels: [10, 50, 100, 500, 1000],
+					levels: [10, 50, 100, 200, 300],
 					lastRewardIndexClaimed: 0,
 					rewards: [
 						{ amount: 10, claimed: false },
