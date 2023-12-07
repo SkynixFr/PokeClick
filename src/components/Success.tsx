@@ -1,5 +1,4 @@
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../app/store';
 import { SuccessDetails } from '../types/success';
@@ -99,20 +98,23 @@ export default Quests;
 
 const styles = StyleSheet.create({
 	successesContainer: {
-		marginTop: 20,
 		flex: 1,
-		width: '95%',
+		width: '100%',
+		height: '100%',
 		flexDirection: 'column',
-		gap: 10
+		borderBottomColor: '#000'
 	},
 	successContainer: {
 		flexDirection: 'row',
+		height: 100,
 		alignItems: 'center',
-		justifyContent: 'space-between',
-		width: '100%',
 		padding: 10,
 		borderWidth: 1,
-		gap: 15
+		borderRadius: 10,
+		backgroundColor: '#F2F2F2',
+		borderColor: '#E0E0E0',
+		gap: 15,
+		margin: 5
 	},
 	successStars: {
 		flexDirection: 'row'

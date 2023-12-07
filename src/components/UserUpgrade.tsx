@@ -1,6 +1,13 @@
 // UpgradeComponent.tsx
 import React, { useState } from 'react';
-import { StyleSheet, View, Text, Button } from 'react-native';
+import {
+	StyleSheet,
+	View,
+	Text,
+	Button,
+	Image,
+	TouchableOpacity
+} from 'react-native';
 import { UpgradeDetails } from '../types/upgrade';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../app/store';
@@ -10,17 +17,20 @@ import { setDpc } from '../features/dpcSlice';
 import { setDps } from '../features/dpsSlice';
 import { computeDPC } from '../utils/computeDPC';
 import { computeDPS } from '../utils/computeDPS';
+import { dpcToExpontential } from '../app/store';
+import { dpsToExpontential } from '../app/store';
+import { pokeDollarToExpontential } from '../app/store';
+import { PokemonImgByPokemonId } from '../constants/PokemonImgByPokemonId';
 
 interface UpgradeComponentProps {
 	upgrade: UpgradeDetails;
 }
 
 const UpgradeComponent: React.FC<UpgradeComponentProps> = ({ upgrade }) => {
+	const [buttonStyle, setButtonStyle] = useState(styles.button);
 	const money = useSelector((state: RootState) => state.money.pokeDollar);
 	const upgrades = useSelector((state: RootState) => state.upgrades.value);
 	const dispatch = useDispatch();
-
-	const [errorMoneyMessage, setErrorMoneyMessage] = useState<string>('');
 
 	const nextUpgradeValues = (
 		basicDpc: number,
@@ -36,10 +46,10 @@ const UpgradeComponent: React.FC<UpgradeComponentProps> = ({ upgrade }) => {
 
 	function onUpgrade(): void {
 		if (money < upgrade.cost) {
-			setErrorMoneyMessage('Not enough money !');
+			setButtonStyle(styles.buttonRed);
 			setTimeout(() => {
-				setErrorMoneyMessage('');
-			}, 1000);
+				setButtonStyle(styles.button);
+			}, 200);
 		} else {
 			const { nextDpc, nextDps } = nextUpgradeValues(
 				upgrade.dpc,
@@ -66,31 +76,47 @@ const UpgradeComponent: React.FC<UpgradeComponentProps> = ({ upgrade }) => {
 
 	return (
 		<View style={styles.container}>
-			<View style={styles.leftColumn}>
+			<Image
+				source={PokemonImgByPokemonId[upgrade.id]}
+				style={{ width: 70, height: 70 }} // Ajustez la taille et la marge selon vos besoins
+			/>
+			<View style={styles.dataColumn}>
 				<View>
-					<Text style={styles.label}>Nom: {upgrade.name}</Text>
+					<Text style={styles.label}>{upgrade.name}</Text>
 				</View>
 
 				<View>
-					<Text style={styles.smallLabel}>
-						Dégâts par seconde: {upgrade.dps}
-					</Text>
-					<Text style={styles.smallLabel}>
-						Dégâts par click: {upgrade.dpc}
-					</Text>
+					{upgrade.basicDps !== 0 ? (
+						<Text style={styles.smallLabel}>
+							Dégâts par seconde: {dpsToExpontential(upgrade.dps)}
+						</Text>
+					) : null}
+					{upgrade.basicDpc !== 0 ? (
+						<Text style={styles.smallLabel}>
+							Dégâts par click: {dpcToExpontential(upgrade.dpc)}
+						</Text>
+					) : null}
 				</View>
 			</View>
 
-			<View style={styles.rightColumn}>
+			<View style={styles.levelColumn}>
 				<Text>
 					Level{'\n'}
 					{upgrade.level}
 				</Text>
 			</View>
 
-			<View style={styles.rightColumn}>
-				<Button title={`Upgrade\n[${upgrade.cost}]`} onPress={onUpgrade} />
-				<Text>{errorMoneyMessage}</Text>
+			<View style={styles.buttonColumn}>
+				<TouchableOpacity style={buttonStyle} onPress={onUpgrade}>
+					<Text style={styles.buttonText}>Upgrade</Text>
+					<Text style={styles.buttonText}>
+						{pokeDollarToExpontential(upgrade.cost)}
+						<Image
+							source={require('../../assets/PokeDollar.png')}
+							style={{ width: 15, height: 15 }}
+						></Image>
+					</Text>
+				</TouchableOpacity>
 			</View>
 		</View>
 	);
@@ -102,25 +128,52 @@ const styles = StyleSheet.create({
 	container: {
 		flexDirection: 'row',
 		height: 100,
-		justifyContent: 'space-between',
 		alignItems: 'center',
-		padding: 10
+		padding: 5,
+		borderRadius: 10,
+		backgroundColor: '#F2F2F2',
+		borderWidth: 1,
+		borderColor: '#E0E0E0',
+		margin: 5
 	},
-	leftColumn: {
-		marginLeft: 10
+	dataColumn: {
+		marginLeft: 10,
+		width: '30%'
+		// borderWidth: 1
 	},
-	middleColumn: {
+	levelColumn: {
 		flex: 1,
-		alignItems: 'center'
+		alignItems: 'center',
+		justifyContent: 'center'
+		// borderWidth: 1,
 	},
-	rightColumn: {
-		flex: 1,
-		alignItems: 'flex-end'
+	buttonColumn: {
+		flexDirection: 'column',
+		justifyContent: 'center',
+		width: '30%'
+		// borderWidth: 1
 	},
 	label: {
-		fontSize: 16 // Taille de police pour le nom
+		fontSize: 16
 	},
 	smallLabel: {
-		fontSize: 12 // Taille de police plus petite pour DPS et DPC
+		fontSize: 12
+	},
+
+	button: {
+		backgroundColor: '#1f618d',
+		padding: 10,
+		borderRadius: 5,
+		alignItems: 'center'
+	},
+	buttonRed: {
+		backgroundColor: 'red',
+		padding: 10,
+		borderRadius: 5,
+		alignItems: 'center'
+	},
+	buttonText: {
+		color: 'white',
+		textAlign: 'center'
 	}
 });
