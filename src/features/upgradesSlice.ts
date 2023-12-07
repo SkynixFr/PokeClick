@@ -25,18 +25,14 @@ export const upgradesSlice = createSlice({
 			);
 			if (upgrade) {
 				upgrade.level += 1;
-				upgrade.cost = computeCost(upgrade.cost, upgrade.level);
+				upgrade.cost = computeCost(upgrade.basicCost, upgrade.level);
 
 				if (upgrade.basicDpc !== 0) {
-					upgrade.dpc = computeDPC(upgrade.dpc, upgrade.level);
+					upgrade.dpc = computeDPC(upgrade.basicDpc, upgrade.level);
 				}
 
 				if (upgrade.basicDps !== 0) {
-					upgrade.dps = computeDPS(
-						upgrade.basicDps,
-						upgrade.dps,
-						upgrade.level
-					);
+					upgrade.dps = computeDPS(upgrade.basicDps, upgrade.level);
 				}
 			}
 		}
