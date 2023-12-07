@@ -24,9 +24,13 @@ import { PokemonImgByPokemonId } from '../constants/PokemonImgByPokemonId';
 
 interface UpgradeComponentProps {
 	upgrade: UpgradeDetails;
+	quantityMultiplier: number;
 }
 
-const UpgradeComponent: React.FC<UpgradeComponentProps> = ({ upgrade }) => {
+const UpgradeComponent: React.FC<UpgradeComponentProps> = ({
+	upgrade,
+	quantityMultiplier
+}) => {
 	const [buttonStyle, setButtonStyle] = useState(styles.button);
 	const money = useSelector((state: RootState) => state.money.pokeDollar);
 	const upgrades = useSelector((state: RootState) => state.upgrades.value);
@@ -46,7 +50,7 @@ const UpgradeComponent: React.FC<UpgradeComponentProps> = ({ upgrade }) => {
 	};
 
 	function onUpgrade(): void {
-		if (money < upgrade.cost) {
+		if (money < upgrade.cost * quantityMultiplier) {
 			setButtonStyle(styles.buttonRed);
 			setTimeout(() => {
 				setButtonStyle(styles.button);
@@ -55,11 +59,13 @@ const UpgradeComponent: React.FC<UpgradeComponentProps> = ({ upgrade }) => {
 			const { nextDpc, nextDps } = nextUpgradeValues(
 				upgrade.dpc,
 				upgrade.basicDps,
-				upgrade.level + 1
+				upgrade.level + quantityMultiplier
 			);
 
 			dispatch(handleUpgradeBoughtById(upgrade.id));
-			dispatch(decrementPokedollarMoneyByAmount(upgrade.cost));
+			dispatch(
+				decrementPokedollarMoneyByAmount(upgrade.cost * quantityMultiplier)
+			);
 
 			if (upgrade.basicDpc !== 0) dispatch(setDpc(nextDpc));
 			if (upgrade.basicDps !== 0) {
@@ -72,7 +78,7 @@ const UpgradeComponent: React.FC<UpgradeComponentProps> = ({ upgrade }) => {
 				dispatch(setDps(totalDps));
 			}
 
-			setLocalMoney(money - upgrade.cost);
+			setLocalMoney(money - upgrade.cost * quantityMultiplier);
 		}
 	}
 
@@ -117,9 +123,11 @@ const UpgradeComponent: React.FC<UpgradeComponentProps> = ({ upgrade }) => {
 					onPress={onUpgrade}
 					disabled={money < upgrade.cost}
 				>
-					<Text style={styles.buttonText}>Upgrade</Text>
+					<Text
+						style={styles.buttonText}
+					>{`Upgrade (x${quantityMultiplier})`}</Text>
 					<Text style={styles.buttonText}>
-						{pokeDollarToExpontential(upgrade.cost)}
+						{pokeDollarToExpontential(upgrade.cost * quantityMultiplier)}
 						<Image
 							source={require('../../assets/pokeDollar.png')}
 							style={{ width: 15, height: 15 }}

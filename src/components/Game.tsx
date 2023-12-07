@@ -267,7 +267,8 @@ const styles = StyleSheet.create({
 		paddingBottom: 15,
 		backgroundColor: 'rgba(255, 255, 255, 0.8)',
 		borderBottomLeftRadius: 20,
-		borderBottomRightRadius: 20
+		borderBottomRightRadius: 20,
+		elevation: 5
 	},
 	moneys: {
 		width: 100,
@@ -311,13 +312,14 @@ const styles = StyleSheet.create({
 	levelContainer: {
 		width: 40,
 		height: 40,
-		backgroundColor: '#fff',
+		backgroundColor: 'rgba(255, 255, 255,1)',
 		borderRadius: 5,
 		justifyContent: 'center',
 		alignItems: 'center',
-		padding: 5
+		padding: 5,
+		elevation: 5
 	},
 	currentLevelContainer: {
-		transform: [{ scale: 1.2 }, { translateY: 5 }]
+		transform: [{ scale: 1.25 }, { translateY: 15 }]
 	}
 });
