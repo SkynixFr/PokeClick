@@ -167,6 +167,7 @@ export const Register = ({ navigation }: RouterProps) => {
 							placeholder="Confirm Your Password"
 						/>
 					</View>
+					<View style={{ marginVertical: 5 }} />
 					<Button
 						title="Register"
 						onPress={() =>
