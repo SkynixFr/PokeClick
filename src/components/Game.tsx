@@ -14,6 +14,15 @@ import SecretZarbi from './SecretZarbi';
 import { decrementLevel } from '../features/levelSlice';
 import { toExponential } from '../utils/toExponential';
 import { PokemonImgByPokemonId } from '../constants/PokemonImgByPokemonId';
+import Animated, {
+	Easing,
+	StretchInX,
+	StretchOutY,
+	useAnimatedStyle,
+	useSharedValue,
+	withSpring,
+	withTiming
+} from 'react-native-reanimated';
 
 const Game = () => {
 	const dispatch = useDispatch();
@@ -43,7 +52,8 @@ const Game = () => {
 	const [legendaryBattleTimeRemaining, setLegendaryBattleTimeRemaining] =
 		useState<number | null>(null);
 
-	const carrouselRef = useRef<ICarouselInstance>(null);
+	const [previousLevels, setPreviousLevels] = useState<number[]>([]);
+	const [nextLevels, setNextLevels] = useState<number[]>([]);
 
 	const getRandomPokemon = () => {
 		const nonLegendaryPokemonIds = pokemons.map(pokemon => pokemon.id);
@@ -124,6 +134,22 @@ const Game = () => {
 		}
 	};
 
+	const generatePreviousLevels = (currentLevel: number) => {
+		const levels = [];
+		for (let i = currentLevel - 2; i < currentLevel; i++) {
+			levels.push(i);
+		}
+		return levels;
+	};
+
+	const generateNextLevels = (currentLevel: number) => {
+		const levels = [];
+		for (let i = currentLevel + 1; i < currentLevel + 3; i++) {
+			levels.push(i);
+		}
+		return levels;
+	};
+
 	useEffect(() => {
 		if (currentLevel % 100 === 0) {
 			getRandomLegendaryPokemon();
@@ -134,18 +160,17 @@ const Game = () => {
 		}
 	}, [pokemons]);
 
+	useEffect(() => {
+		setPreviousLevels(generatePreviousLevels(currentLevel));
+		setNextLevels(generateNextLevels(currentLevel));
+	}, [pokemon]);
+
 	if (!pokemon)
 		return (
 			<View>
 				<Text>Pas de pokemon</Text>
 			</View>
 		);
-
-	const renderItem = (item: number, index: number) => (
-		<View key={index}>
-			<Text>{item}</Text>
-		</View>
-	);
 
 	return (
 		<View style={styles.container}>
@@ -183,23 +208,25 @@ const Game = () => {
 					</View>
 				</View>
 			</View>
+			<View style={styles.levelsContainer}>
+				{previousLevels.map((level, index) => (
+					<Animated.View key={index} style={styles.levelContainer}>
+						<Text>{level}</Text>
+					</Animated.View>
+				))}
 
-			{/* <Carousel
-				data={Array.from({ length: 9 }, (_, i) => currentLevel - 4 + i)}
-				renderItem={({ item, index }) => renderItem(item, index)}
-				ref={carrouselRef}
-				width={60}
-				height={40}
-				loop={true}
-				style={{
-					width: '100%',
-					height: 40,
-					justifyContent: 'center',
-					alignItems: 'center',
-					borderBottomWidth: 1,
-					borderBottomColor: '#0071fa'
-				}}
-			/> */}
+				<Animated.View
+					style={[styles.levelContainer, styles.currentLevelContainer]}
+				>
+					<Text>{currentLevel}</Text>
+				</Animated.View>
+
+				{nextLevels.map((level, index) => (
+					<Animated.View key={index} style={styles.levelContainer}>
+						<Text>{level}</Text>
+					</Animated.View>
+				))}
+			</View>
 
 			<Pokemon
 				imgRef={pokemonImgRef}
@@ -272,18 +299,25 @@ const styles = StyleSheet.create({
 		alignItems: 'center',
 		gap: 10
 	},
-	levelText: {
-		fontSize: 18,
-		fontWeight: 'bold',
-		color: 'white'
-	},
-	carouselItem: {
-		width: 50,
-		height: 50,
-		borderRadius: 10,
-		backgroundColor: '#3498db',
+	levelsContainer: {
+		width: '100%',
+		height: 40,
+		marginTop: 10,
+		flexDirection: 'row',
 		justifyContent: 'center',
 		alignItems: 'center',
-		marginHorizontal: 5
+		gap: 10
+	},
+	levelContainer: {
+		width: 40,
+		height: 40,
+		backgroundColor: '#fff',
+		borderRadius: 5,
+		justifyContent: 'center',
+		alignItems: 'center',
+		padding: 5
+	},
+	currentLevelContainer: {
+		transform: [{ scale: 1.2 }, { translateY: 5 }]
 	}
 });

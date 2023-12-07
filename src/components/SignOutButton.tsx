@@ -82,7 +82,7 @@ export const SignOutButton = () => {
 const styles = StyleSheet.create({
 	container: {
 		position: 'absolute',
-		top: 150,
+		top: 140,
 		right: 5
 	},
 	iconContainer: {
