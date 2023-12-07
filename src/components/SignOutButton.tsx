@@ -52,6 +52,17 @@ export const SignOutButton = () => {
 					{ merge: true }
 				);
 			});
+
+			store.getState().success.value.map(async success => {
+				await setDoc(
+					doc(db, 'Successes', `${success.name}_${user.uid}`),
+					{
+						lastRewardIndexClaimed: success.lastRewardIndexClaimed,
+						rewards: success.rewards
+					},
+					{ merge: true }
+				);
+			});
 			dispatch(resetLevel());
 			dispatch(decrementPokedollarMoneyByAmount(pokeDollar));
 			dispatch(decrementPokeBallMoneyByAmount(pokeBall));

@@ -12,6 +12,7 @@ import { InitialUpgrades } from '../../constants/InitialUpgrades';
 import RouterProps from '../../types/routerProps';
 import RegisterStyle from '../../styles/register';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { InitialSuccesses } from '../../constants/InitialSuccesses';
 async function registerEmailPassword(email: string, password: string) {
 	try {
 		const auth = getAuth();
@@ -37,6 +38,23 @@ async function registerEmailPassword(email: string, password: string) {
 						basicDps: upgrade.basicDps,
 						level: upgrade.level,
 						index: upgrade.index,
+						uid_user: user_uid
+					},
+					{ merge: true }
+				);
+			});
+
+			const initialSuccesses = InitialSuccesses;
+			initialSuccesses.forEach(success => {
+				setDoc(
+					doc(db, 'Successes', `${success.name}_${user_uid}`),
+					{
+						id: success.id,
+						name: success.name,
+						icon: success.icon,
+						levels: success.levels,
+						lastRewardIndexClaimed: success.lastRewardIndexClaimed,
+						rewards: success.rewards,
 						uid_user: user_uid
 					},
 					{ merge: true }

@@ -61,6 +61,8 @@ const Quests = () => {
 		}
 	};
 
+	if (!successes) return null;
+
 	return (
 		<View style={styles.successesContainer}>
 			{successes.map((success: SuccessDetails) => (

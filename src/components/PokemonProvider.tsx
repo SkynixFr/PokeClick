@@ -17,6 +17,8 @@ import {
 	incrementPokeDollarMoneyByAmount
 } from '../features/moneySlice';
 import { setDps } from '../features/dpsSlice';
+import { SuccessDetails } from '../types/success';
+import { addSuccesses } from '../features/successSlice';
 
 export const PokemonProvider = (props: React.PropsWithChildren) => {
 	const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -76,8 +78,33 @@ export const PokemonProvider = (props: React.PropsWithChildren) => {
 		});
 
 		upgrades.sort(compareId);
+
+		const querySuccess = query(
+			collection(db, 'Successes'),
+			where('uid_user', '==', user.uid)
+		);
+		const querySnapshotSuccess = await getDocs(querySuccess);
+
+		const successes: SuccessDetails[] = [];
+
+		querySnapshotSuccess.docs.map(dataDetails => {
+			const currentDataDetails = dataDetails.data();
+
+			const currentSuccess: SuccessDetails = {
+				id: currentDataDetails.id,
+				name: currentDataDetails.name,
+				icon: currentDataDetails.icon,
+				levels: currentDataDetails.levels,
+				lastRewardIndexClaimed: currentDataDetails.lastRewardIndexClaimed,
+				rewards: currentDataDetails.rewards
+			};
+
+			successes.push(currentSuccess);
+		});
+
 		dispatch(incrementDpcByAmount(upgrades[0].dpc));
 		dispatch(addUpgrades(upgrades));
+		dispatch(addSuccesses(successes));
 		dispatch(setDps(totalDps));
 	};
 
