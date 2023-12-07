@@ -1,12 +1,20 @@
-import { View, Text, Alert } from 'react-native';
 import React from 'react';
-import RegisterStyle from '../../styles/register';
-import { TextInput } from 'react-native-gesture-handler';
+import {
+	View,
+	Text,
+	TextInput,
+	ImageBackground,
+	Image,
+	StyleSheet
+} from 'react-native';
 import { Button } from '@rneui/themed';
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
+import { Alert } from 'react-native';
 import RouterProps from '../../types/routerProps';
 import { isValidEmail } from '../../handler/isValid';
 import { isValidPassword } from '../../handler/isValid';
+import Loginstyle from '../../styles/login';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 async function loginFirebase(email: string, password: string) {
 	try {
@@ -17,7 +25,8 @@ async function loginFirebase(email: string, password: string) {
 	} catch (error: any) {
 		const errorCode = error.code;
 		const errorMessage = error.message;
-		console.log(errorCode + ' ' + errorMessage);
+		console.error(errorCode + ' ' + errorMessage);
+
 		// Erreur de connexion
 		if (errorCode === 'auth/invalid-credential') {
 			Alert.alert('Erreur', 'Veuillez vérifier vos identifiants');
@@ -31,15 +40,16 @@ async function loginFirebase(email: string, password: string) {
 	}
 }
 
-export const Login = ({ navigation }: RouterProps) => {
+const Login = ({ navigation }: RouterProps) => {
 	const [email, setEmail] = React.useState<string>('');
 	const [password, setPassword] = React.useState<string>('');
 	const [emailError, setEmailError] = React.useState<string>('');
 	const [passwordError, setPasswordError] = React.useState<string>('');
+	const [showPassword, setShowPassword] = React.useState<boolean>(false);
 
 	const validateEmail = () => {
 		if (email && !isValidEmail(email)) {
-			setEmailError('Please enter a valid email address.');
+			setEmailError('Veuillez entrer un email valide.');
 		} else {
 			setEmailError('');
 		}
@@ -48,7 +58,7 @@ export const Login = ({ navigation }: RouterProps) => {
 	const validatePassword = () => {
 		if (password && !isValidPassword(password)) {
 			setPasswordError(
-				'Password must contain at least one lowercase letter, one uppercase letter, one digit, and be at least 6 characters long.'
+				'Le Mot de passe doit contenir au moins 6 caractères, une majuscule, une minuscule et un chiffre.'
 			);
 		} else {
 			setPasswordError('');
@@ -57,10 +67,7 @@ export const Login = ({ navigation }: RouterProps) => {
 
 	const handleLogin = () => {
 		if (!email || !password) {
-			Alert.alert(
-				'Validation Error',
-				'Please enter both email and password.'
-			);
+			Alert.alert('Validation Error', 'Veuillez remplir tous les champs.');
 			return;
 		}
 
@@ -71,43 +78,69 @@ export const Login = ({ navigation }: RouterProps) => {
 			loginFirebase(email, password);
 		}
 	};
+	//Afficher ou cacher le mot de passe
+	const toggleShowPassword = () => {
+		setShowPassword(!showPassword);
+	};
 
 	return (
 		<>
-			<View style={RegisterStyle.container}>
-				<Text>Login</Text>
-				{emailError ? (
-					<Text style={{ color: 'red' }}>{emailError}</Text>
-				) : null}
-				<TextInput
-					onChangeText={text => {
-						setEmail(text);
-						setEmailError('');
-					}}
-					onBlur={validateEmail}
-					value={email}
-					autoCapitalize="none"
-					placeholder="Your Email"
+			<View style={Loginstyle.container}>
+				<Image
+					style={Loginstyle.logo}
+					source={require('../../../assets/PokeclickLogo.png')}
 				/>
-				{passwordError ? (
-					<Text style={{ color: 'red' }}>{passwordError}</Text>
-				) : null}
-				<TextInput
-					onChangeText={text => {
-						setPassword(text);
-						setPasswordError('');
-					}}
-					onBlur={validatePassword}
-					value={password}
-					autoCapitalize="none"
-					secureTextEntry={true}
-					placeholder="Your Password"
-				/>
-				<Button onPress={handleLogin} title="Login" />
-				<Button
-					onPress={() => navigation.navigate('Register')}
-					title="Create an Account"
-				/>
+				<View style={Loginstyle.formContainer}>
+					{emailError ? (
+						<Text style={Loginstyle.errorText}>{emailError}</Text>
+					) : null}
+					<View style={Loginstyle.inputContainer}>
+						<TextInput
+							style={Loginstyle.input}
+							onChangeText={text => {
+								setEmail(text);
+								setEmailError('');
+							}}
+							onBlur={validateEmail}
+							value={email}
+							autoCapitalize="none"
+							placeholder="example@gmail.com"
+						/>
+					</View>
+					{passwordError ? (
+						<Text style={Loginstyle.errorText}>{passwordError}</Text>
+					) : null}
+					<View style={Loginstyle.inputContainer}>
+						<TextInput
+							style={Loginstyle.input}
+							onChangeText={text => {
+								setPassword(text);
+								setPasswordError('');
+							}}
+							onBlur={validatePassword}
+							value={password}
+							autoCapitalize="none"
+							secureTextEntry={!showPassword}
+							placeholder="Your Password"
+						/>
+						<MaterialCommunityIcons
+							name={showPassword ? 'eye-off' : 'eye'}
+							size={24}
+							color="#aaa"
+							style={Loginstyle.iconPassword}
+							onPress={toggleShowPassword}
+						/>
+					</View>
+					<Button onPress={handleLogin} title="Login" />
+					{/* séparer les deux boutons */}
+					<View style={{ marginVertical: 5 }} />
+					<Button
+						onPress={() => navigation.navigate('Register')}
+						title="Create an Account"
+					/>
+				</View>
+
+				<Image source={require('../../../assets/pikachu.gif')} />
 			</View>
 		</>
 	);

@@ -102,7 +102,7 @@ const Pokemon: React.FC<PokemonDetailsProps> = ({
 				randomPokemon();
 			}
 			dispatch(incrementLevel());
-			const moneyEarned = computeMoney();
+			const moneyEarned = computeMoney(currentLevel);
 			dispatch(incrementPokeDollarMoneyByAmount(moneyEarned));
 		}
 	}, [pokemonLife]);

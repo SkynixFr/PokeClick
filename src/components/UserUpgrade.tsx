@@ -40,7 +40,7 @@ const UpgradeComponent: React.FC<UpgradeComponentProps> = ({ upgrade }) => {
 	) => {
 		return {
 			nextDpc: computeDPC(basicDpc, level),
-			nextDps: computeDPS(basicDps, dps, level)
+			nextDps: computeDPS(basicDps, level)
 		};
 	};
 
@@ -78,7 +78,7 @@ const UpgradeComponent: React.FC<UpgradeComponentProps> = ({ upgrade }) => {
 		<View style={styles.container}>
 			<Image
 				source={PokemonImgByPokemonId[upgrade.id]}
-				style={{ width: 70, height: 70 }} // Ajustez la taille et la marge selon vos besoins
+				style={styles.imageColumn} // Ajustez la taille et la marge selon vos besoins
 			/>
 			<View style={styles.dataColumn}>
 				<View>
@@ -88,22 +88,19 @@ const UpgradeComponent: React.FC<UpgradeComponentProps> = ({ upgrade }) => {
 				<View>
 					{upgrade.basicDps !== 0 ? (
 						<Text style={styles.smallLabel}>
-							Dégâts par seconde: {dpsToExpontential(upgrade.dps)}
+							DPS: {dpsToExpontential(upgrade.dps)}
 						</Text>
 					) : null}
 					{upgrade.basicDpc !== 0 ? (
 						<Text style={styles.smallLabel}>
-							Dégâts par click: {dpcToExpontential(upgrade.dpc)}
+							DPC: {dpcToExpontential(upgrade.dpc)}
 						</Text>
 					) : null}
 				</View>
 			</View>
 
 			<View style={styles.levelColumn}>
-				<Text>
-					Level{'\n'}
-					{upgrade.level}
-				</Text>
+				<Text>{`Level ${upgrade.level}`}</Text>
 			</View>
 
 			<View style={styles.buttonColumn}>
@@ -136,9 +133,14 @@ const styles = StyleSheet.create({
 		borderColor: '#E0E0E0',
 		margin: 5
 	},
+	imageColumn: {
+		width: '20%',
+		height: '80%',
+		resizeMode: 'contain'
+	},
 	dataColumn: {
 		marginLeft: 10,
-		width: '30%'
+		width: '25%'
 		// borderWidth: 1
 	},
 	levelColumn: {
