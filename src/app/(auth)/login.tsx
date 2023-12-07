@@ -13,6 +13,7 @@ import { Alert } from 'react-native';
 import RouterProps from '../../types/routerProps';
 import { isValidEmail } from '../../handler/isValid';
 import { isValidPassword } from '../../handler/isValid';
+import Loginstyle from '../../styles/login';
 
 async function loginFirebase(email: string, password: string) {
 	try {
@@ -114,60 +115,18 @@ const Login = ({ navigation }: RouterProps) => {
 						placeholder="Your Password"
 					/>
 					<Button onPress={handleLogin} title="Login" />
+					{/* séparer les deux boutons */}
 					<View style={{ marginVertical: 5 }} />
 					<Button
 						onPress={() => navigation.navigate('Register')}
 						title="Create an Account"
 					/>
 				</View>
-				<View>
-					<Image source={require('../../../assets/pikachu.gif')} />
-				</View>
+
+				<Image source={require('../../../assets/pikachu.gif')} />
 			</View>
 		</>
 	);
 };
-
-const Loginstyle = StyleSheet.create({
-	container: {
-		flex: 1,
-		backgroundColor: '#F9F9F9',
-		alignItems: 'center',
-		justifyContent: 'center'
-	},
-	logo: {
-		width: '100%',
-		height: '20%',
-		marginVertical: 20
-	},
-
-	imageBackground: {
-		flex: 1,
-		width: '100%',
-		resizeMode: 'cover'
-	},
-	formContainer: {
-		backgroundColor: 'white',
-		padding: 20,
-		borderRadius: 10,
-		width: '80%',
-		marginTop: 20,
-		elevation: 5
-	},
-	input: {
-		height: 40,
-		borderColor: 'gray',
-		borderWidth: 1,
-		marginBottom: 10,
-		paddingLeft: 10
-	},
-	errorText: {
-		color: 'red',
-		marginBottom: 10
-	},
-	Button: {
-		marginVertical: 100
-	}
-});
 
 export default Login;
