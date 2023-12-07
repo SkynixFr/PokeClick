@@ -80,7 +80,7 @@ const StarterSelection: React.FC<StarterSelectionProps> = ({
 
 	return (
 		<View style={styles.container}>
-			<Text style={styles.text}>Choisis ton Pokémon de départ !</Text>
+			<Text style={styles.text}>Choose your starter !</Text>
 			<View style={styles.list}>
 				{starters.map((starter: Starter) => (
 					<TouchableOpacity
@@ -130,10 +130,11 @@ const styles = StyleSheet.create({
 	},
 	imageStarter: {
 		width: '100%',
-		height: '100%'
+		height: '100%',
+		resizeMode: 'contain',
 	},
 	textStarter: {
 		textAlign: 'center',
-		fontSize: 20
+		fontSize: 16,
 	}
 });

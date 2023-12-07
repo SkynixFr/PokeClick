@@ -82,7 +82,9 @@ const UpgradeComponent: React.FC<UpgradeComponentProps> = ({ upgrade }) => {
 			/>
 			<View style={styles.dataColumn}>
 				<View>
-					<Text style={styles.label}>{upgrade.name}</Text>
+					<Text style={styles.label} numberOfLines={1}>
+						{upgrade.name}
+					</Text>
 				</View>
 
 				<View>
@@ -156,10 +158,10 @@ const styles = StyleSheet.create({
 		// borderWidth: 1
 	},
 	label: {
-		fontSize: 16
+		fontSize: 15
 	},
 	smallLabel: {
-		fontSize: 12
+		fontSize: 11
 	},
 
 	button: {
