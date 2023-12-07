@@ -24,8 +24,7 @@ const RegisterStyle = StyleSheet.create({
 	input: {
 		height: 40,
 		borderColor: 'gray',
-
-		marginBottom: 10,
+		marginBottom: 5,
 		paddingLeft: 10
 	},
 	emailContainer: {
@@ -50,10 +49,7 @@ const RegisterStyle = StyleSheet.create({
 		marginBottom: 10
 	},
 	iconPassword: {
-		marginLeft: '40%'
-	},
-	iconConfirmPassword: {
-		marginLeft: '20%'
+		marginLeft: 110
 	}
 });
 

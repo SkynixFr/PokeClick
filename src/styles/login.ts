@@ -24,18 +24,19 @@ const Loginstyle = StyleSheet.create({
 		borderRadius: 10,
 		width: '80%',
 		marginTop: 20,
-		elevation: 5
+		elevation: 5,
+		textAlign: 'center'
 	},
 	input: {
 		height: 40,
 		borderColor: 'gray',
-
-		marginBottom: 10,
+		marginBottom: 5,
 		paddingLeft: 10
 	},
 	inputContainer: {
 		flexDirection: 'row',
 		alignItems: 'center',
+		textAlign: 'center',
 		borderColor: 'gray',
 		borderWidth: 1,
 		marginBottom: 10

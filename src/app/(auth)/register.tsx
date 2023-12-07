@@ -119,7 +119,7 @@ export const Register = ({ navigation }: RouterProps) => {
 							style={RegisterStyle.emailContainer}
 							onChangeText={setEmail}
 							onBlur={() => {
-								validateEmail;
+								validateEmail();
 							}}
 							value={email}
 							autoCapitalize="none"
@@ -165,13 +165,6 @@ export const Register = ({ navigation }: RouterProps) => {
 							value={confirmPassword}
 							autoCapitalize="none"
 							placeholder="Confirm Your Password"
-						/>
-						<MaterialCommunityIcons
-							name={showPassword ? 'eye-off' : 'eye'}
-							size={24}
-							color="#aaa"
-							style={RegisterStyle.iconConfirmPassword}
-							onPress={toggleShowPassword}
 						/>
 					</View>
 					<Button
