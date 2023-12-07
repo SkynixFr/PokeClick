@@ -108,9 +108,14 @@ const UpgradeComponent: React.FC<UpgradeComponentProps> = ({ upgrade }) => {
 
 			<View style={styles.buttonColumn}>
 				<TouchableOpacity style={buttonStyle} onPress={onUpgrade}>
-					<Text
-						style={styles.buttonText}
-					>{`Upgrade\n${pokeDollarToExpontential(upgrade.cost)}`}</Text>
+					<Text style={styles.buttonText}>Upgrade</Text>
+					<Text style={styles.buttonText}>
+						{pokeDollarToExpontential(upgrade.cost)}
+						<Image
+							source={require('../../assets/PokeDollar.png')}
+							style={{ width: 15, height: 15 }}
+						></Image>
+					</Text>
 				</TouchableOpacity>
 			</View>
 		</View>
@@ -123,7 +128,6 @@ const styles = StyleSheet.create({
 	container: {
 		flexDirection: 'row',
 		height: 100,
-		// justifyContent: 'space-around',
 		alignItems: 'center',
 		padding: 5,
 		borderRadius: 10,
@@ -134,7 +138,7 @@ const styles = StyleSheet.create({
 	},
 	dataColumn: {
 		marginLeft: 10,
-		width: '40%'
+		width: '30%'
 		// borderWidth: 1
 	},
 	levelColumn: {
@@ -145,7 +149,8 @@ const styles = StyleSheet.create({
 	},
 	buttonColumn: {
 		flexDirection: 'column',
-		justifyContent: 'center'
+		justifyContent: 'center',
+		width: '30%'
 		// borderWidth: 1
 	},
 	label: {
@@ -168,6 +173,7 @@ const styles = StyleSheet.create({
 		alignItems: 'center'
 	},
 	buttonText: {
-		color: 'white'
+		color: 'white',
+		textAlign: 'center'
 	}
 });
