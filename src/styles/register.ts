@@ -9,6 +9,7 @@ const RegisterStyle = StyleSheet.create({
 	logo: {
 		width: '90%',
 		height: '20%',
+
 		marginVertical: 20,
 		resizeMode: 'contain'
 	},
@@ -23,9 +24,22 @@ const RegisterStyle = StyleSheet.create({
 	input: {
 		height: 40,
 		borderColor: 'gray',
-		borderWidth: 1,
+
 		marginBottom: 10,
 		paddingLeft: 10
+	},
+	emailContainer: {
+		height: 40,
+		borderColor: 'gray',
+		marginLeft: 10,
+		marginBottom: 10
+	},
+	inputContainer: {
+		flexDirection: 'row',
+		alignItems: 'center',
+		borderColor: 'gray',
+		borderWidth: 1,
+		marginBottom: 10
 	},
 	ronflex: {
 		width: '100%',
@@ -34,6 +48,12 @@ const RegisterStyle = StyleSheet.create({
 	errorText: {
 		color: 'red',
 		marginBottom: 10
+	},
+	iconPassword: {
+		marginLeft: '40%'
+	},
+	iconConfirmPassword: {
+		marginLeft: '20%'
 	}
 });
 

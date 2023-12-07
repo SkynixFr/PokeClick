@@ -11,7 +11,7 @@ import { db } from '../../firebase/firebaseInit';
 import { InitialUpgrades } from '../../constants/InitialUpgrades';
 import RouterProps from '../../types/routerProps';
 import RegisterStyle from '../../styles/register';
-
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 async function registerEmailPassword(email: string, password: string) {
 	try {
 		const auth = getAuth();
@@ -60,7 +60,7 @@ export const Register = ({ navigation }: RouterProps) => {
 	const [emailError, setEmailError] = useState<string>('');
 	const [passwordError, setPasswordError] = useState<string>('');
 	const [confirmPasswordError, setConfirmPasswordError] = useState<string>('');
-
+	const [showPassword, setShowPassword] = useState(false);
 	const handleRegister = (
 		email: string,
 		password: string,
@@ -98,6 +98,10 @@ export const Register = ({ navigation }: RouterProps) => {
 			setConfirmPasswordError('');
 		}
 	};
+	// Function to toggle the password visibility state
+	const toggleShowPassword = () => {
+		setShowPassword(!showPassword);
+	};
 
 	return (
 		<>
@@ -110,46 +114,66 @@ export const Register = ({ navigation }: RouterProps) => {
 					{emailError ? (
 						<Text style={RegisterStyle.errorText}>{emailError}</Text>
 					) : null}
-					<TextInput
-						style={RegisterStyle.input}
-						onChangeText={setEmail}
-						onBlur={() => {
-							validateEmail;
-						}}
-						value={email}
-						autoCapitalize="none"
-						placeholder="Your Email"
-					/>
+					<View style={RegisterStyle.inputContainer}>
+						<TextInput
+							style={RegisterStyle.emailContainer}
+							onChangeText={setEmail}
+							onBlur={() => {
+								validateEmail;
+							}}
+							value={email}
+							autoCapitalize="none"
+							placeholder="example@gmail.com"
+						/>
+					</View>
 					{passwordError ? (
 						<Text style={{ color: 'red' }}>{passwordError}</Text>
 					) : null}
-					<TextInput
-						style={RegisterStyle.input}
-						onChangeText={setPassword}
-						secureTextEntry={true}
-						onBlur={() => {
-							validatePassword();
-						}}
-						value={password}
-						autoCapitalize="none"
-						placeholder="Your Password"
-					/>
+					<View style={RegisterStyle.inputContainer}>
+						<TextInput
+							style={RegisterStyle.input}
+							onChangeText={setPassword}
+							secureTextEntry={!showPassword}
+							onBlur={() => {
+								validatePassword();
+							}}
+							value={password}
+							autoCapitalize="none"
+							placeholder="Your Password"
+						/>
+						<MaterialCommunityIcons
+							name={showPassword ? 'eye-off' : 'eye'}
+							size={24}
+							color="#aaa"
+							style={RegisterStyle.iconPassword}
+							onPress={toggleShowPassword}
+						/>
+					</View>
 					{confirmPasswordError ? (
 						<Text style={RegisterStyle.errorText}>
 							{confirmPasswordError}
 						</Text>
 					) : null}
-					<TextInput
-						style={RegisterStyle.input}
-						onChangeText={setConfirmPassword}
-						secureTextEntry={true}
-						onBlur={() => {
-							validateConfirmPassword();
-						}}
-						value={confirmPassword}
-						autoCapitalize="none"
-						placeholder="Confirm Your Password"
-					/>
+					<View style={RegisterStyle.inputContainer}>
+						<TextInput
+							style={RegisterStyle.input}
+							onChangeText={setConfirmPassword}
+							secureTextEntry={!showPassword}
+							onBlur={() => {
+								validateConfirmPassword();
+							}}
+							value={confirmPassword}
+							autoCapitalize="none"
+							placeholder="Confirm Your Password"
+						/>
+						<MaterialCommunityIcons
+							name={showPassword ? 'eye-off' : 'eye'}
+							size={24}
+							color="#aaa"
+							style={RegisterStyle.iconConfirmPassword}
+							onPress={toggleShowPassword}
+						/>
+					</View>
 					<Button
 						title="Register"
 						onPress={() =>

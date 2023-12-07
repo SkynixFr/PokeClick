@@ -14,6 +14,7 @@ import RouterProps from '../../types/routerProps';
 import { isValidEmail } from '../../handler/isValid';
 import { isValidPassword } from '../../handler/isValid';
 import Loginstyle from '../../styles/login';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 async function loginFirebase(email: string, password: string) {
 	try {
@@ -44,6 +45,7 @@ const Login = ({ navigation }: RouterProps) => {
 	const [password, setPassword] = React.useState<string>('');
 	const [emailError, setEmailError] = React.useState<string>('');
 	const [passwordError, setPasswordError] = React.useState<string>('');
+	const [showPassword, setShowPassword] = React.useState<boolean>(false);
 
 	const validateEmail = () => {
 		if (email && !isValidEmail(email)) {
@@ -76,6 +78,10 @@ const Login = ({ navigation }: RouterProps) => {
 			loginFirebase(email, password);
 		}
 	};
+	//Afficher ou cacher le mot de passe
+	const toggleShowPassword = () => {
+		setShowPassword(!showPassword);
+	};
 
 	return (
 		<>
@@ -88,32 +94,43 @@ const Login = ({ navigation }: RouterProps) => {
 					{emailError ? (
 						<Text style={Loginstyle.errorText}>{emailError}</Text>
 					) : null}
-					<TextInput
-						style={Loginstyle.input}
-						onChangeText={text => {
-							setEmail(text);
-							setEmailError('');
-						}}
-						onBlur={validateEmail}
-						value={email}
-						autoCapitalize="none"
-						placeholder="Your Email"
-					/>
+					<View style={Loginstyle.inputContainer}>
+						<TextInput
+							style={Loginstyle.input}
+							onChangeText={text => {
+								setEmail(text);
+								setEmailError('');
+							}}
+							onBlur={validateEmail}
+							value={email}
+							autoCapitalize="none"
+							placeholder="example@gmail.com"
+						/>
+					</View>
 					{passwordError ? (
 						<Text style={Loginstyle.errorText}>{passwordError}</Text>
 					) : null}
-					<TextInput
-						style={Loginstyle.input}
-						onChangeText={text => {
-							setPassword(text);
-							setPasswordError('');
-						}}
-						onBlur={validatePassword}
-						value={password}
-						autoCapitalize="none"
-						secureTextEntry={true}
-						placeholder="Your Password"
-					/>
+					<View style={Loginstyle.inputContainer}>
+						<TextInput
+							style={Loginstyle.input}
+							onChangeText={text => {
+								setPassword(text);
+								setPasswordError('');
+							}}
+							onBlur={validatePassword}
+							value={password}
+							autoCapitalize="none"
+							secureTextEntry={!showPassword}
+							placeholder="Your Password"
+						/>
+						<MaterialCommunityIcons
+							name={showPassword ? 'eye-off' : 'eye'}
+							size={24}
+							color="#aaa"
+							style={Loginstyle.iconPassword}
+							onPress={toggleShowPassword}
+						/>
+					</View>
 					<Button onPress={handleLogin} title="Login" />
 					{/* séparer les deux boutons */}
 					<View style={{ marginVertical: 5 }} />

@@ -29,9 +29,16 @@ const Loginstyle = StyleSheet.create({
 	input: {
 		height: 40,
 		borderColor: 'gray',
-		borderWidth: 1,
+
 		marginBottom: 10,
 		paddingLeft: 10
+	},
+	inputContainer: {
+		flexDirection: 'row',
+		alignItems: 'center',
+		borderColor: 'gray',
+		borderWidth: 1,
+		marginBottom: 10
 	},
 	errorText: {
 		color: 'red',
@@ -39,6 +46,9 @@ const Loginstyle = StyleSheet.create({
 	},
 	Button: {
 		marginVertical: 100
+	},
+	iconPassword: {
+		marginLeft: '45%'
 	}
 });
 
