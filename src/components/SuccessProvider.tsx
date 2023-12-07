@@ -19,7 +19,7 @@ export const SuccessProvider = (props: React.PropsWithChildren) => {
 					id: '1',
 					name: 'Gourou de la Gravité',
 					icon: 'sort-amount-up',
-					levels: [10, 11, 12, 13, 14],
+					levels: [10, 50, 100, 200, 300],
 					lastRewardIndexClaimed: 0,
 					rewards: [
 						{ amount: 10, claimed: false },
@@ -33,7 +33,7 @@ export const SuccessProvider = (props: React.PropsWithChildren) => {
 					id: '2',
 					name: 'Tyran du Tapotage',
 					icon: 'hand-pointer',
-					levels: [1, 5, 10, 15, 20],
+					levels: [100, 1000, 10000, 100000, 1000000],
 					lastRewardIndexClaimed: 0,
 					rewards: [
 						{
