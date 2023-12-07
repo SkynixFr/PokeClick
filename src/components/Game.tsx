@@ -18,6 +18,7 @@ import { computePokemonLife } from '../utils/computePokemonLife';
 import LegendaryMythicalPokemons from '../constants/LegendaryMythicalPokemon';
 import SecretZarbi from './SecretZarbi';
 import { decrementLevel } from '../features/levelSlice';
+import { toExponential } from '../utils/toExponential';
 
 const Game = () => {
 	const dispatch = useDispatch();
@@ -148,15 +149,14 @@ const Game = () => {
 							source={require('../../assets/pokeDollar.png')}
 							style={{ width: 30, height: 30 }}
 						/>
-						<Text>{currentPokedollar}</Text>
-						<Text>{currentLevel}</Text>
+						<Text>{toExponential(currentPokedollar)}</Text>
 					</View>
 					<View style={styles.pokeBalls}>
 						<Image
 							source={require('../../assets/pokeBall.png')}
 							style={{ width: 30, height: 30 }}
 						/>
-						<Text>{currentPokeball}</Text>
+						<Text>{toExponential(currentPokeball)}</Text>
 					</View>
 				</View>
 				<View style={styles.damage}>
@@ -165,19 +165,19 @@ const Game = () => {
 							source={require('../../assets/dpc.png')}
 							style={{ width: 30, height: 30 }}
 						/>
-						<Text>{currentDpc}</Text>
+						<Text>{toExponential(currentDpc)}</Text>
 					</View>
 					<View style={styles.dps}>
 						<Image
 							source={require('../../assets/dps.png')}
 							style={{ width: 30, height: 30 }}
 						/>
-						<Text>{currentDps}</Text>
+						<Text>{toExponential(currentDps)}</Text>
 					</View>
 				</View>
 			</View>
 
-			<Carousel
+			{/* <Carousel
 				data={Array.from({ length: 9 }, (_, i) => currentLevel - 4 + i)}
 				renderItem={({ item, index }) => renderItem(item, index)}
 				ref={carrouselRef}
@@ -192,15 +192,6 @@ const Game = () => {
 					borderBottomWidth: 1,
 					borderBottomColor: '#0071fa'
 				}}
-			/>
-
-			{/* <Carousel
-				data={Array.from({ length: 9 }, (_, i) => currentLevel - 4 + i)}
-				renderItem={({ item, index }) => renderItem(item, index)}
-				itemWidth={60} // Ajustez la largeur selon vos besoins
-				separatorWidth={5} // Espace horizontal entre les blocs
-				inactiveOpacity={0.5}
-				containerWidth={300} // Ajustez la largeur du conteneur selon vos besoins
 			/> */}
 
 			<Pokemon
