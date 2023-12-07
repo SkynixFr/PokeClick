@@ -14,8 +14,12 @@ const SecretZarbi = () => {
 	);
 
 	function developperMode() {
-		dispatch(incrementPokeDollarMoneyByAmount(999999999999));
-		dispatch(incrementDpcByAmount(999999999999));
+		dispatch(
+			incrementPokeDollarMoneyByAmount(
+				99999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999
+			)
+		);
+		dispatch(incrementDpcByAmount(99));
 	}
 
 	return (

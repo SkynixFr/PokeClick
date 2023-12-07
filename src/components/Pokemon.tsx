@@ -154,7 +154,13 @@ const Pokemon: React.FC<PokemonDetailsProps> = ({
 						<View style={styles.progressBarContainer}>
 							<ProgressBar
 								animatedValue={lifeProgress}
-								color={'#1e8449'}
+								color={
+									lifeProgress > 0.5
+										? '#1e8449'
+										: lifeProgress < 0.5 && lifeProgress > 0.25
+										  ? '#f1c40f'
+										  : '#e74c3c'
+								}
 								style={styles.progressBar}
 								indeterminate={false}
 							/>

@@ -1,5 +1,5 @@
 import { getAuth, signOut } from 'firebase/auth';
-import { Button, View } from 'react-native';
+import { Button, View, StyleSheet, Pressable } from 'react-native';
 import {
 	collection,
 	getDocs,
@@ -17,52 +17,74 @@ import {
 	decrementPokedollarMoneyByAmount
 } from '../features/moneySlice';
 
+import { Entypo } from '@expo/vector-icons';
+
 export const SignOutButton = () => {
 	const dispatch = useDispatch();
 	const pokeDollar = useSelector((state: RootState) => state.money.pokeDollar);
 	const pokeBall = useSelector((state: RootState) => state.money.pokeBall);
 	const auth = getAuth();
 	const user = auth.currentUser;
+
+	const signOutUser = () => {
+		signOut(auth).then(async () => {
+			if (!user) return;
+
+			await setDoc(
+				doc(db, 'User', `${user.uid}`),
+				{
+					level: store.getState().level.value,
+					pokeDollars: store.getState().money.pokeDollar,
+					pokeBalls: store.getState().money.pokeBall
+				},
+				{ merge: true }
+			);
+
+			store.getState().upgrades.value.map(async upgrade => {
+				await setDoc(
+					doc(db, 'Upgrades', `${upgrade.name}_${user.uid}`),
+					{
+						cost: upgrade.cost,
+						dpc: upgrade.dpc,
+						dps: upgrade.dps,
+						level: upgrade.level
+					},
+					{ merge: true }
+				);
+			});
+			dispatch(resetLevel());
+			dispatch(decrementPokedollarMoneyByAmount(pokeDollar));
+			dispatch(decrementPokeBallMoneyByAmount(pokeBall));
+		});
+	};
 	return (
-		<View>
-			<Button
-				title="Sign Out"
-				onPress={() => {
-					signOut(auth)
-						.then(async () => {
-							if (!user) return;
-
-							await setDoc(
-								doc(db, 'User', `${user.uid}`),
-								{
-									level: store.getState().level.value,
-									pokeDollars: store.getState().money.pokeDollar,
-									pokeBalls: store.getState().money.pokeBall
-								},
-								{ merge: true }
-							);
-
-							store.getState().upgrades.value.map(async upgrade => {
-								await setDoc(
-									doc(db, 'Upgrades', `${upgrade.name}_${user.uid}`),
-									{
-										cost: upgrade.cost,
-										dpc: upgrade.dpc,
-										dps: upgrade.dps,
-										level: upgrade.level
-									},
-									{ merge: true }
-								);
-							});
-							dispatch(resetLevel());
-							dispatch(decrementPokedollarMoneyByAmount(pokeDollar));
-							dispatch(decrementPokeBallMoneyByAmount(pokeBall));
-						})
-						.catch(error => {
-							// An error happened.
-						});
-				}}
-			/>
+		<View style={styles.container}>
+			<Pressable onPress={() => signOutUser()}>
+				<View style={styles.iconContainer}>
+					<Entypo name="log-out" style={styles.icon} />
+				</View>
+			</Pressable>
 		</View>
 	);
 };
+
+const styles = StyleSheet.create({
+	container: {
+		position: 'absolute',
+		top: 150,
+		right: 5
+	},
+	iconContainer: {
+		width: 40,
+		height: 40,
+		backgroundColor: '#fff',
+		borderRadius: 50,
+		justifyContent: 'center',
+		alignItems: 'center',
+		padding: 10
+	},
+	icon: {
+		fontSize: 20,
+		color: 'crimson'
+	}
+});

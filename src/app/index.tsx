@@ -15,7 +15,7 @@ const Home = () => {
 				style={{ position: 'absolute' }}
 				resizeMode="cover"
 			/>
-			{/* <SignOutButton /> */}
+			<SignOutButton />
 			<Game />
 			<BottomNavBar />
 		</View>
