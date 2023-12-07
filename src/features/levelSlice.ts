@@ -4,7 +4,7 @@ import type { PayloadAction } from '@reduxjs/toolkit';
 export const levelSlice = createSlice({
 	name: 'level',
 	initialState: {
-		value: 0
+		value: 44
 	},
 	reducers: {
 		incrementLevel: state => {

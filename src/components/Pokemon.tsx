@@ -139,12 +139,6 @@ const Pokemon: React.FC<PokemonDetailsProps> = ({
 	return (
 		<View style={styles.container}>
 			<View style={styles.pokemonWrapper}>
-				{imageLoaded && isLegendary && (
-					<View>
-						<Text>Temps restant : {legendaryBattleTimeRemaining} s</Text>
-					</View>
-				)}
-
 				{imageLoaded && (
 					<View style={styles.pokemonInfos}>
 						<View style={styles.pokemonName}>
@@ -171,6 +165,38 @@ const Pokemon: React.FC<PokemonDetailsProps> = ({
 								{toExponential(pokemonMaxLife)}
 							</Text>
 						</View>
+						{imageLoaded && isLegendary && (
+							<View style={styles.timeContainer}>
+								<Image
+									source={require('../../assets/time.png')}
+									style={{ width: 20, height: 20 }}
+								/>
+								<Text
+									style={
+										legendaryBattleTimeRemaining! >= 20
+											? {
+													color: '#000',
+													fontWeight: 'bold',
+													fontSize: 16
+											  }
+											: legendaryBattleTimeRemaining! < 20 &&
+											    legendaryBattleTimeRemaining! >= 10
+											  ? {
+														color: '#d68910',
+														fontWeight: 'bold',
+														fontSize: 16
+											    }
+											  : {
+														color: '#e74c3c',
+														fontWeight: 'bold',
+														fontSize: 16
+											    }
+									}
+								>
+									{legendaryBattleTimeRemaining} sec
+								</Text>
+							</View>
+						)}
 					</View>
 				)}
 
@@ -225,13 +251,13 @@ const styles = StyleSheet.create({
 		width: '60%',
 		marginLeft: '20%',
 		marginRight: '20%',
-		height: 75,
+		minHeight: 75,
 		padding: 10,
 		backgroundColor: '#f8f9f9',
 		borderWidth: 1,
 		borderTopLeftRadius: 10,
 		borderBottomRightRadius: 10,
-		gap: 5,
+		gap: 10,
 		elevation: 20,
 		shadowColor: '#52006A'
 	},
@@ -253,6 +279,15 @@ const styles = StyleSheet.create({
 		width: '100%',
 		justifyContent: 'flex-end',
 		alignItems: 'flex-end'
+	},
+	timeContainer: {
+		width: '50%',
+		marginLeft: '25%',
+		marginRight: '25%',
+		flexDirection: 'row',
+		justifyContent: 'center',
+		alignItems: 'center',
+		gap: 10
 	},
 	pokemonImage: {
 		width: 200,
