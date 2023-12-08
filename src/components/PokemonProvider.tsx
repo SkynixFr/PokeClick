@@ -7,7 +7,7 @@ import StarterSelection from './StarterSelection';
 import LegendaryMythicalPokemons from '../constants/LegendaryMythicalPokemon';
 import { addUpgrades } from '../features/upgradesSlice';
 import { UpgradeDetails } from '../types/upgrade';
-import { incrementDpcByAmount } from '../features/dpcSlice';
+import { incrementDpcByAmount, setDpc } from '../features/dpcSlice';
 import { getAuth } from 'firebase/auth';
 import { collection, getDocs, query, where } from 'firebase/firestore';
 import { db } from '../firebase/firebaseInit';
