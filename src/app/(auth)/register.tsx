@@ -204,7 +204,7 @@ export const Register = ({ navigation }: RouterProps) => {
 					{/* séparer les deux boutons */}
 					<View style={{ marginVertical: 5 }} />
 					<Button
-						title="revenir à la page de connexion"
+						title="Revenir à la page de connexion"
 						onPress={() => navigation.navigate('Login')}
 					/>
 				</View>
