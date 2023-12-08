@@ -14,6 +14,7 @@ import { dpcToExpontential } from '../app/store';
 import { dpsToExpontential } from '../app/store';
 import { pokeDollarToExpontential } from '../app/store';
 import { PokemonImgByPokemonId } from '../constants/PokemonImgByPokemonId';
+import { computeCost } from '../utils/computeCost';
 
 interface UpgradeComponentProps {
 	upgrade: UpgradeDetails;
@@ -42,8 +43,17 @@ const UpgradeComponent: React.FC<UpgradeComponentProps> = ({
 		};
 	};
 
+	function getCostByQuantityMultiplayer(quantityMultiplayer: number) {
+		let totalCost = 0;
+		for (let i = 0; i < quantityMultiplayer; i++) {
+			totalCost += computeCost(upgrade.basicCost, upgrade.level + i);
+		}
+
+		return totalCost;
+	}
+
 	function onUpgrade(): void {
-		if (money < upgrade.cost * quantityMultiplier) {
+		if (money < getCostByQuantityMultiplayer(quantityMultiplier)) {
 			setButtonStyle(styles.buttonRed);
 			setTimeout(() => {
 				setButtonStyle(styles.button);
@@ -55,9 +65,16 @@ const UpgradeComponent: React.FC<UpgradeComponentProps> = ({
 				upgrade.level + quantityMultiplier
 			);
 
-			dispatch(handleUpgradeBoughtById(upgrade.id));
 			dispatch(
-				decrementPokedollarMoneyByAmount(upgrade.cost * quantityMultiplier)
+				handleUpgradeBoughtById({
+					id: upgrade.id,
+					multiplier: quantityMultiplier
+				})
+			);
+			dispatch(
+				decrementPokedollarMoneyByAmount(
+					getCostByQuantityMultiplayer(quantityMultiplier)
+				)
 			);
 
 			if (upgrade.basicDpc !== 0) dispatch(setDpc(nextDpc));
@@ -81,7 +98,7 @@ const UpgradeComponent: React.FC<UpgradeComponentProps> = ({
 		<View style={styles.container}>
 			<Image
 				source={PokemonImgByPokemonId[upgrade.id]}
-				style={styles.imageColumn} // Ajustez la taille et la marge selon vos besoins
+				style={styles.imageColumn}
 			/>
 			<View style={styles.dataColumn}>
 				<View>
@@ -111,16 +128,22 @@ const UpgradeComponent: React.FC<UpgradeComponentProps> = ({
 			<View style={styles.buttonColumn}>
 				<TouchableOpacity
 					style={
-						money < upgrade.cost ? styles.buttonDisabled : styles.button
+						money < getCostByQuantityMultiplayer(quantityMultiplier)
+							? styles.buttonDisabled
+							: styles.button
 					}
 					onPress={onUpgrade}
-					disabled={money < upgrade.cost}
+					disabled={
+						money < getCostByQuantityMultiplayer(quantityMultiplier)
+					}
 				>
 					<Text
 						style={styles.buttonText}
 					>{`Upgrade (x${quantityMultiplier})`}</Text>
 					<Text style={styles.buttonText}>
-						{pokeDollarToExpontential(upgrade.cost * quantityMultiplier)}
+						{`${pokeDollarToExpontential(
+							getCostByQuantityMultiplayer(quantityMultiplier)
+						)} `}
 						<Image
 							source={require('../../assets/pokeDollar.png')}
 							style={{ width: 15, height: 15 }}
