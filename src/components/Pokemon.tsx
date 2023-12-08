@@ -11,7 +11,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../app/store';
 import { ProgressBar } from 'react-native-paper';
 
-import { decrementLevel, incrementLevel } from '../features/levelSlice';
+import { incrementLevel } from '../features/levelSlice';
 
 import { PokemonDetails } from '../types/pokemon';
 

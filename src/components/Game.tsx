@@ -2,8 +2,6 @@ import { Image, StyleSheet, Text, View } from 'react-native';
 import React, { useEffect, useRef, useState } from 'react';
 import { RootState, store } from '../app/store';
 import { useDispatch, useSelector } from 'react-redux';
-import Carousel from 'react-native-reanimated-carousel';
-import type { ICarouselInstance } from 'react-native-reanimated-carousel';
 
 import { PokemonDetails } from '../types/pokemon';
 

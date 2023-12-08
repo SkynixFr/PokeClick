@@ -11,59 +11,6 @@ export const SuccessProvider = (props: React.PropsWithChildren) => {
 	const currentLevel = useSelector((state: RootState) => state.level.value);
 	const currentClicks = useSelector((state: RootState) => state.dpc.nbClicks);
 
-	// useEffect(() => {
-	// 	function getSuccess() {
-	// 		// const successes: SuccessDetails[] = [
-	// 		// 	{
-	// 		// 		id: '1',
-	// 		// 		name: 'Gourou de la Gravité',
-	// 		// 		icon: 'sort-amount-up',
-	// 		// 		levels: [10, 50, 100, 200, 300],
-	// 		// 		lastRewardIndexClaimed: 0,
-	// 		// 		rewards: [
-	// 		// 			{ amount: 10, claimed: false },
-	// 		// 			{ amount: 20, claimed: false },
-	// 		// 			{ amount: 30, claimed: false },
-	// 		// 			{ amount: 40, claimed: false },
-	// 		// 			{ amount: 50, claimed: false }
-	// 		// 		]
-	// 		// 	},
-	// 		// 	{
-	// 		// 		id: '2',
-	// 		// 		name: 'Tyran du Tapotage',
-	// 		// 		icon: 'hand-pointer',
-	// 		// 		levels: [100, 1000, 10000, 100000, 1000000],
-	// 		// 		lastRewardIndexClaimed: 0,
-	// 		// 		rewards: [
-	// 		// 			{
-	// 		// 				amount: 10,
-	// 		// 				claimed: false
-	// 		// 			},
-	// 		// 			{
-	// 		// 				amount: 20,
-	// 		// 				claimed: false
-	// 		// 			},
-	// 		// 			{
-	// 		// 				amount: 30,
-	// 		// 				claimed: false
-	// 		// 			},
-	// 		// 			{
-	// 		// 				amount: 40,
-	// 		// 				claimed: false
-	// 		// 			},
-	// 		// 			{
-	// 		// 				amount: 50,
-	// 		// 				claimed: false
-	// 		// 			}
-	// 		// 		]
-	// 		// 	}
-	// 		// ];
-	// 		// dispatch(addSuccesses(successes));
-	// 	}
-
-	// 	getSuccess();
-	// }, []);
-
 	useEffect(() => {
 		successList.forEach((success: SuccessDetails, index) => {
 			if (success.id === '1' && success.levels.includes(currentLevel)) {
