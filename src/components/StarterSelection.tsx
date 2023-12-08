@@ -77,7 +77,7 @@ const StarterSelection: React.FC<StarterSelectionProps> = ({
 
 	return (
 		<View style={styles.container}>
-			<Text style={styles.text}>Choose your starter !</Text>
+			<Text style={styles.text}>Choisis ton starter !</Text>
 			<View style={styles.list}>
 				{starters.map((starter: Starter) => (
 					<TouchableOpacity

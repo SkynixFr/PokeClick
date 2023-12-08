@@ -141,7 +141,7 @@ export const Register = ({ navigation }: RouterProps) => {
 							}}
 							value={email}
 							autoCapitalize="none"
-							placeholder="example@gmail.com"
+							placeholder="exemple@gmail.com"
 						/>
 					</View>
 					{passwordError ? (
@@ -157,7 +157,7 @@ export const Register = ({ navigation }: RouterProps) => {
 							}}
 							value={password}
 							autoCapitalize="none"
-							placeholder="Your Password"
+							placeholder="Votre Mot de Passe"
 						/>
 						<MaterialCommunityIcons
 							name={showPassword ? 'eye-off' : 'eye'}
@@ -182,12 +182,12 @@ export const Register = ({ navigation }: RouterProps) => {
 							}}
 							value={confirmPassword}
 							autoCapitalize="none"
-							placeholder="Confirm Your Password"
+							placeholder="Confirmer votre Mot de Passe"
 						/>
 					</View>
 					<View style={{ marginVertical: 5 }} />
 					<Button
-						title="Register"
+						title="Créer un compte"
 						onPress={() =>
 							handleRegister(email, password, confirmPassword)
 						}
@@ -195,7 +195,7 @@ export const Register = ({ navigation }: RouterProps) => {
 					{/* séparer les deux boutons */}
 					<View style={{ marginVertical: 5 }} />
 					<Button
-						title="Go to Login"
+						title="revenir à la page de connexion"
 						onPress={() => navigation.navigate('Login')}
 					/>
 				</View>
