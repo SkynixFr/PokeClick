@@ -85,7 +85,16 @@ export const Register = ({ navigation }: RouterProps) => {
 		confirmPassword: string
 	) => {
 		if (!email || !password || !confirmPassword) {
-			Alert.alert('Validation Error', 'Veuillez remplir tous les champs');
+			Alert.alert('Erreur', 'Veuillez remplir tous les champs');
+			return;
+		}
+		if (
+			emailError ||
+			passwordError ||
+			confirmPasswordError ||
+			password != confirmPassword
+		) {
+			Alert.alert('Erreur', 'Veuillez vérifier vos informations');
 			return;
 		}
 		if (!emailError && !passwordError && !confirmPasswordError) {
