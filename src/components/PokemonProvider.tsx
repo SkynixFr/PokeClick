@@ -102,10 +102,10 @@ export const PokemonProvider = (props: React.PropsWithChildren) => {
 			successes.push(currentSuccess);
 		});
 
-		dispatch(incrementDpcByAmount(upgrades[0].dpc));
 		dispatch(addUpgrades(upgrades));
 		dispatch(addSuccesses(successes));
 		dispatch(setDps(totalDps));
+		dispatch(setDpc(upgrades[0].dpc));
 	};
 
 	const getUserInfos = async () => {

@@ -50,7 +50,7 @@ const UpgradeComponent: React.FC<UpgradeComponentProps> = ({
 			}, 200);
 		} else {
 			const { nextDpc, nextDps } = nextUpgradeValues(
-				upgrade.dpc,
+				upgrade.basicDpc,
 				upgrade.basicDps,
 				upgrade.level + quantityMultiplier
 			);

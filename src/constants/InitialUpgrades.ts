@@ -9,7 +9,7 @@ export const InitialUpgrades: UpgradeDetails[] = [
 		dpc: 0,
 		basicDpc: 0,
 		dps: 0,
-		basicDps: 5,
+		basicDps: 20,
 		level: 0,
 		index: 2
 	},
