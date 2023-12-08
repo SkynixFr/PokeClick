@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { Text, View, StyleSheet, ImageBackground } from 'react-native';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { useGetPokemonsQuery } from '../features/api/apiSlice';
 import { addPokemons } from '../features/pokemonsSlice';
 import StarterSelection from './StarterSelection';
 import LegendaryMythicalPokemons from '../constants/LegendaryMythicalPokemon';
 import { addUpgrades } from '../features/upgradesSlice';
 import { UpgradeDetails } from '../types/upgrade';
-import { incrementDpcByAmount } from '../features/dpcSlice';
+import { incrementDpcByAmount, setDpc } from '../features/dpcSlice';
 import { getAuth } from 'firebase/auth';
 import { collection, getDocs, query, where } from 'firebase/firestore';
 import { db } from '../firebase/firebaseInit';
@@ -102,10 +102,10 @@ export const PokemonProvider = (props: React.PropsWithChildren) => {
 			successes.push(currentSuccess);
 		});
 
-		dispatch(incrementDpcByAmount(upgrades[0].dpc));
 		dispatch(addUpgrades(upgrades));
 		dispatch(addSuccesses(successes));
 		dispatch(setDps(totalDps));
+		dispatch(setDpc(upgrades[0].dpc));
 	};
 
 	const getUserInfos = async () => {

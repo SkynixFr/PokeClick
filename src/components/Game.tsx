@@ -2,8 +2,6 @@ import { Image, StyleSheet, Text, View } from 'react-native';
 import React, { useEffect, useRef, useState } from 'react';
 import { RootState, store } from '../app/store';
 import { useDispatch, useSelector } from 'react-redux';
-import Carousel from 'react-native-reanimated-carousel';
-import type { ICarouselInstance } from 'react-native-reanimated-carousel';
 
 import { PokemonDetails } from '../types/pokemon';
 
@@ -216,7 +214,14 @@ const Game = () => {
 			</View>
 			<View style={styles.levelsContainer}>
 				{previousLevels.map((level, index) => (
-					<Animated.View key={index} style={styles.levelContainer}>
+					<Animated.View
+						key={index}
+						style={
+							level > 0
+								? styles.levelContainer
+								: styles.levelContainerHidden
+						}
+					>
 						<Text>{level}</Text>
 					</Animated.View>
 				))}
@@ -324,6 +329,17 @@ const styles = StyleSheet.create({
 		alignItems: 'center',
 		padding: 5,
 		elevation: 5
+	},
+	levelContainerHidden: {
+		width: 40,
+		height: 40,
+		backgroundColor: 'rgba(255, 255, 255,1)',
+		borderRadius: 5,
+		justifyContent: 'center',
+		alignItems: 'center',
+		padding: 5,
+		elevation: 5,
+		opacity: 0
 	},
 	currentLevelContainer: {
 		transform: [{ scale: 1.25 }, { translateY: 15 }]

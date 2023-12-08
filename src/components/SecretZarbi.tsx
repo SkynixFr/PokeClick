@@ -1,17 +1,13 @@
 import { Pressable, StyleSheet, Image, View } from 'react-native';
 import React from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '../app/store';
+import { useDispatch } from 'react-redux';
+
 import { PokemonImgByPokemonId } from '../constants/PokemonImgByPokemonId';
 import { incrementPokeDollarMoneyByAmount } from '../features/moneySlice';
 import { incrementDpcByAmount } from '../features/dpcSlice';
 
 const SecretZarbi = () => {
 	const dispatch = useDispatch();
-	const currentDpc = useSelector((state: RootState) => state.dpc.value);
-	const currentMoney = useSelector(
-		(state: RootState) => state.money.pokeDollar
-	);
 
 	function developperMode() {
 		dispatch(

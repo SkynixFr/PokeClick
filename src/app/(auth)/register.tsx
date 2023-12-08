@@ -85,7 +85,16 @@ export const Register = ({ navigation }: RouterProps) => {
 		confirmPassword: string
 	) => {
 		if (!email || !password || !confirmPassword) {
-			Alert.alert('Validation Error', 'Veuillez remplir tous les champs');
+			Alert.alert('Erreur', 'Veuillez remplir tous les champs');
+			return;
+		}
+		if (
+			emailError ||
+			passwordError ||
+			confirmPasswordError ||
+			password != confirmPassword
+		) {
+			Alert.alert('Erreur', 'Veuillez vérifier vos informations');
 			return;
 		}
 		if (!emailError && !passwordError && !confirmPasswordError) {
@@ -141,7 +150,7 @@ export const Register = ({ navigation }: RouterProps) => {
 							}}
 							value={email}
 							autoCapitalize="none"
-							placeholder="example@gmail.com"
+							placeholder="exemple@gmail.com"
 						/>
 					</View>
 					{passwordError ? (
@@ -157,7 +166,7 @@ export const Register = ({ navigation }: RouterProps) => {
 							}}
 							value={password}
 							autoCapitalize="none"
-							placeholder="Your Password"
+							placeholder="Votre Mot de Passe"
 						/>
 						<MaterialCommunityIcons
 							name={showPassword ? 'eye-off' : 'eye'}
@@ -182,12 +191,12 @@ export const Register = ({ navigation }: RouterProps) => {
 							}}
 							value={confirmPassword}
 							autoCapitalize="none"
-							placeholder="Confirm Your Password"
+							placeholder="Confirmer votre Mot de Passe"
 						/>
 					</View>
 					<View style={{ marginVertical: 5 }} />
 					<Button
-						title="Register"
+						title="Créer un compte"
 						onPress={() =>
 							handleRegister(email, password, confirmPassword)
 						}
@@ -195,7 +204,7 @@ export const Register = ({ navigation }: RouterProps) => {
 					{/* séparer les deux boutons */}
 					<View style={{ marginVertical: 5 }} />
 					<Button
-						title="Go to Login"
+						title="Revenir à la page de connexion"
 						onPress={() => navigation.navigate('Login')}
 					/>
 				</View>

@@ -2,12 +2,10 @@ import {
 	StyleSheet,
 	ScrollView,
 	Text,
-	Button,
 	View,
-	Pressable,
 	TouchableOpacity
 } from 'react-native';
-import React, { useEffect } from 'react';
+import React from 'react';
 import UpgradeComponent from './UserUpgrade';
 import { useSelector } from 'react-redux';
 import { RootState } from '../app/store';
@@ -24,8 +22,6 @@ const Upgrade: React.FC<UpgradeComponentProps> = ({}) => {
 		React.useState<number>(1);
 
 	const handleQuantityMultiplier = (quantity: number) => {
-		console.log(quantity);
-
 		setQuantityMultiplier(quantity);
 	};
 

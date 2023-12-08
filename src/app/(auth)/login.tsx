@@ -1,12 +1,5 @@
 import React from 'react';
-import {
-	View,
-	Text,
-	TextInput,
-	ImageBackground,
-	Image,
-	StyleSheet
-} from 'react-native';
+import { View, Text, TextInput, Image } from 'react-native';
 import { Button } from '@rneui/themed';
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
 import { Alert } from 'react-native';
@@ -104,7 +97,7 @@ const Login = ({ navigation }: RouterProps) => {
 							onBlur={validateEmail}
 							value={email}
 							autoCapitalize="none"
-							placeholder="example@gmail.com"
+							placeholder="exemple@gmail.com"
 						/>
 					</View>
 					{passwordError ? (
@@ -121,7 +114,7 @@ const Login = ({ navigation }: RouterProps) => {
 							value={password}
 							autoCapitalize="none"
 							secureTextEntry={!showPassword}
-							placeholder="Your Password"
+							placeholder="Votre mot de passe"
 						/>
 						<MaterialCommunityIcons
 							name={showPassword ? 'eye-off' : 'eye'}
@@ -131,12 +124,12 @@ const Login = ({ navigation }: RouterProps) => {
 							onPress={toggleShowPassword}
 						/>
 					</View>
-					<Button onPress={handleLogin} title="Login" />
+					<Button onPress={handleLogin} title="Se connecter" />
 					{/* séparer les deux boutons */}
 					<View style={{ marginVertical: 5 }} />
 					<Button
 						onPress={() => navigation.navigate('Register')}
-						title="Create an Account"
+						title="Créer un compte"
 					/>
 				</View>
 

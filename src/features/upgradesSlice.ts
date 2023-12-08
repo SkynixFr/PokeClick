@@ -19,12 +19,17 @@ export const upgradesSlice = createSlice({
 		setIsStarterSelected: (state, action) => {
 			state.isStarterSelected = action.payload;
 		},
-		handleUpgradeBoughtById: (state, action: PayloadAction<number>) => {
-			const upgrade = state.value.find(
-				upgrade => upgrade.id === action.payload
-			);
+		handleUpgradeBoughtById: (
+			state,
+			action: PayloadAction<{ id: number; multiplier: number }>
+		) => {
+			const id = action.payload.id;
+			const multiplier = action.payload.multiplier;
+
+			const upgrade = state.value.find(upgrade => upgrade.id === id);
+
 			if (upgrade) {
-				upgrade.level += 1;
+				upgrade.level += multiplier;
 				upgrade.cost = computeCost(upgrade.basicCost, upgrade.level);
 
 				if (upgrade.basicDpc !== 0) {

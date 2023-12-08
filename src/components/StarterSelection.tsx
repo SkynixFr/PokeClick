@@ -2,10 +2,7 @@ import { StyleSheet, Text, TouchableOpacity, View, Image } from 'react-native';
 import React from 'react';
 import { PokemonImgByPokemonId } from '../constants/PokemonImgByPokemonId';
 import { Starter } from '../types/starter';
-import { useDispatch } from 'react-redux';
-import { addUpgrades, setIsStarterSelected } from '../features/upgradesSlice';
-import { incrementDpcByAmount } from '../features/dpcSlice';
-import { UpgradeDetails } from '../types/upgrade';
+
 import { db } from '../firebase/firebaseInit';
 import { doc, setDoc } from 'firebase/firestore';
 import { getAuth } from 'firebase/auth';
@@ -80,7 +77,7 @@ const StarterSelection: React.FC<StarterSelectionProps> = ({
 
 	return (
 		<View style={styles.container}>
-			<Text style={styles.text}>Choose your starter !</Text>
+			<Text style={styles.text}>Choisis ton starter !</Text>
 			<View style={styles.list}>
 				{starters.map((starter: Starter) => (
 					<TouchableOpacity
@@ -131,10 +128,10 @@ const styles = StyleSheet.create({
 	imageStarter: {
 		width: '85%',
 		height: '85%',
-		resizeMode: 'contain',
+		resizeMode: 'contain'
 	},
 	textStarter: {
 		textAlign: 'center',
-		fontSize: 16,
+		fontSize: 16
 	}
 });

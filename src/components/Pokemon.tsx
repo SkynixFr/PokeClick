@@ -9,14 +9,14 @@ import {
 import React, { useState, useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../app/store';
-import { ProgressBar, MD3Colors, Surface } from 'react-native-paper';
+import { ProgressBar } from 'react-native-paper';
 
-import { decrementLevel, incrementLevel } from '../features/levelSlice';
+import { incrementLevel } from '../features/levelSlice';
 
 import { PokemonDetails } from '../types/pokemon';
 
 import { PokemonImgByPokemonId } from '../constants/PokemonImgByPokemonId';
-import { computePokemonLife } from '../utils/computePokemonLife';
+
 import { incrementDifficulty } from '../features/difficultySlice';
 import { incrementPokeDollarMoneyByAmount } from '../features/moneySlice';
 import { computeMoney } from '../utils/computeMoney';

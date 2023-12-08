@@ -1,13 +1,6 @@
 import { getAuth, signOut } from 'firebase/auth';
-import { Button, View, StyleSheet, Pressable } from 'react-native';
-import {
-	collection,
-	getDocs,
-	query,
-	setDoc,
-	doc,
-	where
-} from 'firebase/firestore';
+import { View, StyleSheet, Pressable } from 'react-native';
+import { setDoc, doc } from 'firebase/firestore';
 import { db } from '../firebase/firebaseInit';
 import { RootState, store } from '../app/store';
 import { useDispatch, useSelector } from 'react-redux';
