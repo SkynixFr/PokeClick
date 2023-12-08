@@ -1,11 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import {
-	Text,
-	View,
-	Image,
-	ImageBackground,
-	ActivityIndicator
-} from 'react-native';
+import { Text, View, ImageBackground, ActivityIndicator } from 'react-native';
 import { useNetInfo } from '@react-native-community/netinfo';
 
 import { StyleSheet } from 'react-native';

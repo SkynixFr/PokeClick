@@ -1,15 +1,8 @@
 import { StyleSheet, AppState } from 'react-native';
 import React, { useEffect, useRef, useState } from 'react';
-import { useSelector } from 'react-redux';
-import { RootState, store } from '../app/store';
-import {
-	collection,
-	getDocs,
-	query,
-	setDoc,
-	doc,
-	where
-} from 'firebase/firestore';
+
+import { store } from '../app/store';
+import { setDoc, doc } from 'firebase/firestore';
 import { db } from '../firebase/firebaseInit';
 import { getAuth } from 'firebase/auth';
 

@@ -1,13 +1,6 @@
 // UpgradeComponent.tsx
 import React, { useState, useEffect } from 'react';
-import {
-	StyleSheet,
-	View,
-	Text,
-	Button,
-	Image,
-	TouchableOpacity
-} from 'react-native';
+import { StyleSheet, View, Text, Image, TouchableOpacity } from 'react-native';
 import { UpgradeDetails } from '../types/upgrade';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../app/store';

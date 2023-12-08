@@ -3,7 +3,6 @@ import { ToastAndroid } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { SuccessDetails } from '../types/success';
-import { addSuccesses } from '../features/successSlice';
 import { RootState } from '../app/store';
 
 export const SuccessProvider = (props: React.PropsWithChildren) => {

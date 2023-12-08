@@ -1,12 +1,5 @@
 import React from 'react';
-import {
-	View,
-	Text,
-	TextInput,
-	ImageBackground,
-	Image,
-	StyleSheet
-} from 'react-native';
+import { View, Text, TextInput, Image } from 'react-native';
 import { Button } from '@rneui/themed';
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
 import { Alert } from 'react-native';
