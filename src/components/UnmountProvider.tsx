@@ -1,6 +1,6 @@
 import { StyleSheet, AppState } from 'react-native';
 import React, { useEffect, useRef, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { RootState, store } from '../app/store';
 import {
 	collection,
@@ -19,6 +19,7 @@ const UnmountProvider = (props: React.PropsWithChildren) => {
 
 	const appState = useRef(AppState.currentState);
 	const [appStateVisible, setAppStateVisible] = useState(appState.current);
+
 	useEffect(() => {
 		const subscription = AppState.addEventListener(
 			'change',

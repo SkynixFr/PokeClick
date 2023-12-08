@@ -19,7 +19,7 @@ export const InitialSuccesses: SuccessDetails[] = [
 		id: '2',
 		name: 'Tyran du Tapotage',
 		icon: 'hand-pointer',
-		levels: [100, 1000, 10000, 100000, 1000000],
+		levels: [10, 100, 1000, 10000, 100000],
 		lastRewardIndexClaimed: 0,
 		rewards: [
 			{

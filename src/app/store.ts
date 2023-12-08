@@ -10,6 +10,9 @@ import { dpsSlice } from '../features/dpsSlice';
 import { upgradesSlice } from '../features/upgradesSlice';
 import { successSlice } from '../features/successSlice';
 import { toExponential } from '../utils/toExponential';
+import { dateSlice } from '../features/dateSlice';
+import { idleSlice } from '../features/idleSlice';
+
 export const store = configureStore({
 	reducer: {
 		[apiSlice.reducerPath]: apiSlice.reducer,
@@ -20,7 +23,9 @@ export const store = configureStore({
 		level: levelSlice.reducer,
 		difficulty: difficultySlice.reducer,
 		money: moneySlice.reducer,
-		success: successSlice.reducer
+		success: successSlice.reducer,
+		date: dateSlice.reducer,
+		idle: idleSlice.reducer
 	},
 	middleware: getDefaultMiddleware => {
 		return getDefaultMiddleware().concat(apiSlice.middleware);

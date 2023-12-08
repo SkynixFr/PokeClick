@@ -23,6 +23,7 @@ import Animated, {
 	withSpring,
 	withTiming
 } from 'react-native-reanimated';
+import ModalInactivity from './ModalInactivity';
 
 const Game = () => {
 	const dispatch = useDispatch();
@@ -174,6 +175,11 @@ const Game = () => {
 
 	return (
 		<View style={styles.container}>
+			<ModalInactivity
+				stopAutoAttack={stopAutoAttack}
+				startAutoAttack={startAutoAttack}
+				setPokemonLife={setCurrentPokemonLife}
+			/>
 			<View style={styles.gameInfos}>
 				<View style={styles.moneys}>
 					<View style={styles.pokeDollars}>
@@ -310,7 +316,7 @@ const styles = StyleSheet.create({
 		gap: 10
 	},
 	levelContainer: {
-		width: 40,
+		minWidth: 40,
 		height: 40,
 		backgroundColor: 'rgba(255, 255, 255,1)',
 		borderRadius: 5,

@@ -9,6 +9,9 @@ export const useRewardSuccessLevels = () => {
 	const levelSuccessLevel = () => {
 		const success = successes.find(success => success.id === '1');
 		if (!success) return -1;
+
+		if (currentLevel > success.levels[success.levels.length - 1])
+			return success.levels.length;
 		return success.levels.findIndex(level => level > currentLevel);
 	};
 
